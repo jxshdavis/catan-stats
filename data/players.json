@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "players": [
+    {
+      "id": "dh",
+      "initials": "DH",
+      "aliases": ["MorningWood", "azzgrazzlawnmower", "pinkdate", "Sawfish:148"],
+      "color_slot": 1,
+      "twosheep_accounts": ["9658b227781f053f", "b3a855b531bcdc8d"]
+    },
+    {
+      "id": "ms",
+      "initials": "MS",
+      "aliases": ["LogMaxxer69", "Koala:933"],
+      "color_slot": 2,
+      "twosheep_accounts": ["5a2a0dd6d9bb5393"]
+    },
+    {
+      "id": "nd",
+      "initials": "ND",
+      "aliases": ["realWOOD", "Leech:171", "SheepsMaxxed420Nco", "SheepLeige", "sheephussler", "masterofalllogs", "St0ndebrickGobbler", "TreeTzarStoneGod", "brickbaby", "TreeTzar"],
+      "color_slot": 3,
+      "twosheep_accounts": ["d2683d20dccfdc95"]
+    },
+    {
+      "id": "ld",
+      "initials": "LD",
+      "aliases": ["Parrotfish:851", "StoneShepard", "sheepPIMP", "BrickMaxxer69", "StormBreaker", "MountainMuncher", "CaptainBrusin", "StoneFlowing", "LapVodka"],
+      "color_slot": 4,
+      "twosheep_accounts": ["e436ef199f83b5bc"]
+    },
+    {
+      "id": "jd",
+      "initials": "JD",
+      "aliases": ["brickpump", "WheatGod", "Hedgehog:291", "ElDiabloRojo", "stonepumper", "Sheeple", "pumpingbrick", "brickpumpousa", "SheepStacker", "BrickMaximum", "GrainGuzzler", "brickedsheep", "CityLover", "BrickedSheep", "GoldBakerJosh", "PinkKingdom", "PurpleKingdom", "SheepMongol", "StoneMeister", "ToastyPeanut", "WheatMaxingJosh", "septabrick", "brickPUMP", "DumpingLogs", "HonorableKingdom"],
+      "color_slot": 5,
+      "twosheep_accounts": ["c9b867f1c3f5b527", "8f918d6648535447"]
+    },
+    {
+      "id": "a",
+      "initials": "A",
+      "aliases": ["merlot5"],
+      "color_slot": 6,
+      "twosheep_accounts": ["eb0de0b716b1717f"]
+    },
+    {
+      "id": "mb",
+      "initials": "MB",
+      "aliases": ["pentawheat"],
+      "color_slot": 7,
+      "twosheep_accounts": ["05e5d8999a41de1f"]
+    }
+  ]
+}

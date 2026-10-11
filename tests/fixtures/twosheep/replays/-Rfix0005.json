@@ -1,0 +1,38 @@
+{
+ "replay_id": "-Rfix0005",
+ "fetched_at": "2026-01-20T00:00:00+00:00",
+ "create_time": null,
+ "update_time": null,
+ "fields": {
+  "c": 1768449600,
+  "d": true,
+  "P": 2,
+  "X": false,
+  "q": 0,
+  "u": [
+   "uid-ana",
+   "uid-ben"
+  ],
+  "p": {
+   "uid-ana": {
+    "n": "AnaPlays",
+    "o": 0,
+    "v": 15,
+    "w": true
+   },
+   "uid-ben": {
+    "n": "BenB",
+    "o": 1,
+    "v": 9,
+    "w": false
+   }
+  },
+  "o": {
+   "sf": true,
+   "gM": 10,
+   "wVPA": 15,
+   "sd": 1,
+   "ps": {}
+  }
+ }
+}

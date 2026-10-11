@@ -1,0 +1,89 @@
+{
+ "replay_id": "-Rfix0002",
+ "fetched_at": "2026-01-20T00:00:00+00:00",
+ "create_time": null,
+ "update_time": null,
+ "fields": {
+  "c": 1768108500,
+  "d": true,
+  "P": 4,
+  "X": false,
+  "q": 0,
+  "u": [
+   "uid-zed",
+   "uid-ana",
+   "uid-dan",
+   "uid-ben"
+  ],
+  "p": {
+   "uid-zed": {
+    "n": "Stranger",
+    "o": 0,
+    "v": 13,
+    "w": true
+   },
+   "uid-ana": {
+    "n": "AnaPlays",
+    "o": 1,
+    "v": 9,
+    "w": false
+   },
+   "uid-dan": {
+    "n": "DanTheMan",
+    "o": 2,
+    "v": 9,
+    "w": false
+   },
+   "uid-ben": {
+    "n": "BenB",
+    "o": 3,
+    "v": 11,
+    "w": false
+   }
+  },
+  "o": {
+   "sf": true,
+   "gM": 13,
+   "wVPA": 13,
+   "sd": 1,
+   "ps": {
+    "blue": {
+     "id": "uid-zed",
+     "c": "blue",
+     "n": "blue",
+     "i": 0,
+     "p": "ui",
+     "B": "",
+     "V": "00"
+    },
+    "red": {
+     "id": "uid-ana",
+     "c": "red",
+     "n": "red",
+     "i": 1,
+     "p": "ui",
+     "B": "",
+     "V": "00"
+    },
+    "orange": {
+     "id": "uid-dan",
+     "c": "orange",
+     "n": "orange",
+     "i": 2,
+     "p": "ui",
+     "B": "",
+     "V": "00"
+    },
+    "white": {
+     "id": "uid-ben",
+     "c": "white",
+     "n": "white",
+     "i": 3,
+     "p": "ui",
+     "B": "",
+     "V": "00"
+    }
+   }
+  }
+ }
+}

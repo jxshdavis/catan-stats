@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "games": [
+    {
+      "id": "2026-01-10-a",
+      "date": "2026-01-10",
+      "platform": "twosheep",
+      "source": "manual: end-of-game stats screen",
+      "settings": {
+        "vp_to_win": null,
+        "expansion": "seafarers",
+        "scenario": null,
+        "notes": "typed in by hand"
+      },
+      "turns": 60,
+      "duration_seconds": null,
+      "winner": "ana",
+      "players": [
+        {
+          "player": "ana",
+          "seat": null,
+          "game_color": "red",
+          "vp": 14,
+          "vp_breakdown": {
+            "settlements": 2,
+            "cities": 8,
+            "vp_cards": 0,
+            "largest_army": 2,
+            "longest_road": 0,
+            "islands": 2
+          }
+        },
+        {
+          "player": "ben",
+          "seat": null,
+          "game_color": null,
+          "vp": 10
+        },
+        {
+          "player": "cat",
+          "seat": null,
+          "game_color": "blue",
+          "vp": 8
+        }
+      ],
+      "dice": null,
+      "events": null
+    }
+  ]
+}

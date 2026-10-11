@@ -1,0 +1,45 @@
+{
+ "replay_id": "-Rfix0006",
+ "fetched_at": "2026-01-20T00:00:00+00:00",
+ "create_time": null,
+ "update_time": null,
+ "fields": {
+  "c": 1768536000,
+  "d": true,
+  "P": 3,
+  "X": false,
+  "q": 0,
+  "u": [
+   "uid-ana",
+   "uid-ben",
+   "uid-cat"
+  ],
+  "p": {
+   "uid-ana": {
+    "n": "AnaPlays",
+    "o": 0,
+    "v": 9,
+    "w": false
+   },
+   "uid-ben": {
+    "n": "BenB",
+    "o": 1,
+    "v": 9,
+    "w": false
+   },
+   "uid-cat": {
+    "n": "CatanCat",
+    "o": 2,
+    "v": 8,
+    "w": false
+   }
+  },
+  "o": {
+   "sf": true,
+   "gM": 10,
+   "wVPA": 14,
+   "sd": 1,
+   "ps": {}
+  }
+ }
+}

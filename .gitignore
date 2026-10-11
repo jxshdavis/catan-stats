@@ -1,0 +1,9 @@
+dist/
+__pycache__/
+.venv/
+.DS_Store
+.env
+.cache/
+raw/
+scripts/fetch_twosheep.py
+.env.example

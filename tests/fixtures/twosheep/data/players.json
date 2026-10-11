@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "players": [
+    {
+      "id": "ana",
+      "name": "Ana",
+      "aliases": [
+        "AnaPlays"
+      ],
+      "color_slot": 1,
+      "twosheep_accounts": [
+        "72e2057bbf5be560"
+      ]
+    },
+    {
+      "id": "ben",
+      "name": "Ben",
+      "aliases": [
+        "BenB"
+      ],
+      "color_slot": 2,
+      "twosheep_accounts": [
+        "3674bad9c53dfc73"
+      ]
+    },
+    {
+      "id": "cat",
+      "name": "Cat",
+      "aliases": [
+        "CatanCat"
+      ],
+      "color_slot": 3,
+      "twosheep_accounts": [
+        "03ba0dc4e8d1b0c3",
+        "3834ccc11eaafa4b"
+      ]
+    },
+    {
+      "id": "dan",
+      "name": "Dan",
+      "aliases": [],
+      "color_slot": 4
+    }
+  ]
+}

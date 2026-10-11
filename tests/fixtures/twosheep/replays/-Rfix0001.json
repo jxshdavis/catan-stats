@@ -1,0 +1,73 @@
+{
+ "replay_id": "-Rfix0001",
+ "fetched_at": "2026-01-20T00:00:00+00:00",
+ "create_time": null,
+ "update_time": null,
+ "fields": {
+  "c": 1768100400,
+  "d": true,
+  "P": 3,
+  "X": false,
+  "q": 0,
+  "u": [
+   "uid-ben",
+   "uid-ana",
+   "uid-cat"
+  ],
+  "p": {
+   "uid-ben": {
+    "n": "BenB",
+    "o": 0,
+    "v": 10,
+    "w": false
+   },
+   "uid-ana": {
+    "n": "AnaPlays",
+    "o": 1,
+    "v": 14,
+    "w": true
+   },
+   "uid-cat": {
+    "n": "CatanCat",
+    "o": 2,
+    "v": 8,
+    "w": false
+   }
+  },
+  "o": {
+   "sf": true,
+   "gM": 11,
+   "wVPA": 14,
+   "sd": 1,
+   "ps": {
+    "white": {
+     "id": "uid-ben",
+     "c": "white",
+     "n": "white",
+     "i": 0,
+     "p": "ui",
+     "B": "",
+     "V": "00"
+    },
+    "red": {
+     "id": "uid-ana",
+     "c": "red",
+     "n": "red",
+     "i": 1,
+     "p": "ui",
+     "B": "",
+     "V": "00"
+    },
+    "green": {
+     "id": "uid-cat",
+     "c": "green",
+     "n": "green",
+     "i": 2,
+     "p": "ui",
+     "B": "",
+     "V": "00"
+    }
+   }
+  }
+ }
+}
