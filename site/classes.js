@@ -92,7 +92,7 @@
     const ids = {};
     let html = `<section class="block">
         <h2>Spending and trading mix ${ctx.info("cls_profile", "Spending and trading profile")}</h2>
-        <p class="note">What each player leans on compared with the rest of the same tables. Spending shares are of cards paid for purchases, in percentage points against the table; the three shares add to 100%, so a lean toward one is a lean away from the others. Dot: shrunk estimate with its 95% interval; ring: raw; tick: losses only.${c.profile && c.profile.tau2_source === "all games" ? " This view has under 30 games, so the amount of shrinkage comes from all games." : ""}</p>`;
+        <p class="note"><b>How to read:</b> each panel compares players with the rest of the same tables. The first three split every card a player spent between dev cards, cities, and expansion (settlements, roads and ships), in percentage points above (right of 0) or below (left) their tablemates; the three add to 100%, so leaning toward one is leaning away from the others. Player trades is a rate against the table (1× the same) and bank reliance is the share of cards received from the bank or ports. Filled dot: our best estimate, pulled a little toward the group so small samples don't exaggerate. Hollow ring: the raw number. Tick: the same from games they lost only. Lines are 95% intervals.${c.profile && c.profile.tau2_source === "all games" ? " This view has under 30 games, so the amount of shrinkage comes from all games." : ""}</p>`;
     if (!axes.length) {
       html += ctx.guardNote(0, 10) + `</section>`;
     } else {
@@ -109,7 +109,7 @@
     ids.kmDev = uid("km-dev"); ids.kmCity = uid("km-city"); ids.kmKn = uid("km-kn");
     html += `<section class="block">
         <h2>Timing columns ${ctx.info("cls_columns", "Class columns")}</h2>
-        <p class="note">Median own turns until each player's first city (Rusher) and first dev card, how long they hold a knight before playing it (Ambusher), and how many of their 7-discards were avoidable (Hoarder). 95% intervals in brackets.</p>
+        <p class="note">How fast each player moves, counted in their own turns: the typical (median) turn of their first city (Rusher: lower is faster) and first dev card, how many turns they hold a knight before playing it (Ambusher: higher means they wait to strike), and how many of their 7-discards they could have avoided by spending first (Hoarder). 95% intervals in brackets.</p>
         ${pl.length ? `<div class="panel table-wrap"><table><thead><tr><th>Player</th><th class="num">Games</th><th class="num">Rusher: first city</th><th class="num">First dev card</th><th class="num">Ambusher: knight held</th><th class="num">Hoarder: avoidable discards</th></tr></thead><tbody>
           ${pl.map((p) => { const r = cols[p]; return `<tr><td>${ctx.who(p)}</td><td class="num">${r.games}</td><td class="num">${medCell(ctx, r.city)}</td><td class="num">${medCell(ctx, r.dev)}</td><td class="num">${r.knight && fin(r.knight.median) ? medCell(ctx, r.knight) : `<span class="sub">${r.knight ? r.knight.bought : 0} knights, needs 20</span>`}</td><td class="num">${hoardCell(ctx, hd[p])}</td></tr>`; }).join("")}
         </tbody></table></div>` : ctx.guardNote(0, 10)}
@@ -117,7 +117,7 @@
       </section>
       <section class="block">
         <h2>How long until ${ctx.info("cls_km", "Kaplan-Meier timings")}</h2>
-        <p class="note">Percent of player-games still waiting, by the player's own turn, everyone pooled. Bands are 95%; curves stop where fewer than 5 are still waiting.</p>
+        <p class="note"><b>How to read:</b> everyone pooled. Each curve starts at 100% of player-games still waiting and drops as players get their first dev card or city (or, for knights, play a knight they bought), counted in their own turns. Where it crosses 50% is the median: half had done it by then. Bands are 95%; curves stop where fewer than 5 are still waiting.</p>
         <div class="three-col">
           <div><h3>First dev card <span class="sub">${km.dev ? `${km.dev.events} of ${km.dev.n}` : ""}</span></h3><div class="panel" style="margin-top:8px"><div class="chart" id="${ids.kmDev}"></div></div></div>
           <div><h3>First city <span class="sub">${km.city ? `${km.city.events} of ${km.city.n}` : ""}</span></h3><div class="panel" style="margin-top:8px"><div class="chart" id="${ids.kmCity}"></div></div></div>
@@ -144,7 +144,7 @@
     const fits = axes.map((a) => { const x = prof.axes[a]; return fin(x.tau2) ? `${AXIS_SHORT[a]}: τ² ${x.tau2_source === "all games" ? "(all games) " : ""}${a === "trade" ? ctx.num(x.tau2, 4) + " (log scale)" : ctx.num(x.tau2 * 1e4, 1) + " pts²"}${fin(x.p) ? `, Q = ${ctx.num(x.Q, 1)} on ${x.df} df, p = ${ctx.num(x.p, 3)}` : ""}` : ""; }).filter(Boolean);
     return ctx.tableView([{ label: "Player" }, { label: "Axis" }, { label: "Raw", num: true }, { label: "Raw 95%", num: true }, { label: "Shrunk", num: true },
       { label: "Shrunk 95%", num: true }, { label: "Losses only", num: true }, { label: "Games", num: true }], rows) +
-      (fits.length ? `<p class="note">Between-player spread: ${fits.join("; ")}.</p>` : "");
+      (fits.length ? `<p class="note">Do players really differ on each of these? ${axes.filter((a) => fin(prof.axes[a].p)).map((a) => `${AXIS_SHORT[a]}: ${prof.axes[a].p < 0.05 ? "yes" : "not clearly"} (p ${prof.axes[a].p < 0.001 ? "< 0.001" : "= " + ctx.num(prof.axes[a].p, 3)})`).join("; ")}.</p><details class="tv"><summary>Model details</summary><p class="note">Between-player spread: ${fits.join("; ")}.</p></details>` : "");
   }
 
   function kmTable(ctx, km) {
@@ -275,15 +275,15 @@
     const G = ca.games || {};
     const games = (cb.gallery || []).map((id) => ({ id, r: G[id], g: gameById(ctx, id) })).filter((x) => x.r && x.g);
     const rec = (cb.record || []).map((id) => ({ id, r: G[id], g: gameById(ctx, id) })).filter((x) => x.r && x.g);
-    const thr = [["d20", "d ≥ 0.2"], ["gap2", "2+ VP behind"], ["gap3", "3+ VP behind"], ["gap4", "4+ VP behind"]];
+    const thr = [["d20", "Behind by 20%+ of the target"], ["gap2", "2+ VP behind"], ["gap3", "3+ VP behind"], ["gap4", "4+ VP behind"]];
     let html = `<section class="block">
         <h2>Comebacks ${ctx.info("cls_comeback", "Comeback gallery")}</h2>
-        <p class="note">Games the winner won from behind. When anyone first reached 3 VP short of the target on the board (t*), how far back was the eventual winner? Board VP leaves out VP cards still in hand, so it is what the table could see.</p>
-        <div class="tiles">${thr.map(([k, l]) => `<div class="tile"><div class="v">${(cb.counts || {})[k] || 0}</div><div class="k">${l} at t*</div><div class="s">of ${cb.with_t_star || 0} games</div></div>`).join("")}
-          ${rec.length ? `<div class="tile"><div class="v">${rec[0].r.gap} VP</div><div class="k">Biggest comeback</div><div class="s">${rec.map((x) => `${chip(ctx, x.r.winner)} in <a href="#/game/${encodeURIComponent(x.id)}">${ctx.esc(ctx.gameLabel(x.g))}</a>`).join(", ")}; d = ${ctx.num(rec[0].r.d, 2)}</div></div>` : ""}</div>
-        ${games.length ? `<div class="panel table-wrap" style="margin-top:12px"><table><thead><tr><th>Game</th><th>Winner</th><th class="num">Behind at t*</th><th class="num">d</th><th>Leader at t*</th><th class="num">t*</th><th class="num">VP cards held at the end</th></tr></thead><tbody>
-          ${games.map((x) => `<tr><td><a href="#/game/${encodeURIComponent(x.id)}">${ctx.esc(ctx.gameLabel(x.g))}</a></td><td>${chip(ctx, x.r.winner)}</td><td class="num"><b>${x.r.gap}</b> <span class="sub">${x.r.winner_bvp} vs ${x.r.max_bvp} of ${x.r.G}</span></td><td class="num">${ctx.num(x.r.d, 2)}</td><td>${(x.r.leaders || []).map((p) => chip(ctx, p)).join(" ")}</td><td class="num">turn ${x.r.t + 1}</td><td class="num">${x.r.vp_cards}</td></tr>`).join("")}
-        </tbody></table></div><p class="note">Games where the winner was 2 or more board VP behind at t*, largest d first.</p>` : `<p class="empty">No game in this view was won from 2 or more VP behind at t*.</p>`}
+        <p class="note">Games the winner won from behind. We freeze each game at the moment someone first got within 3 VP of the target and ask how far back the eventual winner was then. The deficit is in board VP, what the table could see (VP cards still in hand left out), and also as a share of the target, so 4 VP behind in a 10 VP game counts more than in a 14 VP game.</p>
+        <div class="tiles">${thr.map(([k, l]) => `<div class="tile"><div class="v">${(cb.counts || {})[k] || 0}</div><div class="k">${l} when someone got within 3</div><div class="s">of ${cb.with_t_star || 0} games</div></div>`).join("")}
+          ${rec.length ? `<div class="tile"><div class="v">${rec[0].r.gap} VP</div><div class="k">Biggest comeback</div><div class="s">${rec.map((x) => `${chip(ctx, x.r.winner)} in <a href="#/game/${encodeURIComponent(x.id)}">${ctx.esc(ctx.gameLabel(x.g))}</a>`).join(", ")}; ${ctx.pct(rec[0].r.d)} of the target</div></div>` : ""}</div>
+        ${games.length ? `<div class="panel table-wrap" style="margin-top:12px"><table><thead><tr><th>Game</th><th>Winner</th><th class="num">Winner behind by</th><th class="num">Share of target</th><th>Leader then</th><th class="num">When</th><th class="num">VP cards held at the end</th></tr></thead><tbody>
+          ${games.map((x) => `<tr><td><a href="#/game/${encodeURIComponent(x.id)}">${ctx.esc(ctx.gameLabel(x.g))}</a></td><td>${chip(ctx, x.r.winner)}</td><td class="num"><b>${x.r.gap}</b> <span class="sub">${x.r.winner_bvp} vs ${x.r.max_bvp} of ${x.r.G}</span></td><td class="num">${ctx.pct(x.r.d)}</td><td>${(x.r.leaders || []).map((p) => chip(ctx, p)).join(" ")}</td><td class="num">turn ${x.r.t + 1}</td><td class="num">${x.r.vp_cards}</td></tr>`).join("")}
+        </tbody></table></div><p class="note">Games where the winner was 2 or more board VP behind when someone first got within 3 of the target, biggest comeback (as a share of the target) first. "When" is the end of that turn; the game's race chart shows it.</p>` : `<p class="empty">No game in this view was won from 2 or more VP behind.</p>`}
       </section>`;
 
     const ft = c.first_to || {};
@@ -291,7 +291,7 @@
     ids.ftConv = uid("ft-conv"); ids.ftBack = uid("ft-back"); ids.ftCtl = uid("ft-ctl");
     html += `<section class="block">
         <h2>First to get close ${ctx.info("cls_first", "First-to-c conversion")}</h2>
-        <p class="note">How often the first player to reach half, or three quarters, of the way to the target on board VP went on to win.</p>
+        <p class="note">How often the first player to get halfway, or three quarters of the way, to the target (on board VP, counting from the 2 VP everyone starts with) went on to win. Fair share is what you'd expect if being first meant nothing.</p>
         <div class="tiles">${[["0.5", "half", g5], ["0.75", "three quarters", g75]].filter((x) => x[2]).map(([k, l, g]) => `<div class="tile"><div class="v">${ctx.pct(g.p)}</div><div class="k">First to ${l} of the way won</div><div class="s">95% ${ctx.pct(g.ci[0])} to ${ctx.pct(g.ci[1])}; ${g.games} games; fair share ${ctx.pct(g.base)}${ft[k].skipped ? `; ${ft[k].skipped} left out` : ""}</div></div>`).join("")}</div>
         <div class="race-ctl" id="${ids.ftCtl}" style="margin-top:14px"><span class="chips"><button type="button" class="chip on" data-c="0.75">75% of the way</button><button type="button" class="chip" data-c="0.5">Halfway</button></span></div>
         <div class="two-col">
@@ -299,7 +299,7 @@
           <div><h3>Won when not first</h3><div class="panel" style="margin-top:8px"><div class="chart" id="${ids.ftBack}"></div></div></div>
         </div>
         <div id="${ids.ftConv}-t"></div>
-        <p class="note">Vertical line: the fair share (mean of 1/n) over this view's games; each player's own fair share is in the table.</p>
+        <p class="note"><b>How to read:</b> left, how often each player won the games where they got there first; right, how often they won when someone else did. The vertical line is a fair share of wins (1 in n players, averaged over these games); each player's own fair share is in the table. Lines are 95% intervals.</p>
       </section>`;
 
     const d = c.draft || {};
@@ -307,14 +307,14 @@
     const grid = d.grid || {};
     html += `<section class="block">
         <h2>Draft order ${ctx.info("cls_draft", "Draft-order grid")}</h2>
-        ${d.games ? `<p class="note">The best spot (most pips) still open when each seat placed each starting settlement, averaged over ${d.games} base, New Shores and Through the Desert games. Seat 1 places first; the second round runs in reverse. Underneath: the pips actually chosen.</p>
+        ${d.games ? `<p class="note"><b>How to read:</b> the big number is the best spot (most number dots) still open when each seat placed each starting settlement, averaged over ${d.games} base, New Shores and Through the Desert games. Underneath: the dots the player actually took. Seat 1 places first and the second round runs in reverse, so the last seat places twice in a row. Darker blue means better spots were left.</p>
         <div class="two-col">${["3", "4"].filter((n) => grid[n]).map((n) => { ids["grid" + n] = uid("grid-" + n); return `<div><h3>${n} players <span class="sub">${grid[n].games} games</span></h3><div class="panel" style="margin-top:8px;padding:12px"><div id="${ids["grid" + n]}"></div></div></div>`; }).join("")}</div>
         <p class="note">Open corners outside the start region (islands, land beyond the desert) were removed from the decoder's list first: ${ctx.num(d.dropped_per_pick, 1)} per pick on average.</p>` : `<p class="empty">No base, New Shores or Through the Desert games in this view.</p>`}
       </section>`;
     if (d.games) {
       html += `<section class="block">
         <h2>Pick percentile ${ctx.info("cls_pick", "Pick percentile")}</h2>
-        <p class="note">Where each starting settlement ranked by pips among the open spots. The top pip spot was taken in ${ctx.pct(d.top)} of ${d.picks} picks; the mean percentile is ${ctx.num(d.mean_pct * 100, 0)}.</p>
+        <p class="note"><b>How to read:</b> how good each starting settlement was compared with every spot still open, as a percentile: 100 is the spot with the most dots, 50 the middle. The top spot was taken in ${ctx.pct(d.top)} of ${d.picks} picks, and the average pick was at the ${ctx.num(d.mean_pct * 100, 0)}th percentile. Players who sit lower are passing up dots, often for resources or ports.</p>
         <div class="two-col">
           <div><h3>All picks</h3><div class="panel" style="margin-top:8px"><div class="chart" id="${ids.dHist}"></div></div>
             ${ctx.tableView([{ label: "Percentile" }, { label: "Picks", num: true }], d.hist.map((v, i) => [`${i * 10} to ${i * 10 + 10}`, v]))}</div>
@@ -331,7 +331,7 @@
     const dlp = order(ctx).filter((p) => (dl.players || {})[p]);
     html += `<section class="block">
         <h2>Dev card draw luck ${ctx.info("cls_devluck", "Dev draw luck")}</h2>
-        ${dl.games ? `<p class="note">VP cards and knights drawn against what the cards left in the deck made likely at each purchase, in cards. ${dl.buys} purchases in ${dl.games} games${dl.excluded && dl.excluded.length ? `; ${dl.excluded.length} without a recorded deck left out` : ""}. As a group: VP cards ${ctx.fmtSigned(dl.group.vp.diff, 1)} (${dl.group.vp.O} drawn), knights ${ctx.fmtSigned(dl.group.knight.diff, 1)} (${dl.group.knight.O}).</p>
+        ${dl.games ? `<p class="note"><b>How to read:</b> how many VP cards and knights each player drew compared with what the cards left in the deck made likely at each purchase. 0 is exactly average luck; +3 means three more than expected. Right is lucky, left unlucky; lines are 95% intervals. ${dl.buys} purchases in ${dl.games} games${dl.excluded && dl.excluded.length ? `; ${dl.excluded.length} without a recorded deck left out` : ""}. As a group: VP cards ${ctx.fmtSigned(dl.group.vp.diff, 1)} (${dl.group.vp.O} drawn), knights ${ctx.fmtSigned(dl.group.knight.diff, 1)} (${dl.group.knight.O}).</p>
         ${dlp.length ? `<div class="two-col">
           <div><h3>VP cards</h3><div class="panel" style="margin-top:8px"><div class="chart" id="${ids.dlVp}"></div></div></div>
           <div><h3>Knights</h3><div class="panel" style="margin-top:8px"><div class="chart" id="${ids.dlKn}"></div></div></div>
@@ -425,10 +425,10 @@
     const lead = (r.leaders || []).map((p) => nameOf(ctx, p)).join(" and ");
     return `<section class="block">
         <h2>A comeback ${ctx.info("cls_comeback", "Comeback gallery")}</h2>
-        <p class="note">t* is when anyone first reached ${r.G - 3} board VP, 3 short of ${r.G}. Board VP leaves out VP cards still in hand. See the race above, Board VP view, at turn ${r.t + 1}.</p>
+        <p class="note">The moment someone first reached ${r.G - 3} board VP, 3 short of ${r.G}, and how far back the eventual winner was then. Board VP leaves out VP cards still in hand. See the race above, Board VP view, at turn ${r.t + 1}.</p>
         <div class="tiles">
-          <div class="tile"><div class="v">${r.gap} VP</div><div class="k">${nameOf(ctx, r.winner)} behind at t*</div><div class="s">${r.winner_bvp} against ${lead}'s ${r.max_bvp}; d = ${ctx.num(r.d, 2)}</div></div>
-          <div class="tile"><div class="v">Turn ${r.t + 1}</div><div class="k">t*</div><div class="s">end of that turn</div></div>
+          <div class="tile"><div class="v">${r.gap} VP</div><div class="k">${nameOf(ctx, r.winner)} behind</div><div class="s">${r.winner_bvp} against ${lead}'s ${r.max_bvp}; ${ctx.pct(r.d)} of the target</div></div>
+          <div class="tile"><div class="v">Turn ${r.t + 1}</div><div class="k">When someone got within 3</div><div class="s">end of that turn</div></div>
           <div class="tile"><div class="v">${r.vp_cards}</div><div class="k">VP cards ${nameOf(ctx, r.winner)} held at the end</div><div class="s">hidden until the game ended</div></div>
         </div>
       </section>`;

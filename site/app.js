@@ -328,6 +328,7 @@
       <a class="back" href="#/">Back to leaderboard</a>
       <div class="player-head${p.leaderboard_rank === 1 ? " lead" : ""}"><span class="pmark"${p.leaderboard_rank === 1 ? ' title="First on the leaderboard"' : ""}><span class="hex" style="--c:${color(pid)}" aria-hidden="true"></span>${p.leaderboard_rank === 1 ? TROPHY : ""}</span><h1>${esc(p.name)}</h1></div>
       <p class="lede">Ranked ${ord(p.leaderboard_rank)} of ${active}. ${p.games} ${p.games === 1 ? "game" : "games"} recorded.</p>
+      ${hooksHtml("player-head", pid)}
       ${onFire(pid) ? `<p class="fire-line">${FLAME}<span><b>On fire.</b> ${fmtSigned(p.recent.above, 1)} wins above expected over ${esc(p.name)}'s last ${S.ranking.recent_games} games.</span></p>` : ""}      ${filterBar()}
 
       <div class="tiles">
@@ -465,7 +466,7 @@
       </tbody></table></div><p class="note">Over ${wr.wins} wins: where ${esc(p.name)}'s winning points came from, compared with other players' wins in the same kind of game.</p>` : "";
     return `<section class="block">
         <h2>Compared with the table</h2>
-        <p class="note">From the group models on the <a href="#/findings">Findings</a> page. Intervals are 95%.</p>
+        <p class="note">From the group models on the <a href="#/findings">Findings</a> page, each comparing ${esc(p.name)} with the people at the same tables. Intervals are 95%; one that crosses the "no difference" value (0, or 1×) means the games so far can't tell.</p>
         ${tiles.length ? `<div class="tiles">${tiles.join("")}</div>` : ""}
         ${recipe}
       </section>`;
@@ -721,12 +722,12 @@
       <h1>Play style</h1>
       <p class="lede">How everyone plays, from TwoSheep's turn-by-turn record of ${n} ${n === 1 ? "game" : "games"}. Numbers are per game unless they say otherwise.</p>
       ${filterBar()}
-      <div class="mk-key">${markerLegend()}<span class="note">Each marker compares a player with the rest of the same tables, in SDs. ${info("markers", "vs the table markers")}</span></div>
+      <div class="mk-key">${markerLegend()}<span class="note">The small arrows compare a player with the people at the same tables: +0.5 SD means a typical game puts them half a standard deviation above their tablemates on that stat. Colored arrows are clear of noise. ${info("markers", "vs the table markers")}</span></div>
 
       ${luckSection()}
       <section class="block">
         <h2>Dice luck: actual against expected</h2>
-        <p class="note">Cards each player got from rolls, against what their settlements and cities would have produced with average dice at the moment of each roll. Above 1.00 means the dice ran hot for them. Placement shows up in the expected column; luck is the gap. Gold counts as one card.</p>
+        <p class="note">A second way to measure luck: cards each player got from rolls against what their own settlements and cities would have produced with average dice at the moment of each roll, robber included. Above 1.00× means the dice ran hot for them. Good placement shows up in the expected column; luck is the gap. Gold counts as one card. Unlike the table above, this is not compared with tablemates, so dice that favored the whole table lift everyone.</p>
         <div class="panel table-wrap"><table>
           <thead><tr><th>Player</th><th class="num">Games</th><th class="num">From dice</th><th class="num">Expected</th><th class="num">Difference</th><th class="num">Luck</th><th class="hide-sm" style="width:28%"></th></tr></thead>
           <tbody>${lucky.map((p) => { const r = p.replay; return row([`<td>${who(p.id)}</td>`, `<td class="num">${r.games}</td>`, td(r.avg_resources_from_dice), td(r.avg_expected_from_dice),
@@ -736,7 +737,7 @@
 
       <section class="block">
         <h2>Robber</h2>
-        <p class="note">Steals are cards taken with the robber or pirate. Blocked is production the robber sat on. 7s rolled is the share of a player's own rolls that came up 7; fair dice give 16.7%.</p>
+        <p class="note">Per game. Robber moves counts 7s and knights. Steals are cards taken with the robber or pirate, and robbed is cards taken from them. Lost to 7s is cards discarded for holding too many. Blocked is production the robber sat on. 7s rolled is the share of a player's own rolls that came up 7; fair dice give 16.7%.</p>
         <div class="panel table-wrap"><table>
           <thead><tr><th>Player</th><th class="num">Robber moves</th><th class="num">Steals</th><th class="num">Robbed</th><th class="num">Lost to 7s</th><th class="num">Blocked</th><th class="num">Monopoly haul</th><th class="num">7s rolled</th></tr></thead>
           <tbody>${by((p) => p.replay.avg_steals).map((p) => { const r = p.replay; return row([`<td>${who(p.id)}</td>`, tdm(r.avg_robber_moves, p.id, "robber_moves"), tdm(r.avg_steals, p.id, "steals"), tdm(r.avg_stolen_from, p.id, "stolen_from"),
@@ -746,7 +747,7 @@
 
       <section class="block">
         <h2>Who robs whom</h2>
-        <p class="note">Read across a row: cards that player stole from each opponent per game played together.</p>
+        <p class="note"><b>How to read:</b> read across a row: the big number is cards that player stole from each opponent per game played together; the small text is the total over how many games. Darker red means more.</p>
         <div class="panel" style="padding:14px"><div class="table-wrap"><table class="matrix"><thead><tr><th></th>${head}</tr></thead><tbody>${body}</tbody></table></div></div>
       </section>
 
@@ -764,6 +765,17 @@
     hooksDraw("style");
   }
 
+  // One plain sentence on whether any seat's wins fall outside the chance band.
+  function seatVerdict(se) {
+    const out = [];
+    for (const n of ["3", "4"]) {
+      for (const b of ((se || {})[n] || {}).seats || []) {
+        if (b.wins < b.lo || b.wins > b.hi) out.push(`${ord(b.seat)} of ${n} won ${b.wins > b.hi ? "more" : "less"} than luck explains`);
+      }
+    }
+    return out.length ? out.join("; ") + "." : "Every bar sits inside its box, so no seat has a clear edge so far.";
+  }
+
   // ---- Findings: group-level models and tests ------------------------------------------
   function findingsPage() {
     const I = ins();
@@ -772,25 +784,28 @@
     const o = I.opening, bo = I.best_opener, rb = I.opening_robustness;
     const viewNote = o && o.source === "all games"
       ? `<p class="note">This view has ${o.view_games} games with replays, under the 30 a model needs, so the numbers are from all games.</p>` : "";
-    const rob = rb ? `<div class="note">Spot or player? Refits give b = ${rb.map((r) => `${num(r.b, 2)} (${esc(r.name.toLowerCase())}, SE ${num(r.se, 2)})`).join(", ")}. The full table is on <a href="#/about">How it works</a>. ${info("robustness", "Robustness refits")}</div>` : "";
+    const rbOf = (name) => (rb || []).find((r) => r.name === name);
+    const rbW = rbOf("Mundlak, within player"), rbF = rbOf("Player fixed effects");
+    const rob = rb ? `<div class="note"><b>Is it the spot or the player?</b> If stronger players simply open better, dots could be standing in for skill. Comparing each player only with their own other games still gives b = ${rbW ? num(rbW.b, 2) : "n/a"}, and adding a term for each player gives ${rbF ? num(rbF.b, 2) : "n/a"}, against ${num(o.b, 2)} for the headline${rbW && rbF && rbW.b > 0 && rbF.b > 0 ? ", so the dots themselves seem to matter, not just who gets them" : ""}. All refits are on <a href="#/about">How it works</a>. ${info("robustness", "Robustness refits")}</div>` : "";
     const d = I.dice_calibration;
     const cl = ROOT.closeness;
 
     main.innerHTML = `
       <h1>Findings</h1>
-      <p class="lede">What the games say as a group: openings, seats, the robber, trading, where winning points come from, the dice, and which games were closest. Every interval is 95%.</p>
+      <p class="lede">What the games say as a group: openings, seats, the robber, trading, where winning points come from, the dice, and which games were closest.</p>
+      <p class="note">Most charts here put a number next to what pure luck would give. Lines through dots are 95% intervals: the range the true value most likely sits in. When an interval crosses the "no effect" line, the games so far can't tell that effect apart from luck.</p>
       ${filterBar()}
 
       <section class="block">
         <h2>Openings ${info("opening", "Opening edge and win chance")}</h2>
-        ${o ? `<p class="note">Opening dots are the number dots under a player's two starting settlements. Here they are measured against the table: dots minus the average of everyone in that game.</p>
+        ${o ? `<p class="note">Every number token has dots printed under it: 5 on a 6 or 8, 4 on a 5 or 9, down to 1 on a 2 or 12. More dots means that number comes up more often. A player's opening dots add up the dots on every hex their two starting settlements touch, and here they are measured against the table: dots minus the average of everyone in that game.</p>
         ${viewNote}
         <div class="tiles">
           <div class="tile"><div class="v">${pct(o.p2)}</div><div class="k">Win chance, 2 dots above the table</div><div class="s">against 3 equal opponents; 25% at an even table</div></div>
           <div class="tile"><div class="v">${num(o.or, 2)}×</div><div class="k">Odds per extra dot</div><div class="s">95% interval ${num(o.or_ci[0], 2)} to ${num(o.or_ci[1], 2)}</div></div>
-          <div class="tile"><div class="v">${num(o.b, 3)}</div><div class="k">Coefficient b</div><div class="s">${o.games} games, profile interval ${num(o.ci[0], 3)} to ${num(o.ci[1], 3)}</div></div>
+          <div class="tile"><div class="v">${o.games}</div><div class="k">Games in the model</div><div class="s">coefficient b = ${num(o.b, 3)} on the log odds scale, 95% ${num(o.ci[0], 3)} to ${num(o.ci[1], 3)}</div></div>
         </div>
-        <p class="note" style="margin-top:12px">Win chance in percent for a player with that many more opening dots than each of three equal opponents. The band is the 95% interval.</p>
+        <p class="note" style="margin-top:12px"><b>How to read:</b> find how many more opening dots you had than each of three otherwise equal opponents on the bottom axis; the line gives your chance of winning, in percent. At 0 everyone has 25%. The shaded band is the 95% interval for the curve.</p>
         <div class="panel" style="margin-top:6px"><div class="chart" id="f-pd"></div>
         ${tableView([{ label: "Dots above each opponent" }, { label: "Win chance", num: true }, { label: "95% interval", num: true }],
           o.curve.map((c) => [signed(c.d, 0), pct(c.p, 1), `${pct(c.lo, 1)} to ${pct(c.hi, 1)}`]))}</div>
@@ -800,31 +815,32 @@
 
       ${bo ? `<section class="block">
         <h2>Best opener's wins ${info("best_opener", "Best opener's wins vs chance")}</h2>
-        <p class="note">Wins by the seat with the most opening dots, the fewest, and everyone between, against chance. One-sided permutation p = ${num(bo.p_best, 3)} for the best opener; it asks the same question as the model above.${bo.dropped_all_tied ? ` ${bo.dropped_all_tied} ${bo.dropped_all_tied === 1 ? "game" : "games"} where every seat tied ${bo.dropped_all_tied === 1 ? "is" : "are"} left out.` : ""}</p>
+        <p class="note"><b>How to read:</b> in every game, the seat with the most opening dots is the best opener and the seat with the fewest the worst; everyone else is the middle. Bars are how many games each group won. The tick is what they would win if dots didn't matter, and the gray box is the range luck alone covers 95% of the time. Best openers won ${num(bo.buckets[0].observed, 1)} against ${num(bo.buckets[0].expected, 1)} expected (one-sided permutation p = ${num(bo.p_best, 3)}).${bo.dropped_all_tied ? ` ${bo.dropped_all_tied} ${bo.dropped_all_tied === 1 ? "game" : "games"} where every seat tied ${bo.dropped_all_tied === 1 ? "is" : "are"} left out.` : ""}</p>
         <div class="panel"><div class="chart" id="f-best"></div></div>
       </section>` : ""}
 
       <section class="block">
         <h2>Opening strength by player ${info("opening_player", "Opening strength vs the table")}</h2>
-        <p class="note">Board and draft luck plus choice: how many dots above the table each player opened with, on average.</p>
+        <p class="note"><b>How to read:</b> how many more dots than the table average each player's opening sat on, per game. Right of the 0 line means stronger openings than the people they play with. This mixes board luck, draft position and choice. The filled dot adjusts for draft position (picking last in a 4 player game is a handicap); the hollow ring is the raw number. A line that crosses 0 means no clear difference.</p>
         ${Object.keys(I.opening_by_player || {}).length ? `<div class="panel"><div class="chart" id="f-open"></div></div>` : guardNote(0, 10)}
       </section>
+      ${hooksHtml("findings-openings")}
 
       <section class="block">
         <h2>Turn order ${info("seat", "Seat effect")}</h2>
-        <p class="note">Wins by seat, 1 being first to play.</p>
+        <p class="note"><b>How to read:</b> wins by turn order (1st places first and rolls first), in 3 and 4 player games. The tick is a fair share of the wins and the gray box the range luck alone covers 95% of the time. ${seatVerdict(I.seat_effect)}</p>
         <div class="two-col">${["3", "4"].filter((n) => (I.seat_effect || {})[n]).map((n) => `<div><h3>${n} players <span class="sub">${I.seat_effect[n].games} games</span></h3><div class="panel" style="margin-top:8px"><div class="chart" id="f-seat-${n}"></div></div></div>`).join("") || `<p class="empty">No 3 or 4 player games with seats here.</p>`}</div>
       </section>
 
       <section class="block">
         <h2>Robbed vs an even split ${info("steal_share", "Steal share vs an even split")}</h2>
-        <p class="note">Cards stolen from each player against an even split of everyone else's steals. This ignores the board, so robbing the leader counts as excess here.</p>
+        <p class="note"><b>How to read:</b> 1× means a player lost exactly their fair share of stolen cards, if everyone else's steals were split evenly among their possible victims. Right of the line: robbed more; left: robbed less. This ignores the board, so a player who leads or has the best production can be robbed more for good reasons. The <a href="#/network">Network</a> page has a version that allows for that.</p>
         ${Object.keys(I.steal_share || {}).length ? `<div class="panel"><div class="chart" id="f-steal"></div></div>` : guardNote(0, 10)}
       </section>
 
       <section class="block">
         <h2>Trading and the bank ${info("trade_bank", "Trade and bank profile")}</h2>
-        <p class="note">How much each player trades with other players compared with the rest of the same table, and how much of what they receive comes from the bank or ports.</p>
+        <p class="note"><b>How to read:</b> the left chart is how much each player trades with other players, as a multiple of their tablemates (1× the same, 1.2× trading 20% more). The right chart is the share of the cards they receive that comes from the bank or ports, in percentage points above or below their tablemates. In the table, port rate is cards handed to the bank per card back: 4 means always 4:1, 2 means always a 2:1 port.</p>
         ${Object.keys(I.trade_bank || {}).length ? `<div class="two-col">
           <div><h3>Player trades, rate vs the table</h3><div class="panel" style="margin-top:8px"><div class="chart" id="f-trade"></div></div></div>
           <div><h3>Bank share of cards received, vs the table</h3><div class="panel" style="margin-top:8px"><div class="chart" id="f-bank"></div></div></div>
@@ -835,25 +851,26 @@
 
       <section class="block">
         <h2>Where winning points came from ${info("recipe", "Win recipe")}</h2>
-        <p class="note">Share of each win's VP from each source, compared with other players' wins in the same kind of game. Players with at least 10 wins.</p>
+        <p class="note"><b>How to read:</b> for each player's wins, the share of their points from buildings (settlements and cities), development (VP cards and Largest Army) and bonuses (Longest Road and islands). Players with at least 10 wins.</p>
         ${Object.keys(I.win_recipe || {}).length ? `<div class="panel table-wrap"><table><thead><tr><th>Player</th><th class="num">Wins</th><th class="num">Buildings</th><th class="num">Development</th><th class="num">Bonuses</th></tr></thead>
           <tbody>${rowsFor(I.win_recipe, (pid, r) => `<tr><td>${who(pid)}</td><td class="num">${r.wins}</td>${["buildings", "development", "bonuses"].map((c) => `<td class="num">${recipeCell(r[c])}</td>`).join("")}</tr>`).join("")}</tbody></table></div>
-          <p class="note">Each cell: the player's average share of winning VP, then the tilt against comparable wins in points, with its 95% interval. Bold tilts have intervals that exclude 0.</p>` : `<p class="empty">Nobody has 10 wins in this view yet.</p>`}
+          <p class="note">Each cell: the share of the player's winning points from that source, then how many percentage points that is above (+) or below (−) other players' wins in the same kind of game, with its 95% interval. A +8 under development means dev cards made up 8 points more of their winning totals than usual. Bold numbers are clear of noise.</p>` : `<p class="empty">Nobody has 10 wins in this view yet.</p>`}
       </section>
 
       ${d ? `<section class="block">
         <h2>Are the dice fair? ${info("dice", "Dice calibration")}</h2>
         <div class="tiles">
           <div class="tile"><div class="v">${d.sevens}</div><div class="k">Sevens rolled</div><div class="s">${num(d.sevens_expected, 0)} expected; rate ${pct(d.seven_rate, 1)} (${pct(d.seven_rate_ci[0], 1)} to ${pct(d.seven_rate_ci[1], 1)}), z = ${num(d.seven_z, 1)}</div></div>
-          <div class="tile"><div class="v">${num(d.chi2, 1)}</div><div class="k">χ² on ${d.chi2_df} df, all rolls</div><div class="s">p = ${num(d.chi2_p, 3)}, ${d.rolls} rolls</div></div>
-          <div class="tile"><div class="v">${num(d.per_game_chi2, 0)}</div><div class="k">Summed per-game χ²</div><div class="s">on ${d.per_game_df} df (p = ${num(d.per_game_p, 2)}): rolls look independent within games</div></div>
-          <div class="tile"><div class="v">${fmtSigned(d.drift * 100, 1)}%</div><div class="k">Drift</div><div class="s">extra cards a board with one settlement on every number would get</div></div>
+          <div class="tile"><div class="v">${d.chi2_p < 0.05 ? "Off" : "Fair"}</div><div class="k">Do all rolls match fair dice?</div><div class="s">p = ${num(d.chi2_p, 3)} over ${d.rolls} rolls (χ² ${num(d.chi2, 1)} on ${d.chi2_df} df); below 0.05 would be a warning sign</div></div>
+          <div class="tile"><div class="v">${d.per_game_p < 0.05 ? "No" : "Yes"}</div><div class="k">Do rolls look independent within games?</div><div class="s">summed per-game χ² ${num(d.per_game_chi2, 0)} on ${d.per_game_df} df, p = ${num(d.per_game_p, 2)}</div></div>
+          <div class="tile"><div class="v">${fmtSigned(d.drift * 100, 1)}%</div><div class="k">Extra cards from these dice</div><div class="s">how many more cards a board with one settlement on every number got than fair dice would give</div></div>
         </div>
-        <p class="note">Sevens came up less often than fair dice predict, so everyone looks slightly lucky in absolute terms. Comparing players within the same game removes most of this.</p>
+        <p class="note">${d.seven_z < -2 ? "Sevens came up less often than fair dice predict, so everyone looks slightly lucky in absolute terms. " : d.seven_z > 2 ? "Sevens came up more often than fair dice predict, so everyone looks slightly unlucky in absolute terms. " : ""}Everyone at a table shares the same dice, so comparing players within the same game, as most of this site does, removes it.</p>
       </section>` : ""}
 
       ${hooksHtml("findings")}
       ${cl ? closestSection(cl) : ""}`;
+    hooksDraw("findings-openings");
     hooksDraw("findings");
 
     if (o) {
@@ -953,10 +970,10 @@
     }).join("")}</tbody></table></div>`;
     return `<section class="block">
         <h2>Closest games ${info("closeness", "Closeness index")}</h2>
-        <p class="note">How close each game was, from the finish margin, lead changes and the size of the lead. ${board ? "Measured on board VP, what everyone could see; hidden VP cards are left out." : "<b>Hindsight</b> for now: this uses true VP, including VP cards nobody could see."} Ranks are among all ${cl.n} decoded games and don't change with the filter.</p>
+        <p class="note"><b>How to read:</b> each dot is a game, placed by its closeness index (0 to 100) from how far back the runner-up was, how often the lead changed and how big the lead usually was. Right is closer; blue dots are the closest tier, red the most one-sided. Click a dot to open the game. ${board ? "Measured on board VP, what everyone could see; hidden VP cards are left out." : "<b>Hindsight</b> for now: this uses true VP, including VP cards nobody could see."} Ranks are among all ${cl.n} decoded games and don't change with the filter.</p>
         <div class="panel"><div class="chart">${strip}</div></div>
         <h3 style="margin-top:20px">The closest tier</h3>
-        <p class="note">Games in the top quarter however the parts are combined. The rank shows how far each one moves.</p>
+        <p class="note">Games that land in the top quarter however the three parts are weighed. Rank is out of every decoded game, shown as a range because it moves with the weighting. The sparkline is the leader's margin through the game: flat and low means a tight race.</p>
         ${tier.length ? table(tier) : `<p class="empty">No game in this view is in the closest tier.</p>`}
         <h3 style="margin-top:20px">The most one-sided</h3>
         ${lop.length ? table(lop) : `<p class="empty">No game in this view is in the one-sided tier.</p>`}

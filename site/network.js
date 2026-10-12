@@ -187,11 +187,11 @@
     const R = RV(ctx), A = RA(ctx);
     const tm = R.trade_model || A.trade_model;
     if (layer === "trade") {
-      return `<h3>Trade layer</h3><p>Edge color: how much more or less a pair trades together than their popularity, hand sizes and the score predict. Width: expected trades. Node ring: how often a player is picked as a partner.</p>
-        <p>${tm && tm.sigma_u === 0 ? `<b>No pair stands out.</b> The marginal likelihood is highest at σ<sub>u</sub> = 0, so the model finds no pair-specific preference beyond each player's overall popularity and every colored edge is ×1.00.` : tm ? `σ<sub>u</sub> = ${ctx.num(tm.sigma_u, 1)}: pair effects are shrunk toward ×1.` : ""}</p>
+      return `<h3>Trade layer</h3><p>Each line joins two players who share games. Thicker lines: pairs who trade a lot. Color: whether a pair trades more (blue) or less (red) than their overall habits, hand sizes and the score predict. The ring around each player: how often others pick them as a trade partner.</p>
+        <p>${tm && tm.sigma_u === 0 ? `<b>No pair stands out.</b> Once each player's overall popularity as a partner is allowed for, no two players trade with each other more than expected, so every colored line is ×1.00 (the model's best fit puts the spread between pairs, σ<sub>u</sub>, at 0).` : tm ? `σ<sub>u</sub> = ${ctx.num(tm.sigma_u, 1)}: pair effects are shrunk toward ×1.` : ""}</p>
         <p>Select a player or an edge for details.</p>`;
     }
-    return `<h3>Robber layer</h3><p>One arc per direction: the arrow points at the player robbed. Color: cards stolen against the robber model's expectation, which already allows for the board, hands, VP and recent robberies. Red is more than expected, blue less.</p><p>Select a player or an arc for details.</p>`;
+    return `<h3>Robber layer</h3><p>One arrow per direction, pointing at the player robbed. Color: cards stolen compared with what the robber model expects, which already allows for the board, hands, score and recent robberies. Red means robbed more than expected, blue less; gray is about as expected.</p><p>Select a player or an arc for details.</p>`;
   }
 
   // ---- Circular graph -----------------------------------------------------------------------------
@@ -432,31 +432,31 @@
     const pir = R.pirate;
     return `<section class="block" id="overpunishment">
       <h2>Overpunishment</h2>
-      <p class="note">Who loses cards to deliberate opponent actions, and is anyone robbed more than their public position explains? <b>Method, stated plainly:</b> the headline is board-adjusted. A choice model of where the robber goes and whom it robs, fit on every robber move in all games, gives each move's chance of hitting each player from the board, hands, public VP and recent robberies. Each player's cards stolen are compared with the sum of those chances, using a model that never saw that mover's own choices. Monopoly is a separate component; discards on 7s are left out; pirates are only counted.${sourceNote(ctx)}</p>
+      <p class="note">Who loses cards to deliberate opponent actions, and is anyone robbed more than their position explains? Robbing the leader or the best producer is good play, so the fair comparison is a model: fit on every robber move, it learns how likely each player was to be hit given the board, hands, the visible score and recent robberies. Each player's cards stolen are then compared with what the model expected (using a fit that never saw that mover's own choices). Monopoly is shown separately, discards on 7s are left out, and pirates are only counted.${sourceNote(ctx)}</p>
       <h3>Leader tax ${ctx.info("op_leader", "Leader tax")}</h3>
       <div class="tiles net-tiles">
         ${ctx.Charts.statTile({ value: `×${ctx.num(s7.stage2_vp.or, 2)}`, label: "Odds of being the victim, per public VP closer to the lead", sub: `after a 7; 95% interval ${ctx.num(s7.stage2_vp.or_lo, 2)} to ${ctx.num(s7.stage2_vp.or_hi, 2)}. Knights ×${ctx.num(kn.stage2_vp.or, 2)} (${ctx.num(kn.stage2_vp.or_lo, 2)} to ${ctx.num(kn.stage2_vp.or_hi, 2)})` })}
-        ${ctx.Charts.statTile({ value: `×${ctx.num(s7.premium, 2)}`, label: "A pip of the leader's income vs another opponent's", sub: `hex choice after a 7; Fieller ${iv(ctx, s7.premium_lo, s7.premium_hi)}. Knights ×${ctx.num(kn.premium, 2)}` })}
+        ${ctx.Charts.statTile({ value: `×${ctx.num(s7.premium, 2)}`, label: "How much more a dot of the leader's income draws the robber", sub: `than a dot of another opponent's, when choosing the hex after a 7; 95% ${iv(ctx, s7.premium_lo, s7.premium_hi)}. Knights ×${ctx.num(kn.premium, 2)}` })}
         ${ctx.Charts.statTile({ value: ctx.pct(L.base_rate_all), label: "Robber placements touching a public-VP leader", sub: `${ctx.pct(L.uniform_rate_all)} if every legal hex were equally likely; ${A.counts.land_moves} placements` })}
       </div>
-      <p class="note net-sec-note">Odds ratios from the two stages of the shared model, 7s and knights fit separately. Hex choice terms are per pip of income unless labeled.</p>
+      <p class="note net-sec-note"><b>How to read:</b> what the robber model learned. The rows without "Victim" are about which hex the robber goes to; the "Victim" rows are about whom it steals from on that hex. Each dot is an odds ratio: above 1 makes that hex or victim more likely, below 1 less. "Per pip" means per dot of income on the hex. Lines are 95% intervals, some too narrow to see. 7s and knights are fit separately.</p>
       <div class="two-col" style="margin-top:12px">
         <div><h3>After a 7 <span class="sub">${A.stage1.seven.n} moves, ${A.stage2.seven.n} victim picks</span> ${ctx.info("net_robber", "Shared robber model")}</h3><div class="panel" style="margin-top:8px"><div class="chart" id="op-coef-7"></div>${coefTable(ctx, "seven")}</div></div>
         <div><h3>After a knight <span class="sub">${A.stage1.knight.n} moves, ${A.stage2.knight.n} victim picks</span></h3><div class="panel" style="margin-top:8px"><div class="chart" id="op-coef-k"></div>${coefTable(ctx, "knight")}</div></div>
       </div>
       <h3 style="margin-top:28px">Robbed beyond the board ${ctx.info("op_target", "Targeting beyond board state")}</h3>
-      <p class="note">Cards stolen against the board-adjusted expectation (filled dot, shrunk) and against an even split among the players who could be robbed on the chosen hex (hollow dot). Above 1: robbed more.${R.targeting_meta && !R.targeting_meta.gate_open ? " The players' ratios are not clearly different from one another (Cochran's Q p = " + ctx.num(R.targeting_meta.p, 2) + "), so the estimates are pulled hard toward the group." : ""}</p>
+      <p class="note"><b>How to read:</b> cards stolen from each player divided by what the robber model expected. ×1 means robbed exactly as much as their position explains; right of the line, targeted more. Filled dot: the model-based number, shrunk toward the group. Hollow ring: against a simple even split among the players who could be robbed on the chosen hex.${R.targeting_meta && !R.targeting_meta.gate_open ? " The players' ratios are not clearly different from one another (Cochran's Q p = " + ctx.num(R.targeting_meta.p, 2) + "), so the estimates are pulled hard toward the group." : ""}</p>
       ${Object.keys(R.targeting || {}).length ? `<div class="panel"><div class="chart" id="op-target"></div>
         ${ctx.tableView([{ label: "Player" }, { label: "Games", num: true }, { label: "Stolen", num: true }, { label: "Expected", num: true }, { label: "O − E cards", num: true }, { label: "Shrunk ratio", num: true }, { label: "95% interval", num: true }, { label: "Even split ratio", num: true }],
           nodes.filter((p) => R.targeting[p]).map((p) => { const t = R.targeting[p]; return [ctx.who(p), t.games, t.O, ctx.num(t.E, 1), ctx.fmtSigned(t.o_minus_e, 1), ctx.num(t.shrunk, 2), iv(ctx, t.lo, t.hi), ctx.num(t.even.ratio, 2)]; }))}</div>` : ctx.guardNote(0, 10)}
       <h3 style="margin-top:28px">Cards lost to opponents, vs the table ${ctx.info("op_lost", "Cards lost relative to the table")}</h3>
-      <p class="note">Cards per game above (+) or below (−) the table average, with 95% intervals. Monopoly is shown on its own and never added in.</p>
+      <p class="note">Cards per game a player lost to opponents, above (+) or below (−) the average of their tablemates, with 95% intervals. Positive means they lost more than the people they played with. Monopoly is shown on its own and never added in.</p>
       ${lostRows.length ? `<div class="panel table-wrap"><table><thead><tr><th>Player</th><th class="num">Games</th><th class="num">Stolen</th><th class="num">Blocked by robbers</th><th class="num">Monopoly (separate)</th></tr></thead><tbody>
         ${lostRows.map((p) => { const x = R.cards_lost[p]; return `<tr><td>${ctx.who(p)}</td><td class="num">${x.games}</td><td class="num">${cell(x.stolen)}</td><td class="num">${cell(x.blocked)}</td><td class="num">${cell(x.monopoly)}</td></tr>`; }).join("")}</tbody></table></div>` : ctx.guardNote(0, 10)}
       <h3 style="margin-top:28px">Pirates ${ctx.info("op_pirate", "Pirate moves")}</h3>
       <p class="note">${pir.moves ? `${pir.moves} pirate moves stole ${pir.steals} cards in this view. They are not in the models. ${nodes.filter((p) => pir.by_player[p]).map((p) => `${ctx.esc(nm(ctx, p))} moved it ${pir.by_player[p].moves} times and lost ${pir.by_player[p].stolen_from}`).join("; ")}.` : "No pirate moves in this view."}</p>
       <h3 style="margin-top:28px">Early robbing and winning <span class="sub">exploratory</span> ${ctx.info("op_early", "Early excess targeting and winning")}</h3>
-      ${fin(ee.gamma) ? `<div class="tiles net-tiles">${ctx.Charts.statTile({ value: `×${ctx.num(ee.or, 2)}`, label: "Odds of winning per extra early card stolen beyond the model", sub: `The data cannot rule out effects between ×${ctx.num(ee.or_lo, 2)} and ×${ctx.num(ee.or_hi, 2)} per card. ${ee.games} games, adjusted for pre-game μ and opening dots.` })}</div>
+      ${fin(ee.gamma) ? `<div class="tiles net-tiles">${ctx.Charts.statTile({ value: `×${ctx.num(ee.or, 2)}`, label: "Odds of winning per extra early card stolen beyond the model", sub: `Below ×1 means players who robbed more than expected early went on to win less often. 95% ×${ctx.num(ee.or_lo, 2)} to ×${ctx.num(ee.or_hi, 2)} per card; ${ee.games} games, adjusted for pre-game skill and opening dots.` })}</div>
         <p class="note net-sec-note">Exploratory: chosen after looking at the data, so it is an estimate with an interval, not a test. Robbing early can be a reaction to a strong start, which this cannot separate.</p>` : ctx.guardNote(ee.has || 0, ee.needs || 40)}
     </section>`;
   }
@@ -476,18 +476,18 @@
     const hitRows = nodes.filter((p) => R.partner_hit[p]);
     return `<section class="block" id="trade-and-rob">
       <h2>Trade and rob</h2>
-      <p class="note">Do we spare ${who}, or rob them anyway? "Recent" means a trade in the last 2 rounds. Volume, not terms, because the roller usually overpays whatever the relationship.</p>
+      <p class="note">Do we spare ${who}, or rob them anyway? "Recent" means a trade in the last 2 rounds. The betrayal index compares how strongly a recent partner's income draws the robber with another trailing opponent's: 1 means no difference, below 1 means partners are spared, above 1 means they get hit harder.</p>
       <div class="tiles net-tiles">
         ${ctx.Charts.statTile({ value: ctx.num(P.rho, 2), label: `Betrayal index ${ctx.info("tr_betrayal", "Betrayal index")}`, sub: `A recent partner's income counts ${ctx.num(P.rho, 2)}× as much as another trailing opponent's. 95% ${iv(ctx, P.lo, P.hi)}. 1 = no difference.` })}
         ${ctx.Charts.statTile({ value: `×${ctx.num(A.leader.seven.premium, 2)}`, label: `Leader tax, per pip ${ctx.info("op_leader", "Leader tax")}`, sub: "the leader's income against another opponent's, same model" })}
         ${ctx.Charts.statTile({ value: String(P.informative), label: "7s with a recent partner on the board", sub: `of ${P.moves} robber moves after a 7` })}
       </div>
       <h3 style="margin-top:20px">How much a pip of income draws the robber, by owner</h3>
-      <p class="note">Stage 1 weights per pip (log odds) after a 7, with 95% intervals. A pip is one dot under one settlement.</p>
+      <p class="note"><b>How to read:</b> after a 7, how strongly one dot of income on a hex attracts the robber, depending on whose income it is. Longer bar means a more tempting target. Compare the blue bar (a recent trade partner's income) with "Other opponent": shorter means recent partners are spared. Bars are on the log odds scale with 95% intervals; a dot is one number dot under one settlement.</p>
       <div class="panel"><div class="chart tbar" id="tr-bars"></div>
         ${ctx.tableView([{ label: "Owner" }, { label: "Weight per pip", num: true }, { label: "95% interval", num: true }], P.bars.map((b) => [b.label, ctx.num(b.w, 3), `${ctx.num(b.lo, 3)} to ${ctx.num(b.hi, 3)}`]))}</div>
       <h3 style="margin-top:28px">Every refit ${ctx.info("tr_sens", "Betrayal index sensitivity rows")}</h3>
-      <p class="note">The Betrayal index under each check. The lag placebo ${P.caption === "just" ? "includes 1, so the effect belongs to recent partners: the wording is \"people you just traded with\"" : "does not include 1, so the wording is \"people you trade with\""}.</p>
+      <p class="note"><b>How to read:</b> the betrayal index recomputed many ways, including for each player as the robber. Left of 1: recent partners spared; right: hit harder. If most rows sit on the same side, the finding doesn't hinge on one modeling choice. The lag placebo row uses trades 2 to 4 rounds back instead; it ${P.caption === "just" ? "includes 1, so the effect belongs to recent partners: the wording is \"people you just traded with\"" : "does not include 1, so the wording is \"people you trade with\""}.</p>
       <div class="panel"><div class="chart" id="tr-sens"></div>
         ${ctx.tableView([{ label: "Fit" }, { label: "ρ", num: true }, { label: "95% interval", num: true }, { label: "Moves", num: true }], P.sensitivity.map((r) => [sensLabel(ctx, r), ctx.num(r.rho, 2), iv(ctx, r.lo, r.hi), r.n]))}</div>
       <h3 style="margin-top:28px">Partner hit ratio by player ${ctx.info("tr_hit", "Per-player partner hit ratio")}</h3>
@@ -496,13 +496,13 @@
         ${ctx.tableView([{ label: "Player" }, { label: "Placements", num: true }, { label: "Hit a partner", num: true }, { label: "Expected", num: true }, { label: "Shrunk ratio", num: true }, { label: "95% interval", num: true }],
           hitRows.map((p) => { const h = R.partner_hit[p]; return [ctx.who(p), h.placements, h.O, ctx.num(h.E, 1), ctx.num(h.shrunk, 2), iv(ctx, h.lo, h.hi)]; }))}</div>` : `<p class="empty">No player has 10 games and 20 informative placements in this view.</p>`}
       <h3 style="margin-top:28px">Pair robbery balance ${ctx.info("tr_balance", "Pair robbery balance")}</h3>
-      <p class="note">Net cards stolen between each pair with 10 or more shared games, split into what the dice and board explain, reaction to earlier robberies, and what is left. Parts above 0 stack to the right and parts below 0 to the left. The tick is the net; the shaded band is where the model puts the net 95% of the time.</p>
+      <p class="note"><b>How to read:</b> each row is a pair, say A − B. The tick is the net: cards A stole from B minus cards B stole from A, over their shared games (pairs with 10 or more). The bars split that net into what the dice and board explain (gray), payback for earlier robberies (blue) and what is left over (dark). Positive parts stack right, negative left. The shaded band is where the model puts the net 95% of the time; a tick outside it is a grudge the board doesn't explain.</p>
       ${bal.length ? `<ul class="legend"><li><span class="sw box" style="--c:var(--data)"></span>Dice and position</li><li><span class="sw box" style="--c:var(--div-pos)"></span>Reaction to earlier robberies</li><li><span class="sw box" style="--c:var(--ink)"></span>Beyond the model</li><li><span class="sw box band"></span>Model range for the net</li><li><span class="sw vtick"></span>Net</li></ul>
         <div class="panel"><div class="chart bal" id="tr-bal"></div>
         ${ctx.tableView([{ label: "Pair" }, { label: "Net", num: true }, { label: "Dice and position", num: true }, { label: "Reaction", num: true }, { label: "Beyond", num: true }, { label: "Model range", num: true }],
           bal.map((b) => [`${ctx.who(b.a, false)} − ${ctx.who(b.b, false)}`, ctx.fmtSigned(b.net, 0), ctx.fmtSigned(b.position, 1), ctx.fmtSigned(b.retaliation, 1), ctx.fmtSigned(b.beyond, 1), `${ctx.fmtSigned(b.position + b.retaliation + b.band[0], 1)} to ${ctx.fmtSigned(b.position + b.retaliation + b.band[1], 1)}`]))}</div>` : `<p class="empty">No pair has 10 shared games in this view.</p>`}
       <h3 style="margin-top:28px">Grudges and the leader in trading ${ctx.info("tr_grudge", "Grudge terms")}</h3>
-      <p class="note">Odds of picking a partner, from the trade partner model (${tm.n_trades} trades). Hand size is per unit of log(1 + cards).</p>
+      <p class="note"><b>How to read:</b> what makes someone more likely to be picked as a trade partner, from ${tm.n_trades} trades. Above 1: more likely to be picked; below 1: less. Here, leading on visible VP makes a player ${tm.leader.b < 0 ? "less" : "more"} popular to trade with (×${ctx.num(Math.exp(tm.leader.b), 2)}), and holding more cards makes them ${tm.hand.b > 0 ? "more" : "less"} popular (that row is per step of log(1 + cards), roughly per doubling of the hand).</p>
       <div class="panel"><div class="chart" id="tr-grudge"></div></div>
     </section>`;
   }
@@ -520,7 +520,7 @@
     return `<section class="block" id="pairs">
       <h2>Trading terms and setup contention</h2>
       <h3>Roller premium ${ctx.info("net_terms", "Roller premium and terms of trade")}</h3>
-      <p class="note">Cards each player gives per card received when trading on their own turn, against everyone else (field: ${ctx.num((pr._field || {}).P, 2)} given per card received).</p>
+      <p class="note"><b>How to read:</b> when trading on their own turn, how many cards a player gives per card they get, compared with everyone else, who give ${ctx.num((pr._field || {}).P, 2)} per card on average. ×1 is the usual price; left means they get better deals, right means they pay more.</p>
       ${rows.length ? `<div class="panel"><div class="chart" id="pr-prem"></div>
         ${ctx.tableView([{ label: "Player" }, { label: "Trades as roller", num: true }, { label: "Given per received", num: true }, { label: "vs the field", num: true }, { label: "95% interval", num: true }],
           rows.map((p) => [ctx.who(p), pr[p].trades, ctx.num(pr[p].P, 2), `×${ctx.num(pr[p].ratio, 2)}`, iv(ctx, pr[p].lo, pr[p].hi)]))}</div>` : ctx.guardNote(0, 10)}
@@ -530,7 +530,7 @@
           .map(([a, b, n, t]) => `<tr><td>${ctx.who(a)}</td><td>${ctx.who(b)}</td><td class="num">${n}</td><td class="num">×${ctx.num(t.rho, 2)}</td><td class="num">${iv(ctx, t.lo, t.hi)}</td></tr>`).join("")}</tbody></table></div>
         <p class="note">Above 1: the roller gives more per card received when trading with that partner than with anyone else.</p>` : ""}
       <h3 style="margin-top:28px">Setup contention ${ctx.info("net_contention", "Board contention at setup")}</h3>
-      <p class="note">Dots two players' opening settlements share on the same hexes, on average per shared game.</p>
+      <p class="note">How much two players' starting settlements compete: the number dots on hexes both of them touch at the first roll, per shared game. Darker means they tend to start on the same hexes and share the same numbers.</p>
       <div class="panel" style="padding:12px"><p class="note" style="margin:0 0 10px">Average shared dots at the first roll, per shared game.</p><div id="pr-cont"></div></div>
     </section>`;
   }
@@ -549,7 +549,8 @@
     const tsrc = R.trade_source === "all games" ? " The trade model is from all games (this view has under 30)." : "";
     ctx.main.innerHTML = `
       <h1>Network</h1>
-      <p class="lede">Who trades with whom, and who robs whom, beyond what each player's tendencies, the board and the score explain. Every interval is 95%.</p>
+      <p class="lede">Who trades with whom, and who robs whom, beyond what each player's tendencies, the board and the score explain.</p>
+      <p class="note">Most numbers here are ratios against a model's expectation: ×1.00 means exactly what the board, hands and score predict, ×1.20 means 20% more, ×0.80 20% less. Some estimates are "shrunk": pulled toward the group average so a player with few games can't look extreme by luck. Every interval is 95%.</p>
       ${ctx.filterBar()}
       <section class="block">
         <h2>Trades and robberies ${ctx.info("net_graph", "Network graph")}</h2>
@@ -566,7 +567,7 @@
       </section>
       <section class="block">
         <h2>Cards cost ledger ${ctx.info("net_ledger", "Cards cost ledger")}</h2>
-        <p class="note">Cards each player cost another per 100 shared rolls: stolen, blocked by the robber, and taken by Monopoly. Pairs with at least 5 shared games.</p>
+        <p class="note"><b>How to read:</b> read across a row: the number is how many cards that player cost each opponent per 100 rolls they played together. The bar splits it into cards stolen, production blocked by the robber, and cards taken with Monopoly. Pairs with at least 5 shared games.</p>
         <div class="panel" style="padding:12px">${ledgerHtml(ctx, nodes)}</div>
       </section>
       ${overpunishHtml(ctx, nodes)}
@@ -585,8 +586,8 @@
       svgBox.innerHTML = "";
       drawGraph(ctx, svgBox, layer, nodes, (s) => { sel = s; setPanel(); redraw(); }, sel);
       document.getElementById("net-matrix-cap").textContent = layer === "trade"
-        ? "Pair effect on trading, exp(u): above 1, the pair trades together more than expected. Small text: trades observed vs expected. Uncolored cells: 5 to 9 shared games, counts only."
-        : "Cards the row player stole from the column player against the robber model (shrunk O/E): above 1, more than expected. Small text: stolen vs expected. Uncolored cells: 5 to 9 shared games, counts only.";
+        ? "How to read: each cell is how much more (above ×1) or less (below ×1) that pair trades together than their overall habits predict. Small text: trades seen vs expected. Uncolored cells have only 5 to 9 shared games, so they show counts only."
+        : "How to read: read across a row. Each cell is cards the row player stole from the column player divided by what the robber model expected (shrunk toward ×1). Above ×1: robbed them more than the board explains. Small text: stolen vs expected. Uncolored cells have only 5 to 9 shared games, so they show counts only.";
       matrixFor(ctx, document.getElementById("net-matrix"), layer, nodes);
       setPanel();
     };
@@ -710,7 +711,7 @@
         <p class="note">Against the shared robber model and the trade partner model. More on the <a href="#/network">Network</a> page.</p>
         ${tiles.length ? `<div class="tiles">${tiles.join("")}</div>` : ""}
         ${rows ? `<div class="panel table-wrap" style="margin-top:12px"><table><thead><tr><th>With</th><th class="num">Shared games</th><th class="num">Robs them ${ctx.info("net_robber", "Shared robber model")}</th><th class="num">Robbed by them</th><th class="num">Trades together</th></tr></thead><tbody>${rows}</tbody></table></div>
-        <p class="note">Robbing columns: cards stolen against the robber model, shrunk. Pairs with 10 or more shared games.</p>` : ""}
+        <p class="note">Robbing columns: cards stolen divided by what the robber model expected, shrunk toward ×1 (small text: stolen vs expected). Above ×1 means more than the board explains. Pairs with 10 or more shared games.</p>` : ""}
       </section>`;
     },
   });
@@ -724,9 +725,9 @@
       return `<section class="block"><h2>The robber, the leader and trade partners</h2>
         <p class="note">From the shared robber model on all games (${A.counts.land_moves} robber moves, 7s and knights fit separately). Details, per-player and per-pair numbers are on the <a href="#/network">Network</a> page.</p>
         <div class="tiles">
-          ${ctx.Charts.statTile({ value: `×${ctx.num(s7.stage2_vp.or, 2)}`, label: `Leader tax, per public VP ${ctx.info("op_leader", "Leader tax")}`, sub: `odds of being the victim per VP closer to the lead, after a 7; 95% ${ctx.num(s7.stage2_vp.or_lo, 2)} to ${ctx.num(s7.stage2_vp.or_hi, 2)}` })}
-          ${ctx.Charts.statTile({ value: ctx.pct(A.leader.base_rate_all), label: "Placements touching the leader", sub: `${ctx.pct(A.leader.uniform_rate_all)} for a random legal hex` })}
-          ${ctx.Charts.statTile({ value: ctx.num(P.rho, 2), label: `Betrayal index ${ctx.info("tr_betrayal", "Betrayal index")}`, sub: `a recent trade partner's income counts ${ctx.num(P.rho, 2)}× as much as another trailing opponent's; 95% ${iv(ctx, P.lo, P.hi)}` })}
+          ${ctx.Charts.statTile({ value: `×${ctx.num(s7.stage2_vp.or, 2)}`, label: `Leader tax, per public VP ${ctx.info("op_leader", "Leader tax")}`, sub: `after a 7, each visible VP closer to the lead multiplies the odds of being the one robbed by this much; 95% ${ctx.num(s7.stage2_vp.or_lo, 2)} to ${ctx.num(s7.stage2_vp.or_hi, 2)}` })}
+          ${ctx.Charts.statTile({ value: ctx.pct(A.leader.base_rate_all), label: "Robber placements touching the leader", sub: `against ${ctx.pct(A.leader.uniform_rate_all)} if it went on a random legal hex` })}
+          ${ctx.Charts.statTile({ value: ctx.num(P.rho, 2), label: `Betrayal index ${ctx.info("tr_betrayal", "Betrayal index")}`, sub: `when choosing where to put the robber, a recent trade partner's income counts ${ctx.num(P.rho, 2)}× as much as another trailing opponent's (1 = no difference, below 1 = partners spared); 95% ${iv(ctx, P.lo, P.hi)}` })}
         </div></section>`;
     },
   });

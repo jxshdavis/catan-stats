@@ -28,7 +28,7 @@ import insights  # noqa: E402  (model-based and group stats)
 # for a result stored once at stats.json[KEY] (all games), and may have compute_view(games, replays,
 # events, ctx, all_result) for a per-view result at views[view][KEY]. ctx is built in compute_views.
 MODULES = []
-for _name in ("momentum", "robber", "classes"):
+for _name in ("momentum", "robber", "classes", "resources"):
     try:
         MODULES.append(__import__(_name))
     except ModuleNotFoundError as _e:

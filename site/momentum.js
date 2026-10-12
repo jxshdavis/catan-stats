@@ -96,7 +96,7 @@
       if (!m) return null;
       return `<section class="block">
         <h2>The race ${ctx.info("race", "Board VP race")} ${ctx.info("play", "Play of the game")}</h2>
-        <p class="note">Victory points everyone could see at the end of every turn, replayed from TwoSheep's record of the game.</p>
+        <p class="note">Victory points everyone could see at the end of every turn, replayed from TwoSheep's record of the game. Board VP leaves out VP cards still hidden in hand; switch to true VP to include them. Rate per round shows how fast each player was scoring instead of their total. The star marks the play of the game, the winner's turn that most widened their lead, and the vertical rule the moment they went ahead for good.</p>
         <div class="race-ctl"><span id="race-series"></span><span id="race-mode"></span></div>
         <div class="panel"><div class="chart" style="padding-bottom:0"><ul class="legend">${m.seats.map((pid) => `<li><span class="sw" style="--c:${lineColor(ctx, pid)}"></span>${ctx.esc(nameOf(ctx, g, pid))}</li>`).join("")}<li><span class="sw star" style="--c:var(--ink)"></span>Play of the game</li><li><span class="sw rule"></span>Went ahead</li></ul></div>
         <div class="chart" id="race"></div><div id="race-table"></div></div>
@@ -104,12 +104,12 @@
       </section>
       <section class="block">
         <h2>Production engine ${ctx.info("engine", "Production engine")}</h2>
-        <p class="note">Expected cards per round from each player's buildings, robber included. Hover for the total without the robber.</p>
+        <p class="note"><b>How to read:</b> how many cards per round each player's settlements and cities would produce with average dice, robber included. A step up is a new settlement or city; a dip is usually the robber moving onto them. Hover for the total without the robber.</p>
         <div class="panel"><div class="chart" id="engine"></div><div id="engine-table"></div></div>
       </section>
       <section class="block">
         <h2>Dice luck through the game ${ctx.info("luck_game", "Cumulative dice luck")}</h2>
-        <p class="note">Cards from dice minus expected, added up roll by roll. Pick a player to see how far fair dice would usually wander.</p>
+        <p class="note"><b>How to read:</b> each line is a running total of cards from dice minus what that player's buildings should have produced. Above 0 the dice were running hot for them, below 0 cold. Pick a player to shade the range fair dice would usually wander; a line leaving its band is unusually lucky or unlucky.</p>
         <div class="chips" id="luck-pick" role="group" aria-label="Show the chance band for">${m.seats.map((pid, i) => `<button type="button" class="chip" data-i="${i}" aria-pressed="false">${ctx.esc(nameOf(ctx, g, pid))}</button>`).join("")}</div>
         <div class="panel" style="margin-top:8px"><div class="chart" id="luckg"></div><div id="luckg-table"></div></div>
       </section>
@@ -235,8 +235,8 @@
           ${la ? `<div class="tile"><div class="v">${ctx.fmtSigned(la.above_luck, 1)}</div><div class="k">Wins above luck ${ctx.info("luck_adjusted", "Luck-adjusted wins")}</div><div class="s">${la.wins} wins, ${ctx.num(la.luck_expected, 1)} expected from the dice alone (SE ${ctx.num(la.se, 1)})</div></div>` : ""}
           ${D ? `<div class="tile"><div class="v">${ctx.fmtSigned(D.delta, 2)}</div><div class="k">Late minus early production share ${ctx.info("deciles", "Production share by game stage")}</div><div class="s">95% interval ${ctx.fmtSigned(D.delta_ci[0], 2)} to ${ctx.fmtSigned(D.delta_ci[1], 2)}</div></div>` : ""}
         </div>
-        ${L ? `<h3 style="margin-top:20px">Dice luck against games played</h3><p class="note">Everyone's average luck per game against the table, with the range pure chance would give.</p><div class="panel"><div class="chart" id="p-funnel"></div></div>` : ""}
-        ${D ? `<h3 style="margin-top:20px">Production share through the game</h3><p class="note">Expected cards per roll against the table average (1.00), by tenth of the game. ${Object.entries(D.sizes).map(([n, k]) => `${k} ${n}-player`).join(", ")} games.</p><div class="panel"><div class="chart" id="p-dec"></div></div>` : ""}
+        ${L ? `<h3 style="margin-top:20px">Dice luck against games played</h3><p class="note"><b>How to read:</b> each dot is one player: their average dice luck per game (cards above or below their tablemates) against how many games they have played. The funnel is the range fair dice would give, wide for few games and narrow for many. A dot inside the funnel is ordinary luck.</p><div class="panel"><div class="chart" id="p-funnel"></div></div>` : ""}
+        ${D ? `<h3 style="margin-top:20px">Production share through the game</h3><p class="note"><b>How to read:</b> how much this player's buildings produce compared with their tablemates (1.00 is the table average), from the start of the game (1) to the end (10). Above 1 means out-producing the table at that stage; the band is the 95% interval. From ${Object.entries(D.sizes).map(([n, k]) => `${k} ${n}-player`).join(", ")} games.</p><div class="panel"><div class="chart" id="p-dec"></div></div>` : ""}
       </section>`;
     },
     draw(ctx, pid) {
@@ -279,29 +279,31 @@
       const order = ctx.S.players.filter((p) => p.games > 0).map((p) => p.id);
       return `<section class="block">
         <h2>Does early luck snowball? ${ctx.info("snowball", "Snowball test")}</h2>
-        <p class="note">All games, chosen in advance as one of the two tested questions. The numbers are log-odds of winning per card of dice luck.</p>
+        <p class="note">The question: is a lucky card early in the game worth more than a lucky card later, because early cards get built into things that keep producing? We measure how much one card of dice luck (against the table) raises the odds of winning, separately for rounds 1 to 4 and rounds 5 to 8, and D is the difference. All games; this is one of the two questions chosen in advance.</p>
         <div class="tiles">
-          <div class="tile"><div class="v">${s.detected ? "Detected" : "Not detected"}</div><div class="k">Early card worth more than a later one</div><div class="s">D = ${ctx.num(s.D, 3)}, 95% interval ${ctx.num(s.D_ci[0], 3)} to ${ctx.num(s.D_ci[1], 3)}, ${s.games} games</div></div>
-          <div class="tile"><div class="v">${ctx.num(s.b1, 3)} vs ${ctx.num(s.b2, 3)}</div><div class="k">Rounds 1 to 4 vs rounds 5 to 8</div><div class="s">per card of luck</div></div>
-          <div class="tile"><div class="v">${ctx.num(s.detectable_80, 2)}</div><div class="k">Smallest D this test can find</div><div class="s">at 80% power</div></div>
+          <div class="tile"><div class="v">${s.detected ? "Detected" : "Not detected"}</div><div class="k">Are early lucky cards worth more?</div><div class="s">D = ${ctx.num(s.D, 3)}, 95% interval ${ctx.num(s.D_ci[0], 3)} to ${ctx.num(s.D_ci[1], 3)}, ${s.games} games</div></div>
+          <div class="tile"><div class="v">${ctx.num(s.b1, 3)} vs ${ctx.num(s.b2, 3)}</div><div class="k">Effect of one lucky card, rounds 1 to 4 vs 5 to 8</div><div class="s">on the log odds of winning; bigger means it helps more</div></div>
+          <div class="tile"><div class="v">${ctx.num(s.detectable_80, 2)}</div><div class="k">Smallest difference this many games can reliably find</div><div class="s">at 80% power; anything smaller could hide</div></div>
         </div>
-        <p class="note">Round 9 to the end: b₃ = ${ctx.num(s.b3, 3)}, which includes the stopping effect: over the final round the winner averaged ${ctx.fmtSigned(A.final_round.winner, 1)} cards of luck against ${ctx.fmtSigned(A.final_round.others, 1)} for everyone else. "Not detected" doesn't mean absent.</p>
-        <div class="panel" style="margin-top:12px"><div class="chart" id="f-snow"></div></div>
+        <p class="note">From round 9 to the end a lucky card is worth ${ctx.num(s.b3, 3)} (b₃), but that is inflated by how games stop: the game ends on a good turn for the winner, and over the final round the winner averaged ${ctx.fmtSigned(A.final_round.winner, 1)} cards of luck against ${ctx.fmtSigned(A.final_round.others, 1)} for everyone else. "Not detected" doesn't mean absent.</p>
+        <p class="note" style="margin-top:12px"><b>How to read:</b> each row is D from a different version of the test. Right of 0 means early luck counts more; a line that crosses 0 means no clear difference.</p>
+        <div class="panel" style="margin-top:6px"><div class="chart" id="f-snow"></div></div>
         ${mech ? `<h3 style="margin-top:20px">What early luck turns into ${ctx.info("mechanism", "Snowball mechanism")}</h3>
-          <p class="note">Per card of game-centered luck in rounds 1 to 4: return over rounds 5 to 8 ${ctx.fmtSigned(mech.return.slope, 2)} expected cards (${ctx.fmtSigned(mech.return.ci[0], 2)} to ${ctx.fmtSigned(mech.return.ci[1], 2)}); compounding ${ctx.fmtSigned(mech.compounding.slope, 3)} (${ctx.fmtSigned(mech.compounding.ci[0], 3)} to ${ctx.fmtSigned(mech.compounding.ci[1], 3)}).</p>
+          <p class="note"><b>How to read:</b> for every extra card of dice luck in rounds 1 to 4, how much more a player had later, by stretch of the game. Capacity is cards per round their buildings make; robber drag is cards per round the robber blocks; board VP share is their share of the target. Right of 0 means early luck is still paying off at that point. In numbers: per lucky card, the return over rounds 5 to 8 is ${ctx.fmtSigned(mech.return.slope, 2)} expected cards (${ctx.fmtSigned(mech.return.ci[0], 2)} to ${ctx.fmtSigned(mech.return.ci[1], 2)}); compounding ${ctx.fmtSigned(mech.compounding.slope, 3)} (${ctx.fmtSigned(mech.compounding.ci[0], 3)} to ${ctx.fmtSigned(mech.compounding.ci[1], 3)}).</p>
           <div class="three-col">${[["C", "Capacity, cards per round"], ["drag", "Robber drag, cards per round"], ["share", "Board VP share"]].map(([k, t]) => `<div><h4>${t}</h4><div class="panel"><div class="chart" id="f-mech-${k}"></div></div></div>`).join("")}</div>
           <p class="note">Share of games already over: ${Object.entries(mech.finished_share).map(([b, x]) => `rounds ${b}: ${ctx.pct(x)}`).join(", ")}.</p>` : ""}
         ${lk ? `<h3 style="margin-top:20px">Where lucky cards leak ${ctx.info("leaks", "Where lucky cards leak")}</h3>
-          <p class="note">Cards lost in round 5 and later per card of early luck.</p>
+          <p class="note"><b>How to read:</b> for each extra card of dice luck in rounds 1 to 4, how many cards were lost in round 5 and later to 7-discards, steals, monopoly and the bank running out. Right of 0 means lucky players lose more that way, which is expected: bigger hands lose more to 7s and are better targets.</p>
           <div class="panel"><div class="chart" id="f-leak"></div></div>` : ""}
         ${la ? `<h3 style="margin-top:20px">Wins above luck ${ctx.info("luck_adjusted", "Luck-adjusted wins")}</h3>
+          <p class="note"><b>How to read:</b> "From the dice alone" is how many wins each player would expect if only dice luck decided games. "Luck part" is how many of those the dice handed them beyond a fair share. "Above luck" is their actual wins minus the dice-alone number, with its 95% margin: positive means they won more than their dice explain.</p>
           <div class="panel table-wrap"><table><thead><tr><th>Player</th><th class="num">Games</th><th class="num">Wins</th><th class="num">From the dice alone</th><th class="num">Luck part</th><th class="num">Above luck</th></tr></thead><tbody>
           ${order.filter((id) => la.players[id]).map((id) => { const r = la.players[id]; return `<tr><td>${ctx.who(id)}</td><td class="num">${r.games}</td><td class="num">${r.wins}</td><td class="num">${ctx.num(r.luck_expected, 1)}</td><td class="num">${ctx.fmtSigned(r.luck_part, 1)}</td><td class="num">${ctx.fmtSigned(r.above_luck, 1)} <span class="sub">± ${ctx.num(1.96 * r.se, 1)}</span></td></tr>`; }).join("")}
           </tbody></table></div>` : ""}
         ${A.play_tally ? `<h3 style="margin-top:20px">What the plays of the game were ${ctx.info("play", "Play of the game")}</h3>
           <div class="panel table-wrap"><table><thead><tr><th>Biggest action in the play</th>${Object.keys(A.play_tally).map((k) => `<th class="num">${ctx.esc(k)}</th>`).join("")}</tr></thead><tbody>
           ${[...new Set(Object.values(A.play_tally).flatMap((d) => Object.keys(d)))].map((t) => `<tr><td>${ctx.esc(TYPE_LABEL[t] || t)}</td>${Object.keys(A.play_tally).map((k) => `<td class="num">${ctx.num(A.play_tally[k][t] || 0, 1)}</td>`).join("")}</tr>`).join("")}
-          </tbody></table></div><p class="note">All games; ties split a game between the tied plays. Games with no standout play aren't counted.</p>` : ""}
+          </tbody></table></div><p class="note">The play of the game is the winner's turn that most widened their board VP lead over the next best player (the star on each game's race chart). This counts what kind of action it was, by scenario. All games; ties split a game between the tied plays, and games with no standout play aren't counted.</p>` : ""}
       </section>`;
     },
     draw(ctx) {
