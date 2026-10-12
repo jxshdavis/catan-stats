@@ -17,7 +17,8 @@ Then open `dist/index.html` in a browser. Opening `site/index.html` shows a "No 
 ## After game night: importing from TwoSheep
 
 ```bash
-python scripts/fetch_twosheep.py --files      # local only: saves new game summaries and replay files to raw/twosheep/
+python scripts/fetch_twosheep.py --files      # local only: saves new group game summaries and replay files to raw/twosheep/,
+                                              # including games other members played without the maintainer
 python scripts/twosheep_replay.py             # local only: replays each new game, saves its stats to raw/twosheep/
 python scripts/import_twosheep.py             # dry run: shows new games, links and conflicts
 python scripts/import_twosheep.py --write     # adds them to data/games.json

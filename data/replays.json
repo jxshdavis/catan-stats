@@ -518,6 +518,30 @@
         }
       }
     },
+    "2025-04-15-a": {
+      "twosheep_id": "-ONwWCpM9Ap_8TwERn2-",
+      "players": {
+        "nd": {"resources_from_dice": 49, "production": {"wood": 11, "brick": 15, "sheep": 6, "wheat": 6, "ore": 3}, "gold_from_dice": 8, "expected_from_dice": 53.056, "blocked_by_robber": 9, "opening_dots": 18, "rolls": 21, "sevens_rolled": 2, "robber_moves": 2, "steals": 2, "stolen_from": 5, "discards": 0, "cards_discarded": 0, "monopoly_cards": 0, "monopoly_lost": 0, "trades": 4, "trade_cards_given": 5, "trade_cards_received": 4, "bank_trades": 0, "bank_cards_given": 0, "bank_cards_received": 0, "built": {"settlement": 3, "city": 1, "road": 4, "ship": 6}, "dev_cards_played": {"knight": 0, "victory_point": 0, "monopoly": 0, "road_building": 0, "year_of_plenty": 0}, "longest_road_length": 11, "max_hand": 10, "fog_discovered": 0, "steals_by_victim": {"ms": 1, "jd": 1}, "trade_partners": {"ld": 2, "jd": 2}},
+        "ms": {"resources_from_dice": 36, "production": {"wood": 8, "brick": 3, "sheep": 6, "wheat": 5, "ore": 7}, "gold_from_dice": 7, "expected_from_dice": 40.861, "blocked_by_robber": 9, "opening_dots": 15, "rolls": 21, "sevens_rolled": 3, "robber_moves": 3, "steals": 3, "stolen_from": 5, "discards": 0, "cards_discarded": 0, "monopoly_cards": 0, "monopoly_lost": 0, "trades": 4, "trade_cards_given": 5, "trade_cards_received": 6, "bank_trades": 2, "bank_cards_given": 6, "bank_cards_received": 2, "built": {"settlement": 2, "city": 1, "road": 0, "ship": 6}, "dev_cards_played": {"knight": 0, "victory_point": 0, "monopoly": 0, "road_building": 0, "year_of_plenty": 0}, "longest_road_length": 7, "max_hand": 8, "fog_discovered": 0, "steals_by_victim": {"nd": 1, "ld": 1, "jd": 1}, "trade_partners": {"ld": 1, "jd": 3}},
+        "ld": {"resources_from_dice": 63, "production": {"wood": 12, "brick": 0, "sheep": 10, "wheat": 18, "ore": 23}, "gold_from_dice": 0, "expected_from_dice": 64.361, "blocked_by_robber": 2, "opening_dots": 22, "rolls": 21, "sevens_rolled": 6, "robber_moves": 9, "steals": 9, "stolen_from": 3, "discards": 2, "cards_discarded": 9, "monopoly_cards": 0, "monopoly_lost": 0, "trades": 6, "trade_cards_given": 6, "trade_cards_received": 7, "bank_trades": 8, "bank_cards_given": 22, "bank_cards_received": 8, "built": {"settlement": 3, "city": 2, "road": 8, "ship": 0}, "dev_cards_played": {"knight": 3, "victory_point": 0, "monopoly": 0, "road_building": 1, "year_of_plenty": 0}, "longest_road_length": 5, "max_hand": 13, "fog_discovered": 0, "steals_by_victim": {"nd": 3, "ms": 3, "jd": 3}, "trade_partners": {"nd": 2, "ms": 1, "jd": 3}},
+        "jd": {"resources_from_dice": 94, "production": {"wood": 31, "brick": 22, "sheep": 10, "wheat": 31, "ore": 0}, "gold_from_dice": 0, "expected_from_dice": 99.806, "blocked_by_robber": 11, "opening_dots": 21, "rolls": 21, "sevens_rolled": 4, "robber_moves": 5, "steals": 4, "stolen_from": 5, "discards": 2, "cards_discarded": 8, "monopoly_cards": 0, "monopoly_lost": 0, "trades": 8, "trade_cards_given": 10, "trade_cards_received": 9, "bank_trades": 8, "bank_cards_given": 27, "bank_cards_received": 9, "built": {"settlement": 5, "city": 3, "road": 10, "ship": 2}, "dev_cards_played": {"knight": 1, "victory_point": 0, "monopoly": 0, "road_building": 0, "year_of_plenty": 0}, "longest_road_length": 12, "max_hand": 13, "fog_discovered": 0, "steals_by_victim": {"nd": 1, "ms": 1, "ld": 2}, "trade_partners": {"nd": 2, "ms": 3, "ld": 3}}
+      },
+      "timeline": {
+        "turn": [0, 1, 2, 3, 4, 5, 8, 9, 10, 11, 12, 13, 15, 16, 18, 19, 20, 21, 22, 23, 25, 28, 29, 30, 31, 33, 34, 35, 38, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84],
+        "vp": {
+          "nd": [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 7, 7, 7, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 9, 9, 9, 9, 10, 10, 10, 10, 10, 10, 10, 8],
+          "ms": [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 5, 5, 5, 5, 5, 5, 5, 6, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7, 7, 7, 7, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+          "ld": [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 6, 6, 6, 6, 6, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 8, 8, 8, 8, 8, 8, 8, 8, 9, 9],
+          "jd": [2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 10, 10, 10, 10, 11, 11, 11, 11, 14]
+        },
+        "cards_from_dice": {
+          "nd": [0, 1, 1, 1, 2, 2, 2, 2, 3, 4, 4, 4, 5, 5, 6, 7, 8, 8, 8, 8, 8, 8, 8, 9, 10, 10, 10, 10, 10, 10, 10, 12, 12, 12, 12, 12, 13, 13, 13, 14, 15, 15, 15, 16, 17, 19, 20, 22, 22, 22, 23, 23, 23, 23, 24, 27, 28, 28, 28, 29, 32, 34, 36, 38, 38, 40, 40, 41, 45, 46, 49, 49],
+          "ms": [0, 1, 1, 1, 1, 1, 1, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 6, 6, 7, 7, 8, 9, 9, 10, 11, 11, 11, 13, 13, 13, 15, 16, 16, 17, 18, 20, 20, 20, 20, 22, 23, 24, 24, 25, 26, 28, 28, 28, 28, 29, 30, 31, 32, 33, 33, 33, 33, 33, 36],
+          "ld": [0, 0, 0, 1, 2, 3, 4, 4, 4, 5, 6, 7, 8, 9, 10, 11, 12, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 22, 22, 23, 23, 23, 23, 23, 24, 26, 26, 27, 28, 30, 31, 32, 32, 33, 34, 35, 35, 36, 37, 38, 38, 39, 39, 40, 41, 42, 43, 45, 47, 48, 49, 49, 50, 51, 51, 52, 55, 57, 60, 62, 63],
+          "jd": [0, 1, 2, 2, 3, 4, 4, 6, 8, 9, 9, 10, 10, 10, 12, 12, 12, 12, 12, 12, 13, 14, 15, 15, 17, 18, 19, 19, 21, 21, 22, 24, 24, 26, 28, 30, 31, 33, 34, 37, 38, 38, 38, 39, 40, 41, 42, 44, 46, 49, 52, 52, 54, 54, 56, 57, 59, 63, 63, 66, 67, 70, 72, 74, 75, 77, 78, 82, 84, 88, 91, 94]
+        }
+      }
+    },
     "2025-05-03-a": {
       "twosheep_id": "-OPOW_XDGE5Qp8fcEncV",
       "players": {
@@ -977,6 +1001,27 @@
         }
       }
     },
+    "2025-11-01-a": {
+      "twosheep_id": "-Od0xX5Y8zzxCSTnEp59",
+      "players": {
+        "jd": {"resources_from_dice": 140, "production": {"wood": 43, "brick": 35, "sheep": 15, "wheat": 1, "ore": 46}, "gold_from_dice": 0, "expected_from_dice": 128.167, "blocked_by_robber": 13, "opening_dots": 24, "rolls": 37, "sevens_rolled": 6, "robber_moves": 10, "steals": 10, "stolen_from": 8, "discards": 6, "cards_discarded": 28, "monopoly_cards": 0, "monopoly_lost": 0, "trades": 1, "trade_cards_given": 4, "trade_cards_received": 1, "bank_trades": 13, "bank_cards_given": 52, "bank_cards_received": 13, "built": {"settlement": 4, "city": 2, "road": 13, "ship": 3}, "dev_cards_played": {"knight": 4, "victory_point": 0, "monopoly": 0, "road_building": 0, "year_of_plenty": 0}, "longest_road_length": 18, "max_hand": 16, "fog_discovered": 1, "steals_by_victim": {"ms": 8, "a": 2}, "trade_partners": {"a": 1}},
+        "ms": {"resources_from_dice": 82, "production": {"wood": 29, "brick": 6, "sheep": 33, "wheat": 3, "ore": 11}, "gold_from_dice": 0, "expected_from_dice": 78.222, "blocked_by_robber": 13, "opening_dots": 21, "rolls": 36, "sevens_rolled": 3, "robber_moves": 6, "steals": 6, "stolen_from": 10, "discards": 0, "cards_discarded": 0, "monopoly_cards": 0, "monopoly_lost": 0, "trades": 0, "trade_cards_given": 0, "trade_cards_received": 0, "bank_trades": 9, "bank_cards_given": 29, "bank_cards_received": 9, "built": {"settlement": 3, "city": 0, "road": 3, "ship": 12}, "dev_cards_played": {"knight": 3, "victory_point": 0, "monopoly": 0, "road_building": 2, "year_of_plenty": 1}, "longest_road_length": 17, "max_hand": 10, "fog_discovered": 5, "steals_by_victim": {"jd": 5, "a": 1}, "trade_partners": {}},
+        "a": {"resources_from_dice": 65, "production": {"wood": 13, "brick": 3, "sheep": 13, "wheat": 10, "ore": 22}, "gold_from_dice": 4, "expected_from_dice": 68.028, "blocked_by_robber": 9, "opening_dots": 17, "rolls": 36, "sevens_rolled": 4, "robber_moves": 5, "steals": 5, "stolen_from": 3, "discards": 0, "cards_discarded": 0, "monopoly_cards": 0, "monopoly_lost": 0, "trades": 1, "trade_cards_given": 1, "trade_cards_received": 4, "bank_trades": 3, "bank_cards_given": 12, "bank_cards_received": 3, "built": {"settlement": 3, "city": 2, "road": 3, "ship": 8}, "dev_cards_played": {"knight": 1, "victory_point": 0, "monopoly": 1, "road_building": 0, "year_of_plenty": 0}, "longest_road_length": 12, "max_hand": 14, "fog_discovered": 4, "steals_by_victim": {"jd": 3, "ms": 2}, "trade_partners": {"jd": 1}}
+      },
+      "timeline": {
+        "turn": [0, 2, 3, 4, 6, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 26, 27, 29, 30, 31, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 79, 80, 81, 83, 84, 85, 86, 87, 88, 89, 90, 92, 93, 94, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109],
+        "vp": {
+          "jd": [2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 6, 6, 6, 6, 6, 7, 7, 7, 7, 7, 7, 7, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 6, 6, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 9, 9, 9, 10, 10, 10, 12],
+          "ms": [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 6, 6, 6, 6, 6, 6, 6, 8, 8, 8, 8, 8, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 8, 8, 8, 8, 8, 8, 6],
+          "a": [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 6, 6, 6, 7, 7, 7, 7, 5, 5, 5, 5, 5, 5, 5, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 8, 8, 8, 8, 8, 8, 8, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 10, 10, 10, 10, 10, 10, 10, 10, 10, 11, 11]
+        },
+        "cards_from_dice": {
+          "jd": [0, 0, 0, 1, 2, 4, 6, 8, 9, 9, 10, 11, 12, 12, 13, 14, 14, 16, 17, 17, 18, 19, 20, 21, 21, 21, 21, 23, 24, 24, 24, 24, 24, 26, 27, 28, 29, 29, 31, 33, 35, 37, 37, 38, 39, 41, 43, 45, 47, 48, 49, 50, 51, 53, 53, 55, 58, 60, 62, 64, 67, 71, 71, 74, 76, 77, 78, 78, 78, 81, 82, 85, 85, 88, 91, 94, 97, 101, 102, 104, 105, 106, 106, 107, 111, 114, 114, 116, 120, 120, 124, 128, 130, 132, 136, 140],
+          "ms": [0, 1, 2, 3, 3, 4, 5, 6, 7, 7, 7, 8, 8, 8, 8, 9, 9, 10, 10, 11, 11, 11, 12, 13, 14, 15, 16, 17, 17, 18, 18, 18, 20, 20, 21, 21, 21, 23, 24, 24, 25, 26, 28, 28, 28, 29, 30, 30, 31, 31, 32, 33, 33, 34, 35, 36, 37, 37, 37, 37, 39, 41, 43, 44, 44, 46, 46, 46, 47, 48, 50, 51, 51, 53, 55, 56, 57, 59, 59, 60, 62, 62, 64, 66, 68, 70, 71, 72, 74, 74, 76, 78, 78, 79, 81, 82],
+          "a": [0, 0, 0, 0, 0, 1, 2, 3, 3, 4, 4, 5, 6, 7, 7, 8, 9, 9, 9, 9, 9, 9, 10, 11, 11, 11, 12, 12, 12, 12, 12, 12, 12, 12, 13, 14, 14, 14, 15, 15, 16, 17, 17, 17, 17, 18, 19, 19, 20, 21, 22, 23, 24, 25, 27, 30, 30, 30, 30, 30, 30, 30, 30, 33, 33, 33, 34, 34, 38, 39, 39, 40, 40, 44, 48, 49, 50, 50, 51, 51, 51, 51, 51, 51, 51, 55, 59, 59, 59, 59, 59, 59, 60, 60, 64, 65]
+        }
+      }
+    },
     "2025-11-04-a": {
       "twosheep_id": "-OdGifEsCtFwOBa8Arxp",
       "players": {
@@ -1001,6 +1046,321 @@
           "jd": [0, 1, 2, 3, 3, 4, 5, 6, 6, 6, 6, 6, 7, 8, 8, 10, 10, 12, 14, 15, 15, 17, 19, 21, 23, 23, 25, 25, 25, 25, 25, 27, 27, 27, 27, 27, 27, 29, 31, 33, 36, 36, 36, 38, 38, 38, 40, 40, 40, 40, 42, 44, 46, 48, 48, 50, 53, 55, 55, 57, 57, 58, 60, 62, 64, 65, 66],
           "ms": [0, 0, 1, 1, 1, 1, 1, 1, 3, 5, 7, 7, 8, 9, 9, 9, 11, 11, 12, 13, 14, 14, 14, 14, 15, 17, 18, 18, 20, 22, 24, 25, 25, 25, 25, 28, 28, 28, 29, 30, 30, 30, 33, 34, 37, 40, 43, 47, 51, 55, 57, 60, 62, 62, 62, 65, 65, 67, 68, 68, 68, 72, 74, 77, 77, 81, 85],
           "mb": [0, 0, 1, 1, 2, 2, 2, 3, 3, 3, 3, 4, 5, 6, 6, 7, 7, 8, 9, 10, 10, 11, 11, 11, 12, 12, 13, 13, 13, 13, 13, 14, 14, 14, 14, 14, 15, 15, 16, 17, 18, 19, 19, 20, 21, 22, 23, 24, 24, 24, 25, 26, 27, 27, 27, 28, 29, 31, 32, 32, 34, 34, 36, 37, 37, 37, 37]
+        }
+      }
+    },
+    "2025-11-09-a": {
+      "twosheep_id": "-OdfI-nyGAt4_ckdEMif",
+      "players": {
+        "ms": {"resources_from_dice": 79, "production": {"wood": 15, "brick": 14, "sheep": 0, "wheat": 33, "ore": 17}, "gold_from_dice": 0, "expected_from_dice": 97.167, "blocked_by_robber": 27, "opening_dots": 22, "rolls": 31, "sevens_rolled": 4, "robber_moves": 4, "steals": 4, "stolen_from": 14, "discards": 1, "cards_discarded": 7, "monopoly_cards": 0, "monopoly_lost": 0, "trades": 0, "trade_cards_given": 0, "trade_cards_received": 0, "bank_trades": 7, "bank_cards_given": 25, "bank_cards_received": 8, "built": {"settlement": 3, "city": 2, "road": 7, "ship": 1}, "dev_cards_played": {"knight": 0, "victory_point": 0, "monopoly": 0, "road_building": 0, "year_of_plenty": 0}, "longest_road_length": 5, "max_hand": 14, "fog_discovered": 0, "steals_by_victim": {"jd": 3, "a": 1}, "trade_partners": {}},
+        "jd": {"resources_from_dice": 73, "production": {"wood": 0, "brick": 11, "sheep": 0, "wheat": 10, "ore": 52}, "gold_from_dice": 0, "expected_from_dice": 75.472, "blocked_by_robber": 13, "opening_dots": 16, "rolls": 31, "sevens_rolled": 9, "robber_moves": 11, "steals": 11, "stolen_from": 4, "discards": 1, "cards_discarded": 4, "monopoly_cards": 0, "monopoly_lost": 0, "trades": 2, "trade_cards_given": 4, "trade_cards_received": 2, "bank_trades": 14, "bank_cards_given": 44, "bank_cards_received": 21, "built": {"settlement": 3, "city": 4, "road": 3, "ship": 3}, "dev_cards_played": {"knight": 2, "victory_point": 0, "monopoly": 0, "road_building": 0, "year_of_plenty": 0}, "longest_road_length": 7, "max_hand": 14, "fog_discovered": 0, "steals_by_victim": {"ms": 9, "a": 2}, "trade_partners": {"a": 2}},
+        "a": {"resources_from_dice": 49, "production": {"wood": 13, "brick": 8, "sheep": 16, "wheat": 10, "ore": 2}, "gold_from_dice": 0, "expected_from_dice": 67.056, "blocked_by_robber": 15, "opening_dots": 18, "rolls": 30, "sevens_rolled": 6, "robber_moves": 6, "steals": 6, "stolen_from": 3, "discards": 1, "cards_discarded": 4, "monopoly_cards": 0, "monopoly_lost": 0, "trades": 2, "trade_cards_given": 2, "trade_cards_received": 4, "bank_trades": 4, "bank_cards_given": 15, "bank_cards_received": 4, "built": {"settlement": 3, "city": 1, "road": 7, "ship": 0}, "dev_cards_played": {"knight": 0, "victory_point": 0, "monopoly": 0, "road_building": 0, "year_of_plenty": 1}, "longest_road_length": 6, "max_hand": 11, "fog_discovered": 0, "steals_by_victim": {"ms": 5, "jd": 1}, "trade_partners": {"jd": 2}}
+      },
+      "timeline": {
+        "turn": [0, 3, 5, 6, 7, 8, 9, 10, 11, 15, 17, 18, 19, 21, 22, 23, 28, 31, 32, 33, 34, 35, 37, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 51, 52, 53, 54, 55, 56, 57, 58, 59, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 72, 73, 74, 75, 76, 77, 78, 80, 81, 83, 85, 86, 87, 88, 89, 90, 91, 92],
+        "vp": {
+          "ms": [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
+          "jd": [2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 6, 6, 6, 7, 7, 7, 7, 8, 8, 8, 8, 8, 10, 10, 10, 13],
+          "a": [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 6, 6, 6, 6, 6, 6, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 8, 8, 8, 8, 10, 10, 8, 8, 8, 8]
+        },
+        "cards_from_dice": {
+          "ms": [0, 0, 1, 1, 1, 1, 2, 2, 2, 4, 4, 6, 6, 8, 9, 12, 12, 15, 15, 15, 15, 15, 16, 17, 20, 20, 24, 26, 30, 32, 32, 32, 33, 37, 40, 40, 42, 44, 46, 46, 46, 48, 48, 48, 53, 53, 53, 58, 58, 58, 58, 58, 58, 63, 63, 65, 65, 65, 65, 66, 68, 68, 70, 72, 72, 74, 74, 79, 79, 79],
+          "jd": [0, 1, 1, 2, 3, 3, 3, 5, 5, 5, 7, 7, 9, 9, 10, 10, 10, 10, 10, 10, 12, 12, 12, 12, 12, 14, 14, 14, 14, 14, 14, 16, 16, 16, 16, 16, 17, 18, 19, 21, 23, 23, 25, 27, 28, 30, 30, 30, 30, 33, 33, 36, 39, 39, 39, 40, 44, 44, 48, 51, 53, 57, 59, 61, 63, 65, 69, 69, 73, 73],
+          "a": [0, 1, 1, 2, 2, 2, 3, 4, 5, 5, 6, 7, 8, 8, 9, 10, 11, 11, 12, 12, 12, 14, 15, 15, 16, 16, 17, 17, 18, 18, 18, 19, 19, 20, 20, 20, 21, 22, 23, 23, 23, 23, 25, 27, 28, 28, 30, 31, 33, 33, 35, 35, 35, 36, 36, 39, 39, 39, 39, 40, 43, 43, 43, 43, 45, 45, 45, 46, 46, 49]
+        }
+      }
+    },
+    "2026-01-07-a": {
+      "twosheep_id": "-OiPYecZixFtvHjiq0oY",
+      "players": {
+        "nd": {"resources_from_dice": 40, "production": {"wood": 9, "brick": 23, "sheep": 2, "wheat": 2, "ore": 4}, "gold_from_dice": 0, "expected_from_dice": 34.222, "blocked_by_robber": 10, "opening_dots": 22, "rolls": 15, "sevens_rolled": 1, "robber_moves": 1, "steals": 1, "stolen_from": 3, "discards": 0, "cards_discarded": 0, "monopoly_cards": 0, "monopoly_lost": 0, "trades": 1, "trade_cards_given": 2, "trade_cards_received": 1, "bank_trades": 4, "bank_cards_given": 12, "bank_cards_received": 4, "built": {"settlement": 3, "city": 1, "road": 5, "ship": 2}, "dev_cards_played": {"knight": 0, "victory_point": 0, "monopoly": 0, "road_building": 0, "year_of_plenty": 0}, "longest_road_length": 5, "max_hand": 10, "fog_discovered": 0, "steals_by_victim": {"ld": 1}, "trade_partners": {"ld": 1}},
+        "ld": {"resources_from_dice": 37, "production": {"wood": 16, "brick": 4, "sheep": 13, "wheat": 0, "ore": 4}, "gold_from_dice": 0, "expected_from_dice": 24.667, "blocked_by_robber": 2, "opening_dots": 20, "rolls": 14, "sevens_rolled": 2, "robber_moves": 3, "steals": 3, "stolen_from": 2, "discards": 1, "cards_discarded": 4, "monopoly_cards": 0, "monopoly_lost": 0, "trades": 1, "trade_cards_given": 1, "trade_cards_received": 2, "bank_trades": 3, "bank_cards_given": 10, "bank_cards_received": 3, "built": {"settlement": 1, "city": 0, "road": 4, "ship": 3}, "dev_cards_played": {"knight": 1, "victory_point": 0, "monopoly": 0, "road_building": 0, "year_of_plenty": 0}, "longest_road_length": 3, "max_hand": 12, "fog_discovered": 0, "steals_by_victim": {"nd": 3}, "trade_partners": {"nd": 1}},
+        "dh": {"resources_from_dice": 43, "production": {"wood": 8, "brick": 30, "sheep": 0, "wheat": 0, "ore": 5}, "gold_from_dice": 0, "expected_from_dice": 33.0, "blocked_by_robber": 7, "opening_dots": 20, "rolls": 14, "sevens_rolled": 1, "robber_moves": 1, "steals": 1, "stolen_from": 0, "discards": 1, "cards_discarded": 4, "monopoly_cards": 0, "monopoly_lost": 0, "trades": 0, "trade_cards_given": 0, "trade_cards_received": 0, "bank_trades": 8, "bank_cards_given": 18, "bank_cards_received": 9, "built": {"settlement": 2, "city": 2, "road": 4, "ship": 0}, "dev_cards_played": {"knight": 0, "victory_point": 0, "monopoly": 0, "road_building": 0, "year_of_plenty": 0}, "longest_road_length": 4, "max_hand": 10, "fog_discovered": 0, "steals_by_victim": {"ld": 1}, "trade_partners": {}}
+      },
+      "timeline": {
+        "turn": [0, 1, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43],
+        "vp": {
+          "nd": [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 7, 7, 7, 10],
+          "ld": [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+          "dh": [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 6, 6, 6, 6, 6, 6, 6, 6]
+        },
+        "cards_from_dice": {
+          "nd": [0, 1, 3, 3, 3, 3, 4, 4, 5, 5, 7, 9, 10, 10, 12, 13, 15, 15, 15, 17, 17, 17, 17, 17, 18, 20, 20, 23, 23, 26, 27, 29, 30, 32, 33, 35, 37, 38, 39, 39, 40],
+          "ld": [0, 1, 2, 3, 4, 5, 5, 6, 7, 8, 9, 10, 10, 11, 12, 12, 13, 15, 17, 18, 20, 22, 23, 24, 24, 25, 25, 26, 27, 28, 30, 30, 30, 30, 30, 31, 31, 32, 34, 35, 37],
+          "dh": [0, 1, 2, 3, 4, 4, 4, 4, 5, 6, 7, 8, 8, 8, 9, 9, 10, 11, 12, 13, 15, 17, 18, 18, 18, 21, 21, 24, 25, 27, 29, 32, 32, 35, 35, 37, 37, 37, 39, 41, 43]
+        }
+      }
+    },
+    "2026-01-07-b": {
+      "twosheep_id": "-OiPd9iwe5WJuOzKjdJi",
+      "players": {
+        "dh": {"resources_from_dice": 79, "production": {"wood": 16, "brick": 11, "sheep": 22, "wheat": 25, "ore": 5}, "gold_from_dice": 0, "expected_from_dice": 72.083, "blocked_by_robber": 3, "opening_dots": 23, "rolls": 19, "sevens_rolled": 2, "robber_moves": 5, "steals": 5, "stolen_from": 2, "discards": 1, "cards_discarded": 7, "monopoly_cards": 0, "monopoly_lost": 0, "trades": 7, "trade_cards_given": 9, "trade_cards_received": 9, "bank_trades": 11, "bank_cards_given": 26, "bank_cards_received": 11, "built": {"settlement": 5, "city": 2, "road": 8, "ship": 2}, "dev_cards_played": {"knight": 3, "victory_point": 0, "monopoly": 0, "road_building": 0, "year_of_plenty": 0}, "longest_road_length": 12, "max_hand": 16, "fog_discovered": 0, "steals_by_victim": {"nd": 4, "ld": 1}, "trade_partners": {"nd": 4, "ld": 3}},
+        "nd": {"resources_from_dice": 65, "production": {"wood": 19, "brick": 10, "sheep": 25, "wheat": 9, "ore": 2}, "gold_from_dice": 0, "expected_from_dice": 55.917, "blocked_by_robber": 10, "opening_dots": 22, "rolls": 18, "sevens_rolled": 1, "robber_moves": 2, "steals": 2, "stolen_from": 9, "discards": 2, "cards_discarded": 8, "monopoly_cards": 0, "monopoly_lost": 0, "trades": 8, "trade_cards_given": 10, "trade_cards_received": 9, "bank_trades": 2, "bank_cards_given": 8, "bank_cards_received": 2, "built": {"settlement": 4, "city": 1, "road": 2, "ship": 6}, "dev_cards_played": {"knight": 1, "victory_point": 0, "monopoly": 0, "road_building": 0, "year_of_plenty": 0}, "longest_road_length": 8, "max_hand": 11, "fog_discovered": 0, "steals_by_victim": {"dh": 1, "ld": 1}, "trade_partners": {"dh": 4, "ld": 4}},
+        "ld": {"resources_from_dice": 38, "production": {"wood": 17, "brick": 8, "sheep": 7, "wheat": 0, "ore": 3}, "gold_from_dice": 3, "expected_from_dice": 39.639, "blocked_by_robber": 3, "opening_dots": 17, "rolls": 18, "sevens_rolled": 6, "robber_moves": 6, "steals": 6, "stolen_from": 2, "discards": 3, "cards_discarded": 12, "monopoly_cards": 0, "monopoly_lost": 0, "trades": 7, "trade_cards_given": 8, "trade_cards_received": 9, "bank_trades": 1, "bank_cards_given": 2, "bank_cards_received": 1, "built": {"settlement": 2, "city": 1, "road": 4, "ship": 2}, "dev_cards_played": {"knight": 0, "victory_point": 0, "monopoly": 0, "road_building": 0, "year_of_plenty": 0}, "longest_road_length": 4, "max_hand": 9, "fog_discovered": 0, "steals_by_victim": {"dh": 1, "nd": 5}, "trade_partners": {"dh": 3, "nd": 4}}
+      },
+      "timeline": {
+        "turn": [0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 11, 12, 13, 15, 16, 17, 18, 19, 20, 21, 22, 23, 26, 27, 28, 29, 30, 31, 32, 34, 35, 36, 37, 38, 39, 40, 41, 43, 44, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55],
+        "vp": {
+          "dh": [2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 11, 11, 11, 13, 13, 13, 16],
+          "nd": [2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 9, 9, 9, 10, 10, 10, 10, 10, 10, 10, 10, 10, 8, 11, 11, 11],
+          "ld": [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 10, 10, 10, 10, 10]
+        },
+        "cards_from_dice": {
+          "dh": [0, 1, 2, 4, 6, 8, 9, 9, 10, 10, 11, 12, 14, 17, 17, 17, 20, 23, 23, 25, 27, 27, 27, 30, 34, 38, 42, 42, 42, 42, 44, 44, 44, 44, 44, 44, 46, 48, 52, 52, 57, 57, 62, 63, 63, 68, 73, 75, 79],
+          "nd": [0, 0, 1, 3, 5, 7, 8, 8, 9, 10, 11, 12, 14, 16, 17, 18, 20, 20, 22, 24, 26, 28, 28, 31, 31, 33, 36, 36, 37, 38, 38, 40, 40, 41, 41, 43, 45, 45, 47, 48, 50, 51, 53, 54, 56, 58, 60, 62, 65],
+          "ld": [0, 0, 1, 2, 3, 4, 5, 6, 7, 7, 8, 9, 9, 9, 9, 9, 9, 11, 11, 13, 15, 17, 18, 18, 20, 22, 22, 22, 22, 22, 22, 24, 25, 25, 25, 27, 28, 29, 31, 32, 32, 33, 33, 34, 34, 34, 34, 36, 38]
+        }
+      }
+    },
+    "2026-01-07-c": {
+      "twosheep_id": "-OiPloL6Q5p9WIK-stdL",
+      "players": {
+        "nd": {"resources_from_dice": 34, "production": {"wood": 10, "brick": 3, "sheep": 11, "wheat": 10, "ore": 0}, "gold_from_dice": 0, "expected_from_dice": 34.944, "blocked_by_robber": 6, "opening_dots": 20, "rolls": 18, "sevens_rolled": 1, "robber_moves": 1, "steals": 1, "stolen_from": 4, "discards": 0, "cards_discarded": 0, "monopoly_cards": 0, "monopoly_lost": 0, "trades": 1, "trade_cards_given": 1, "trade_cards_received": 2, "bank_trades": 4, "bank_cards_given": 10, "bank_cards_received": 4, "built": {"settlement": 2, "city": 0, "road": 4, "ship": 1}, "dev_cards_played": {"knight": 0, "victory_point": 0, "monopoly": 0, "road_building": 0, "year_of_plenty": 0}, "longest_road_length": 4, "max_hand": 10, "fog_discovered": 0, "steals_by_victim": {"dh": 1}, "trade_partners": {"ld": 1}},
+        "dh": {"resources_from_dice": 74, "production": {"wood": 13, "brick": 18, "sheep": 12, "wheat": 17, "ore": 14}, "gold_from_dice": 0, "expected_from_dice": 78.833, "blocked_by_robber": 6, "opening_dots": 24, "rolls": 18, "sevens_rolled": 5, "robber_moves": 5, "steals": 5, "stolen_from": 3, "discards": 2, "cards_discarded": 9, "monopoly_cards": 0, "monopoly_lost": 0, "trades": 0, "trade_cards_given": 0, "trade_cards_received": 0, "bank_trades": 3, "bank_cards_given": 12, "bank_cards_received": 3, "built": {"settlement": 5, "city": 4, "road": 3, "ship": 4}, "dev_cards_played": {"knight": 0, "victory_point": 0, "monopoly": 0, "road_building": 0, "year_of_plenty": 0}, "longest_road_length": 4, "max_hand": 15, "fog_discovered": 0, "steals_by_victim": {"nd": 4, "ld": 1}, "trade_partners": {}},
+        "ld": {"resources_from_dice": 25, "production": {"wood": 0, "brick": 0, "sheep": 9, "wheat": 9, "ore": 0}, "gold_from_dice": 7, "expected_from_dice": 20.694, "blocked_by_robber": 4, "opening_dots": 13, "rolls": 17, "sevens_rolled": 1, "robber_moves": 2, "steals": 2, "stolen_from": 1, "discards": 0, "cards_discarded": 0, "monopoly_cards": 0, "monopoly_lost": 0, "trades": 1, "trade_cards_given": 2, "trade_cards_received": 1, "bank_trades": 3, "bank_cards_given": 8, "bank_cards_received": 4, "built": {"settlement": 1, "city": 1, "road": 3, "ship": 1}, "dev_cards_played": {"knight": 1, "victory_point": 0, "monopoly": 0, "road_building": 0, "year_of_plenty": 0}, "longest_road_length": 5, "max_hand": 7, "fog_discovered": 0, "steals_by_victim": {"dh": 2}, "trade_partners": {"nd": 1}}
+      },
+      "timeline": {
+        "turn": [0, 2, 3, 4, 8, 9, 10, 11, 16, 18, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 42, 43, 44, 45, 46, 47, 48, 51, 52, 53],
+        "vp": {
+          "nd": [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 5, 5, 5, 5, 5, 5, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6],
+          "dh": [2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 4, 4, 4, 6, 6, 6, 7, 7, 7, 7, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 9, 9, 9, 9, 15],
+          "ld": [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 5, 5, 5, 5, 5, 5, 5, 5, 6, 6, 6, 6, 6, 6, 6, 8, 8, 8]
+        },
+        "cards_from_dice": {
+          "nd": [0, 2, 2, 3, 3, 3, 3, 4, 6, 7, 8, 9, 10, 10, 13, 13, 14, 15, 15, 16, 18, 18, 18, 19, 19, 20, 20, 20, 21, 22, 26, 26, 26, 28, 29, 30, 30, 30, 32, 34],
+          "dh": [0, 1, 2, 4, 5, 6, 8, 8, 9, 12, 15, 18, 21, 23, 26, 28, 33, 33, 35, 35, 40, 40, 42, 42, 45, 45, 47, 49, 49, 49, 53, 53, 53, 58, 58, 62, 64, 64, 70, 74],
+          "ld": [0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 4, 5, 6, 6, 6, 6, 7, 7, 8, 8, 9, 9, 10, 11, 12, 13, 14, 15, 16, 16, 16, 18, 20, 21, 21, 21, 22, 24, 25, 25]
+        }
+      }
+    },
+    "2026-01-07-d": {
+      "twosheep_id": "-OiPrJT-QIfPZ7jWopa4",
+      "players": {
+        "dh": {"resources_from_dice": 61, "production": {"wood": 4, "brick": 34, "sheep": 21, "wheat": 2, "ore": 0}, "gold_from_dice": 0, "expected_from_dice": 72.944, "blocked_by_robber": 8, "opening_dots": 20, "rolls": 29, "sevens_rolled": 5, "robber_moves": 5, "steals": 5, "stolen_from": 11, "discards": 0, "cards_discarded": 0, "monopoly_cards": 0, "monopoly_lost": 0, "trades": 1, "trade_cards_given": 2, "trade_cards_received": 1, "bank_trades": 12, "bank_cards_given": 30, "bank_cards_received": 15, "built": {"settlement": 4, "city": 1, "road": 4, "ship": 2}, "dev_cards_played": {"knight": 0, "victory_point": 0, "monopoly": 0, "road_building": 0, "year_of_plenty": 0}, "longest_road_length": 6, "max_hand": 9, "fog_discovered": 0, "steals_by_victim": {"nd": 2, "ld": 3}, "trade_partners": {"nd": 1}},
+        "nd": {"resources_from_dice": 97, "production": {"wood": 16, "brick": 10, "sheep": 17, "wheat": 28, "ore": 24}, "gold_from_dice": 2, "expected_from_dice": 94.722, "blocked_by_robber": 8, "opening_dots": 23, "rolls": 29, "sevens_rolled": 5, "robber_moves": 8, "steals": 7, "stolen_from": 11, "discards": 2, "cards_discarded": 9, "monopoly_cards": 2, "monopoly_lost": 0, "trades": 2, "trade_cards_given": 3, "trade_cards_received": 3, "bank_trades": 3, "bank_cards_given": 10, "bank_cards_received": 3, "built": {"settlement": 5, "city": 3, "road": 9, "ship": 2}, "dev_cards_played": {"knight": 3, "victory_point": 0, "monopoly": 1, "road_building": 0, "year_of_plenty": 2}, "longest_road_length": 12, "max_hand": 15, "fog_discovered": 0, "steals_by_victim": {"dh": 7}, "trade_partners": {"dh": 1, "ld": 1}},
+        "ld": {"resources_from_dice": 56, "production": {"wood": 7, "brick": 0, "sheep": 17, "wheat": 11, "ore": 21}, "gold_from_dice": 0, "expected_from_dice": 63.361, "blocked_by_robber": 2, "opening_dots": 19, "rolls": 28, "sevens_rolled": 9, "robber_moves": 13, "steals": 13, "stolen_from": 3, "discards": 4, "cards_discarded": 18, "monopoly_cards": 0, "monopoly_lost": 2, "trades": 1, "trade_cards_given": 1, "trade_cards_received": 2, "bank_trades": 3, "bank_cards_given": 12, "bank_cards_received": 3, "built": {"settlement": 1, "city": 2, "road": 1, "ship": 0}, "dev_cards_played": {"knight": 4, "victory_point": 0, "monopoly": 0, "road_building": 0, "year_of_plenty": 0}, "longest_road_length": 2, "max_hand": 11, "fog_discovered": 0, "steals_by_victim": {"dh": 4, "nd": 9}, "trade_partners": {"nd": 1}}
+      },
+      "timeline": {
+        "turn": [0, 1, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12, 15, 16, 18, 20, 21, 22, 24, 25, 26, 27, 28, 31, 32, 34, 36, 37, 38, 39, 40, 41, 44, 45, 46, 47, 48, 49, 52, 53, 54, 55, 56, 62, 64, 65, 67, 68, 69, 70, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86],
+        "vp": {
+          "dh": [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 6, 6, 6, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 10, 10, 10, 10, 10],
+          "nd": [2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 7, 7, 7, 7, 7, 9, 9, 9, 9, 9, 10, 10, 10, 10, 10, 10, 14, 14, 14, 15, 15, 15, 16],
+          "ld": [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 7, 7, 7, 7, 7, 7, 8, 8, 8, 8, 8, 8]
+        },
+        "cards_from_dice": {
+          "dh": [0, 1, 2, 3, 3, 4, 4, 5, 5, 5, 6, 7, 8, 8, 8, 10, 10, 11, 12, 13, 14, 14, 15, 16, 16, 16, 17, 19, 21, 21, 23, 24, 26, 26, 26, 27, 29, 30, 30, 32, 32, 34, 34, 34, 35, 37, 37, 38, 40, 42, 42, 42, 42, 45, 45, 48, 48, 50, 50, 53, 53, 56, 57, 60, 61],
+          "nd": [0, 2, 4, 5, 5, 5, 6, 6, 7, 8, 8, 8, 9, 9, 10, 12, 13, 14, 14, 14, 15, 15, 16, 16, 17, 18, 20, 23, 23, 23, 26, 27, 27, 28, 30, 32, 36, 36, 38, 38, 38, 42, 45, 47, 47, 47, 49, 49, 49, 51, 55, 59, 61, 65, 69, 71, 75, 75, 77, 81, 85, 89, 91, 95, 97],
+          "ld": [0, 1, 2, 2, 3, 4, 4, 4, 4, 4, 5, 6, 6, 7, 7, 8, 8, 8, 9, 10, 10, 11, 11, 11, 13, 15, 15, 16, 17, 17, 18, 18, 18, 21, 21, 21, 22, 22, 22, 24, 26, 28, 28, 32, 34, 36, 36, 36, 38, 38, 38, 40, 44, 44, 44, 44, 44, 46, 50, 50, 50, 50, 54, 54, 56]
+        }
+      }
+    },
+    "2026-01-08-a": {
+      "twosheep_id": "-OiTpGC2VivZoySIzEZg",
+      "players": {
+        "nd": {"resources_from_dice": 104, "production": {"wood": 13, "brick": 42, "sheep": 7, "wheat": 33, "ore": 8}, "gold_from_dice": 1, "expected_from_dice": 94.611, "blocked_by_robber": 5, "opening_dots": 19, "rolls": 30, "sevens_rolled": 7, "robber_moves": 9, "steals": 9, "stolen_from": 11, "discards": 3, "cards_discarded": 13, "monopoly_cards": 5, "monopoly_lost": 0, "trades": 5, "trade_cards_given": 5, "trade_cards_received": 5, "bank_trades": 18, "bank_cards_given": 36, "bank_cards_received": 18, "built": {"settlement": 5, "city": 2, "road": 8, "ship": 7}, "dev_cards_played": {"knight": 2, "victory_point": 0, "monopoly": 1, "road_building": 1, "year_of_plenty": 0}, "longest_road_length": 10, "max_hand": 17, "fog_discovered": 0, "steals_by_victim": {"ld": 8, "dh": 1}, "trade_partners": {"ld": 1, "dh": 4}},
+        "ld": {"resources_from_dice": 99, "production": {"wood": 19, "brick": 44, "sheep": 10, "wheat": 14, "ore": 4}, "gold_from_dice": 8, "expected_from_dice": 87.833, "blocked_by_robber": 13, "opening_dots": 19, "rolls": 30, "sevens_rolled": 9, "robber_moves": 10, "steals": 9, "stolen_from": 11, "discards": 1, "cards_discarded": 4, "monopoly_cards": 0, "monopoly_lost": 4, "trades": 5, "trade_cards_given": 6, "trade_cards_received": 6, "bank_trades": 8, "bank_cards_given": 24, "bank_cards_received": 8, "built": {"settlement": 5, "city": 3, "road": 9, "ship": 3}, "dev_cards_played": {"knight": 1, "victory_point": 0, "monopoly": 0, "road_building": 0, "year_of_plenty": 0}, "longest_road_length": 12, "max_hand": 18, "fog_discovered": 0, "steals_by_victim": {"nd": 8, "dh": 1}, "trade_partners": {"nd": 1, "dh": 4}},
+        "dh": {"resources_from_dice": 71, "production": {"wood": 12, "brick": 15, "sheep": 28, "wheat": 12, "ore": 4}, "gold_from_dice": 0, "expected_from_dice": 99.306, "blocked_by_robber": 9, "opening_dots": 21, "rolls": 29, "sevens_rolled": 5, "robber_moves": 7, "steals": 6, "stolen_from": 2, "discards": 0, "cards_discarded": 0, "monopoly_cards": 0, "monopoly_lost": 1, "trades": 8, "trade_cards_given": 9, "trade_cards_received": 9, "bank_trades": 7, "bank_cards_given": 19, "bank_cards_received": 7, "built": {"settlement": 4, "city": 2, "road": 8, "ship": 2}, "dev_cards_played": {"knight": 2, "victory_point": 0, "monopoly": 0, "road_building": 0, "year_of_plenty": 0}, "longest_road_length": 11, "max_hand": 10, "fog_discovered": 0, "steals_by_victim": {"nd": 3, "ld": 3}, "trade_partners": {"nd": 4, "ld": 4}}
+      },
+      "timeline": {
+        "turn": [0, 1, 3, 4, 7, 9, 11, 12, 13, 15, 16, 17, 18, 20, 21, 22, 23, 25, 26, 27, 29, 30, 31, 32, 33, 34, 35, 36, 38, 39, 40, 41, 42, 44, 45, 46, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 64, 65, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 85, 86, 87, 88, 89],
+        "vp": {
+          "nd": [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 6, 6, 6, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 9, 9, 9, 9, 9, 10, 10, 10, 10, 8, 8, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 12, 12, 15, 15, 15, 15, 15],
+          "ld": [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 13, 13, 13, 13, 13, 13, 14, 14, 14, 15, 15, 15, 15, 15, 16],
+          "dh": [2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 6, 6, 6, 6, 6, 9, 9, 9, 9, 9, 9, 10, 10, 10, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11]
+        },
+        "cards_from_dice": {
+          "nd": [0, 1, 2, 2, 3, 4, 5, 6, 7, 8, 9, 9, 10, 11, 13, 14, 15, 16, 17, 17, 19, 21, 22, 24, 25, 25, 27, 29, 29, 31, 32, 34, 34, 34, 35, 37, 37, 40, 43, 46, 46, 46, 50, 50, 50, 51, 55, 56, 58, 59, 60, 60, 62, 62, 64, 67, 70, 73, 73, 76, 80, 84, 86, 89, 93, 97, 98, 101, 101, 104],
+          "ld": [0, 0, 1, 2, 2, 3, 3, 4, 5, 7, 8, 8, 10, 10, 11, 13, 13, 15, 15, 16, 17, 18, 20, 21, 21, 21, 23, 24, 24, 26, 26, 29, 29, 30, 30, 32, 34, 36, 38, 40, 41, 42, 44, 45, 47, 47, 50, 50, 50, 50, 50, 51, 51, 53, 53, 57, 59, 63, 64, 68, 71, 74, 74, 79, 82, 85, 87, 92, 94, 99],
+          "dh": [0, 1, 1, 1, 2, 3, 4, 4, 5, 6, 6, 6, 6, 8, 8, 8, 9, 9, 11, 12, 12, 12, 12, 12, 14, 14, 14, 14, 14, 14, 16, 18, 18, 20, 22, 22, 23, 23, 24, 24, 24, 24, 24, 26, 27, 30, 30, 32, 35, 37, 39, 41, 44, 46, 46, 48, 49, 51, 54, 56, 56, 56, 60, 62, 62, 62, 64, 66, 69, 71]
+        }
+      }
+    },
+    "2026-01-08-b": {
+      "twosheep_id": "-OiTzh75lHjMpI77IR8h",
+      "players": {
+        "dh": {"resources_from_dice": 93, "production": {"wood": 22, "brick": 12, "sheep": 31, "wheat": 13, "ore": 15}, "gold_from_dice": 0, "expected_from_dice": 73.833, "blocked_by_robber": 2, "opening_dots": 18, "rolls": 23, "sevens_rolled": 2, "robber_moves": 3, "steals": 3, "stolen_from": 5, "discards": 1, "cards_discarded": 4, "monopoly_cards": 0, "monopoly_lost": 2, "trades": 2, "trade_cards_given": 3, "trade_cards_received": 2, "bank_trades": 6, "bank_cards_given": 21, "bank_cards_received": 9, "built": {"settlement": 5, "city": 4, "road": 5, "ship": 8}, "dev_cards_played": {"knight": 1, "victory_point": 0, "monopoly": 0, "road_building": 1, "year_of_plenty": 0}, "longest_road_length": 10, "max_hand": 13, "fog_discovered": 0, "steals_by_victim": {"nd": 2, "ld": 1}, "trade_partners": {"nd": 2}},
+        "nd": {"resources_from_dice": 60, "production": {"wood": 13, "brick": 12, "sheep": 4, "wheat": 18, "ore": 11}, "gold_from_dice": 2, "expected_from_dice": 64.611, "blocked_by_robber": 11, "opening_dots": 18, "rolls": 22, "sevens_rolled": 4, "robber_moves": 5, "steals": 5, "stolen_from": 6, "discards": 0, "cards_discarded": 0, "monopoly_cards": 0, "monopoly_lost": 2, "trades": 4, "trade_cards_given": 5, "trade_cards_received": 6, "bank_trades": 9, "bank_cards_given": 23, "bank_cards_received": 9, "built": {"settlement": 3, "city": 2, "road": 4, "ship": 4}, "dev_cards_played": {"knight": 1, "victory_point": 0, "monopoly": 0, "road_building": 0, "year_of_plenty": 0}, "longest_road_length": 6, "max_hand": 12, "fog_discovered": 0, "steals_by_victim": {"dh": 4, "ld": 1}, "trade_partners": {"dh": 2, "ld": 2}},
+        "ld": {"resources_from_dice": 75, "production": {"wood": 16, "brick": 15, "sheep": 12, "wheat": 19, "ore": 13}, "gold_from_dice": 0, "expected_from_dice": 59.417, "blocked_by_robber": 0, "opening_dots": 19, "rolls": 22, "sevens_rolled": 3, "robber_moves": 5, "steals": 5, "stolen_from": 2, "discards": 2, "cards_discarded": 8, "monopoly_cards": 4, "monopoly_lost": 0, "trades": 2, "trade_cards_given": 3, "trade_cards_received": 3, "bank_trades": 6, "bank_cards_given": 19, "bank_cards_received": 6, "built": {"settlement": 3, "city": 2, "road": 8, "ship": 0}, "dev_cards_played": {"knight": 2, "victory_point": 0, "monopoly": 1, "road_building": 0, "year_of_plenty": 2}, "longest_road_length": 9, "max_hand": 13, "fog_discovered": 0, "steals_by_victim": {"dh": 1, "nd": 4}, "trade_partners": {"nd": 2}}
+      },
+      "timeline": {
+        "turn": [0, 1, 2, 3, 4, 6, 7, 8, 10, 12, 13, 16, 17, 19, 20, 21, 22, 23, 24, 25, 26, 28, 29, 30, 31, 32, 33, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67],
+        "vp": {
+          "dh": [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 6, 6, 6, 7, 7, 7, 7, 7, 7, 7, 10, 10, 10, 10, 10, 10, 11, 11, 11, 12, 12, 12, 13, 13, 11, 11, 11, 11, 11, 11, 11, 12, 12, 12, 17],
+          "nd": [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 5, 5, 5, 5, 5, 5, 5, 5, 6, 6, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7, 7, 7, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+          "ld": [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 5, 5, 5, 6, 6, 6, 6, 6, 6, 10, 10, 10, 10, 10, 10, 10, 10, 10, 11, 9]
+        },
+        "cards_from_dice": {
+          "dh": [0, 1, 2, 3, 4, 5, 6, 7, 7, 7, 8, 9, 9, 10, 11, 12, 13, 13, 15, 17, 19, 20, 22, 24, 26, 26, 29, 31, 33, 35, 38, 41, 41, 44, 44, 46, 48, 51, 51, 53, 56, 60, 63, 65, 65, 69, 71, 75, 78, 78, 80, 80, 83, 86, 91, 93],
+          "nd": [0, 2, 4, 6, 6, 7, 7, 9, 10, 11, 11, 11, 11, 11, 12, 12, 12, 12, 15, 18, 21, 21, 21, 21, 22, 23, 23, 24, 28, 28, 28, 28, 30, 30, 32, 37, 37, 38, 40, 40, 41, 41, 42, 42, 44, 49, 49, 54, 55, 55, 55, 59, 59, 59, 59, 60],
+          "ld": [0, 1, 2, 3, 4, 4, 5, 6, 7, 7, 8, 9, 9, 10, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 19, 20, 21, 21, 22, 23, 24, 25, 27, 29, 31, 32, 34, 36, 39, 42, 45, 47, 50, 51, 54, 55, 56, 57, 60, 61, 62, 65, 68, 71, 73, 75]
+        }
+      }
+    },
+    "2026-01-09-a": {
+      "twosheep_id": "-OiZ7WQAJgOTlT3NAuXu",
+      "players": {
+        "nd": {"resources_from_dice": 69, "production": {"wood": 13, "brick": 21, "sheep": 17, "wheat": 18, "ore": 0}, "gold_from_dice": 0, "expected_from_dice": 78.417, "blocked_by_robber": 2, "opening_dots": 18, "rolls": 25, "sevens_rolled": 3, "robber_moves": 4, "steals": 4, "stolen_from": 3, "discards": 2, "cards_discarded": 8, "monopoly_cards": 0, "monopoly_lost": 0, "trades": 6, "trade_cards_given": 9, "trade_cards_received": 8, "bank_trades": 8, "bank_cards_given": 18, "bank_cards_received": 8, "built": {"settlement": 4, "city": 1, "road": 9, "ship": 7}, "dev_cards_played": {"knight": 1, "victory_point": 0, "monopoly": 0, "road_building": 0, "year_of_plenty": 1}, "longest_road_length": 13, "max_hand": 12, "fog_discovered": 5, "steals_by_victim": {"dh": 3, "ld": 1}, "trade_partners": {"dh": 2, "ld": 4}},
+        "dh": {"resources_from_dice": 113, "production": {"wood": 52, "brick": 4, "sheep": 4, "wheat": 5, "ore": 48}, "gold_from_dice": 0, "expected_from_dice": 89.694, "blocked_by_robber": 9, "opening_dots": 21, "rolls": 25, "sevens_rolled": 4, "robber_moves": 6, "steals": 6, "stolen_from": 5, "discards": 2, "cards_discarded": 10, "monopoly_cards": 0, "monopoly_lost": 0, "trades": 9, "trade_cards_given": 12, "trade_cards_received": 15, "bank_trades": 15, "bank_cards_given": 48, "bank_cards_received": 19, "built": {"settlement": 6, "city": 4, "road": 4, "ship": 11}, "dev_cards_played": {"knight": 2, "victory_point": 0, "monopoly": 0, "road_building": 0, "year_of_plenty": 0}, "longest_road_length": 14, "max_hand": 21, "fog_discovered": 5, "steals_by_victim": {"nd": 3, "ld": 3}, "trade_partners": {"nd": 2, "ld": 7}},
+        "ld": {"resources_from_dice": 85, "production": {"wood": 27, "brick": 15, "sheep": 29, "wheat": 5, "ore": 7}, "gold_from_dice": 2, "expected_from_dice": 76.778, "blocked_by_robber": 5, "opening_dots": 21, "rolls": 24, "sevens_rolled": 3, "robber_moves": 3, "steals": 2, "stolen_from": 4, "discards": 1, "cards_discarded": 6, "monopoly_cards": 0, "monopoly_lost": 0, "trades": 11, "trade_cards_given": 17, "trade_cards_received": 15, "bank_trades": 5, "bank_cards_given": 14, "bank_cards_received": 5, "built": {"settlement": 5, "city": 2, "road": 5, "ship": 9}, "dev_cards_played": {"knight": 0, "victory_point": 0, "monopoly": 0, "road_building": 1, "year_of_plenty": 0}, "longest_road_length": 12, "max_hand": 14, "fog_discovered": 2, "steals_by_victim": {"dh": 2}, "trade_partners": {"nd": 4, "dh": 7}}
+      },
+      "timeline": {
+        "turn": [0, 1, 2, 3, 6, 7, 8, 9, 10, 11, 13, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 51, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 67, 68, 69, 70, 71, 72, 73, 74],
+        "vp": {
+          "nd": [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 7, 9, 7],
+          "dh": [2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 7, 7, 7, 7, 7, 9, 9, 9, 10, 10, 10, 8, 8, 8, 8, 8, 8, 8, 9, 9, 9, 10, 10, 10, 10, 10, 10, 10, 10, 12, 12, 12, 14],
+          "ld": [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 4, 4, 4, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 5, 6, 6, 6, 7, 7, 9, 9, 9, 9, 9, 9, 7, 7, 7, 7, 7, 8, 8, 8, 8, 8, 9, 9, 9, 12, 10, 10]
+        },
+        "cards_from_dice": {
+          "nd": [0, 0, 1, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 5, 6, 8, 10, 11, 12, 13, 13, 15, 15, 18, 21, 21, 24, 27, 29, 29, 31, 34, 34, 38, 40, 43, 43, 43, 43, 43, 45, 45, 45, 45, 47, 50, 50, 52, 55, 56, 56, 58, 60, 60, 60, 62, 63, 63, 63, 63, 66, 66, 69, 69, 69],
+          "dh": [0, 0, 1, 1, 3, 5, 5, 5, 6, 6, 7, 7, 7, 7, 9, 11, 13, 13, 13, 15, 15, 15, 16, 18, 19, 19, 19, 21, 23, 23, 26, 27, 30, 33, 35, 35, 38, 40, 40, 44, 44, 45, 48, 48, 49, 54, 57, 60, 60, 60, 62, 63, 66, 69, 72, 72, 78, 78, 79, 85, 91, 93, 93, 99, 99, 106, 113],
+          "ld": [0, 2, 2, 3, 3, 3, 4, 6, 6, 8, 10, 12, 14, 16, 16, 16, 16, 18, 20, 20, 21, 22, 22, 22, 23, 26, 26, 28, 28, 31, 31, 32, 32, 32, 34, 37, 37, 37, 41, 43, 43, 44, 44, 44, 44, 48, 48, 48, 48, 50, 50, 50, 52, 52, 52, 52, 56, 58, 59, 63, 67, 68, 69, 74, 75, 80, 85]
+        }
+      }
+    },
+    "2026-01-10-a": {
+      "twosheep_id": "-OidAc-UJhnMGjuYLtqj",
+      "players": {
+        "ld": {"resources_from_dice": 49, "production": {"wood": 19, "brick": 5, "sheep": 10, "wheat": 12, "ore": 2}, "gold_from_dice": 1, "expected_from_dice": 51.778, "blocked_by_robber": 0, "opening_dots": 22, "rolls": 21, "sevens_rolled": 1, "robber_moves": 4, "steals": 4, "stolen_from": 2, "discards": 1, "cards_discarded": 4, "monopoly_cards": 0, "monopoly_lost": 0, "trades": 2, "trade_cards_given": 2, "trade_cards_received": 2, "bank_trades": 4, "bank_cards_given": 13, "bank_cards_received": 4, "built": {"settlement": 3, "city": 0, "road": 5, "ship": 3}, "dev_cards_played": {"knight": 3, "victory_point": 0, "monopoly": 0, "road_building": 0, "year_of_plenty": 0}, "longest_road_length": 9, "max_hand": 14, "fog_discovered": 2, "steals_by_victim": {"dh": 4}, "trade_partners": {"nd": 1, "dh": 1}},
+        "nd": {"resources_from_dice": 26, "production": {"wood": 7, "brick": 0, "sheep": 16, "wheat": 2, "ore": 0}, "gold_from_dice": 1, "expected_from_dice": 43.389, "blocked_by_robber": 0, "opening_dots": 17, "rolls": 21, "sevens_rolled": 1, "robber_moves": 1, "steals": 1, "stolen_from": 0, "discards": 0, "cards_discarded": 0, "monopoly_cards": 0, "monopoly_lost": 0, "trades": 1, "trade_cards_given": 1, "trade_cards_received": 1, "bank_trades": 3, "bank_cards_given": 6, "bank_cards_received": 3, "built": {"settlement": 3, "city": 0, "road": 1, "ship": 5}, "dev_cards_played": {"knight": 0, "victory_point": 0, "monopoly": 0, "road_building": 0, "year_of_plenty": 0}, "longest_road_length": 7, "max_hand": 7, "fog_discovered": 5, "steals_by_victim": {"dh": 1}, "trade_partners": {"ld": 1}},
+        "dh": {"resources_from_dice": 101, "production": {"wood": 26, "brick": 12, "sheep": 3, "wheat": 34, "ore": 26}, "gold_from_dice": 0, "expected_from_dice": 87.639, "blocked_by_robber": 16, "opening_dots": 21, "rolls": 21, "sevens_rolled": 1, "robber_moves": 2, "steals": 2, "stolen_from": 5, "discards": 0, "cards_discarded": 0, "monopoly_cards": 0, "monopoly_lost": 0, "trades": 1, "trade_cards_given": 1, "trade_cards_received": 1, "bank_trades": 12, "bank_cards_given": 37, "bank_cards_received": 12, "built": {"settlement": 6, "city": 4, "road": 7, "ship": 5}, "dev_cards_played": {"knight": 1, "victory_point": 0, "monopoly": 0, "road_building": 0, "year_of_plenty": 1}, "longest_road_length": 10, "max_hand": 16, "fog_discovered": 5, "steals_by_victim": {"ld": 2}, "trade_partners": {"ld": 1}}
+      },
+      "timeline": {
+        "turn": [0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 37, 38, 39, 41, 42, 43, 44, 45, 46, 47, 48, 50, 51, 52, 53, 54, 55, 56, 58, 59, 60, 61, 62, 63],
+        "vp": {
+          "ld": [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 6, 6, 6, 6, 6, 6, 4, 4, 4, 4, 4, 4, 4, 6, 6, 6, 6, 4, 4, 4, 4, 5, 5, 7, 7, 7, 7, 7, 7],
+          "nd": [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 6, 6, 6, 6, 6, 6, 6, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5],
+          "dh": [2, 2, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 6, 6, 6, 6, 6, 6, 7, 7, 7, 7, 7, 8, 8, 8, 8, 8, 8, 8, 8, 9, 9, 11, 11, 11, 12, 12, 12, 12, 12, 13, 13, 13, 14]
+        },
+        "cards_from_dice": {
+          "ld": [0, 1, 1, 1, 1, 2, 2, 3, 4, 6, 7, 8, 9, 11, 11, 12, 12, 12, 13, 13, 13, 15, 17, 18, 20, 21, 22, 24, 26, 28, 29, 30, 30, 30, 30, 30, 30, 30, 31, 31, 32, 35, 36, 36, 37, 37, 39, 40, 40, 40, 41, 42, 43, 44, 45, 45, 48, 49],
+          "nd": [0, 0, 0, 0, 1, 1, 2, 2, 2, 4, 4, 4, 4, 6, 7, 7, 7, 8, 8, 9, 10, 10, 10, 10, 10, 10, 10, 10, 13, 13, 13, 13, 15, 16, 17, 17, 18, 18, 18, 18, 18, 22, 22, 22, 22, 22, 23, 23, 23, 24, 24, 24, 24, 24, 24, 25, 26, 26],
+          "dh": [0, 1, 3, 6, 7, 9, 10, 10, 10, 10, 10, 10, 12, 12, 12, 12, 12, 14, 14, 16, 18, 20, 22, 23, 26, 27, 29, 33, 33, 35, 37, 39, 39, 41, 44, 46, 49, 51, 53, 55, 57, 57, 59, 61, 63, 65, 67, 70, 72, 76, 79, 81, 85, 87, 91, 95, 97, 101]
+        }
+      }
+    },
+    "2026-01-10-b": {
+      "twosheep_id": "-OidIMwzMok-Pe7xs9Uu",
+      "players": {
+        "dh": {"resources_from_dice": 65, "production": {"wood": 17, "brick": 13, "sheep": 0, "wheat": 24, "ore": 11}, "gold_from_dice": 0, "expected_from_dice": 71.528, "blocked_by_robber": 13, "opening_dots": 21, "rolls": 26, "sevens_rolled": 5, "robber_moves": 6, "steals": 6, "stolen_from": 6, "discards": 1, "cards_discarded": 4, "monopoly_cards": 0, "monopoly_lost": 0, "trades": 5, "trade_cards_given": 5, "trade_cards_received": 5, "bank_trades": 3, "bank_cards_given": 9, "bank_cards_received": 3, "built": {"settlement": 4, "city": 4, "road": 6, "ship": 0}, "dev_cards_played": {"knight": 1, "victory_point": 0, "monopoly": 0, "road_building": 0, "year_of_plenty": 0}, "longest_road_length": 6, "max_hand": 14, "fog_discovered": 0, "steals_by_victim": {"ld": 6}, "trade_partners": {"nd": 4, "ld": 1}},
+        "nd": {"resources_from_dice": 75, "production": {"wood": 0, "brick": 16, "sheep": 18, "wheat": 34, "ore": 7}, "gold_from_dice": 0, "expected_from_dice": 72.778, "blocked_by_robber": 5, "opening_dots": 20, "rolls": 26, "sevens_rolled": 4, "robber_moves": 5, "steals": 5, "stolen_from": 2, "discards": 1, "cards_discarded": 6, "monopoly_cards": 0, "monopoly_lost": 0, "trades": 5, "trade_cards_given": 5, "trade_cards_received": 5, "bank_trades": 11, "bank_cards_given": 28, "bank_cards_received": 11, "built": {"settlement": 4, "city": 3, "road": 5, "ship": 2}, "dev_cards_played": {"knight": 1, "victory_point": 0, "monopoly": 0, "road_building": 0, "year_of_plenty": 0}, "longest_road_length": 7, "max_hand": 15, "fog_discovered": 3, "steals_by_victim": {"dh": 2, "ld": 3}, "trade_partners": {"dh": 4, "ld": 1}},
+        "ld": {"resources_from_dice": 79, "production": {"wood": 28, "brick": 13, "sheep": 20, "wheat": 13, "ore": 3}, "gold_from_dice": 2, "expected_from_dice": 70.111, "blocked_by_robber": 6, "opening_dots": 20, "rolls": 25, "sevens_rolled": 6, "robber_moves": 7, "steals": 6, "stolen_from": 9, "discards": 2, "cards_discarded": 8, "monopoly_cards": 0, "monopoly_lost": 0, "trades": 2, "trade_cards_given": 2, "trade_cards_received": 2, "bank_trades": 5, "bank_cards_given": 16, "bank_cards_received": 5, "built": {"settlement": 4, "city": 2, "road": 5, "ship": 6}, "dev_cards_played": {"knight": 1, "victory_point": 0, "monopoly": 0, "road_building": 0, "year_of_plenty": 0}, "longest_road_length": 6, "max_hand": 14, "fog_discovered": 5, "steals_by_victim": {"dh": 4, "nd": 2}, "trade_partners": {"dh": 1, "nd": 1}}
+      },
+      "timeline": {
+        "turn": [0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 11, 12, 14, 16, 17, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 35, 36, 39, 40, 41, 43, 44, 45, 46, 47, 48, 49, 50, 52, 53, 54, 56, 57, 58, 59, 60, 61, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77],
+        "vp": {
+          "dh": [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 6, 6, 6, 6, 6, 7, 7, 7, 9, 9, 9, 9, 9, 9, 10, 10],
+          "nd": [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 6, 6, 6, 6, 7, 7, 7, 7, 7, 7, 7, 7, 8, 8, 8, 8, 8, 8, 10, 10, 10, 10, 10, 10, 13],
+          "ld": [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 7, 7, 7, 7, 7, 7, 7, 8, 8, 8, 9, 9, 9, 9, 9, 9, 9, 9, 10, 10, 10, 10, 10, 10, 11, 11, 9]
+        },
+        "cards_from_dice": {
+          "dh": [0, 0, 0, 0, 2, 2, 4, 4, 5, 6, 7, 7, 7, 8, 8, 8, 9, 10, 10, 11, 11, 11, 11, 11, 11, 12, 13, 13, 13, 13, 15, 16, 17, 19, 19, 20, 21, 22, 24, 25, 26, 28, 28, 28, 28, 28, 29, 31, 33, 35, 37, 37, 37, 40, 42, 43, 45, 48, 51, 54, 54, 54, 58, 58, 58, 61, 65],
+          "nd": [0, 0, 1, 2, 3, 4, 5, 6, 7, 8, 8, 8, 9, 9, 9, 9, 10, 10, 11, 11, 11, 12, 13, 15, 17, 18, 19, 21, 21, 22, 23, 23, 25, 27, 29, 30, 31, 31, 31, 32, 34, 34, 36, 38, 38, 38, 41, 43, 43, 45, 45, 45, 48, 51, 51, 51, 55, 55, 58, 61, 61, 61, 64, 64, 67, 71, 75],
+          "ld": [0, 1, 3, 4, 4, 4, 4, 6, 6, 6, 6, 6, 7, 9, 10, 11, 11, 13, 14, 16, 17, 19, 19, 20, 21, 21, 21, 24, 24, 24, 24, 26, 27, 27, 28, 28, 28, 28, 31, 31, 34, 37, 39, 41, 42, 43, 46, 47, 47, 48, 51, 51, 55, 55, 55, 56, 60, 60, 60, 61, 61, 64, 64, 67, 71, 75, 79]
+        }
+      }
+    },
+    "2026-01-10-c": {
+      "twosheep_id": "-OidVPKkjM0lwCeoOwZT",
+      "players": {
+        "ld": {"resources_from_dice": 34, "production": {"wood": 12, "brick": 5, "sheep": 9, "wheat": 0, "ore": 8}, "gold_from_dice": 0, "expected_from_dice": 35.306, "blocked_by_robber": 8, "opening_dots": 21, "rolls": 23, "sevens_rolled": 2, "robber_moves": 4, "steals": 4, "stolen_from": 4, "discards": 1, "cards_discarded": 4, "monopoly_cards": 0, "monopoly_lost": 0, "trades": 5, "trade_cards_given": 5, "trade_cards_received": 7, "bank_trades": 1, "bank_cards_given": 4, "bank_cards_received": 1, "built": {"settlement": 1, "city": 0, "road": 3, "ship": 5}, "dev_cards_played": {"knight": 2, "victory_point": 0, "monopoly": 0, "road_building": 0, "year_of_plenty": 0}, "longest_road_length": 9, "max_hand": 8, "fog_discovered": 0, "steals_by_victim": {"nd": 2, "dh": 2}, "trade_partners": {"nd": 3, "dh": 2}},
+        "nd": {"resources_from_dice": 43, "production": {"wood": 7, "brick": 7, "sheep": 15, "wheat": 0, "ore": 14}, "gold_from_dice": 0, "expected_from_dice": 49.528, "blocked_by_robber": 9, "opening_dots": 20, "rolls": 23, "sevens_rolled": 4, "robber_moves": 5, "steals": 5, "stolen_from": 5, "discards": 0, "cards_discarded": 0, "monopoly_cards": 0, "monopoly_lost": 0, "trades": 4, "trade_cards_given": 6, "trade_cards_received": 4, "bank_trades": 6, "bank_cards_given": 15, "bank_cards_received": 6, "built": {"settlement": 2, "city": 1, "road": 4, "ship": 2}, "dev_cards_played": {"knight": 1, "victory_point": 0, "monopoly": 0, "road_building": 0, "year_of_plenty": 0}, "longest_road_length": 7, "max_hand": 10, "fog_discovered": 0, "steals_by_victim": {"ld": 3, "dh": 2}, "trade_partners": {"ld": 3, "dh": 1}},
+        "dh": {"resources_from_dice": 106, "production": {"wood": 9, "brick": 9, "sheep": 14, "wheat": 67, "ore": 7}, "gold_from_dice": 0, "expected_from_dice": 86.417, "blocked_by_robber": 0, "opening_dots": 19, "rolls": 23, "sevens_rolled": 3, "robber_moves": 4, "steals": 4, "stolen_from": 4, "discards": 4, "cards_discarded": 19, "monopoly_cards": 0, "monopoly_lost": 0, "trades": 3, "trade_cards_given": 3, "trade_cards_received": 3, "bank_trades": 15, "bank_cards_given": 32, "bank_cards_received": 16, "built": {"settlement": 4, "city": 4, "road": 7, "ship": 3}, "dev_cards_played": {"knight": 1, "victory_point": 0, "monopoly": 0, "road_building": 0, "year_of_plenty": 1}, "longest_road_length": 11, "max_hand": 15, "fog_discovered": 0, "steals_by_victim": {"ld": 1, "nd": 3}, "trade_partners": {"ld": 2, "nd": 1}}
+      },
+      "timeline": {
+        "turn": [0, 1, 4, 8, 9, 10, 11, 12, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 28, 29, 30, 32, 33, 34, 35, 36, 37, 38, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 53, 54, 55, 57, 59, 60, 61, 62, 63, 65, 66, 68, 69],
+        "vp": {
+          "ld": [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 3],
+          "nd": [2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 7, 7, 7, 7, 7, 7],
+          "dh": [2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 6, 6, 6, 6, 6, 7, 7, 7, 8, 8, 8, 8, 8, 8, 10, 10, 10, 10, 11, 11, 11, 11, 11, 12, 12, 12, 12, 14]
+        },
+        "cards_from_dice": {
+          "ld": [0, 1, 2, 3, 3, 3, 4, 5, 6, 6, 7, 7, 8, 8, 9, 9, 9, 10, 11, 11, 12, 12, 12, 13, 14, 15, 16, 16, 16, 16, 16, 17, 17, 18, 19, 19, 19, 20, 20, 21, 23, 24, 25, 25, 26, 28, 29, 29, 30, 31, 31, 31, 31, 33, 34],
+          "nd": [0, 1, 2, 3, 4, 4, 4, 4, 6, 6, 7, 7, 7, 7, 8, 8, 8, 11, 13, 13, 13, 15, 16, 18, 18, 18, 18, 18, 18, 18, 18, 19, 19, 19, 19, 19, 19, 19, 20, 21, 21, 23, 23, 23, 25, 25, 29, 31, 35, 37, 37, 37, 40, 40, 43],
+          "dh": [0, 1, 2, 3, 3, 4, 4, 4, 5, 6, 7, 9, 9, 10, 11, 13, 14, 15, 17, 19, 21, 21, 22, 24, 27, 27, 30, 32, 34, 37, 40, 42, 45, 48, 51, 51, 54, 57, 59, 61, 64, 69, 69, 74, 79, 83, 85, 86, 88, 93, 93, 96, 97, 101, 106]
+        }
+      }
+    },
+    "2026-01-11-a": {
+      "twosheep_id": "-OiiTJEw5Hkg1y3NIKe-",
+      "players": {
+        "ld": {"resources_from_dice": 64, "production": {"wood": 6, "brick": 0, "sheep": 39, "wheat": 0, "ore": 19}, "gold_from_dice": 0, "expected_from_dice": 55.333, "blocked_by_robber": 5, "opening_dots": 17, "rolls": 26, "sevens_rolled": 5, "robber_moves": 8, "steals": 8, "stolen_from": 6, "discards": 3, "cards_discarded": 12, "monopoly_cards": 5, "monopoly_lost": 0, "trades": 5, "trade_cards_given": 6, "trade_cards_received": 5, "bank_trades": 11, "bank_cards_given": 28, "bank_cards_received": 13, "built": {"settlement": 2, "city": 1, "road": 3, "ship": 1}, "dev_cards_played": {"knight": 3, "victory_point": 0, "monopoly": 1, "road_building": 0, "year_of_plenty": 0}, "longest_road_length": 3, "max_hand": 12, "fog_discovered": 0, "steals_by_victim": {"nd": 8}, "trade_partners": {"dh": 5}},
+        "dh": {"resources_from_dice": 50, "production": {"wood": 0, "brick": 27, "sheep": 0, "wheat": 23, "ore": 0}, "gold_from_dice": 0, "expected_from_dice": 76.917, "blocked_by_robber": 0, "opening_dots": 20, "rolls": 26, "sevens_rolled": 5, "robber_moves": 5, "steals": 5, "stolen_from": 1, "discards": 1, "cards_discarded": 4, "monopoly_cards": 0, "monopoly_lost": 2, "trades": 8, "trade_cards_given": 9, "trade_cards_received": 10, "bank_trades": 10, "bank_cards_given": 23, "bank_cards_received": 10, "built": {"settlement": 3, "city": 3, "road": 4, "ship": 0}, "dev_cards_played": {"knight": 0, "victory_point": 0, "monopoly": 0, "road_building": 0, "year_of_plenty": 0}, "longest_road_length": 4, "max_hand": 12, "fog_discovered": 0, "steals_by_victim": {"ld": 2, "nd": 3}, "trade_partners": {"ld": 5, "nd": 3}},
+        "nd": {"resources_from_dice": 88, "production": {"wood": 29, "brick": 22, "sheep": 9, "wheat": 9, "ore": 19}, "gold_from_dice": 0, "expected_from_dice": 90.944, "blocked_by_robber": 2, "opening_dots": 19, "rolls": 26, "sevens_rolled": 6, "robber_moves": 6, "steals": 5, "stolen_from": 11, "discards": 2, "cards_discarded": 8, "monopoly_cards": 0, "monopoly_lost": 3, "trades": 3, "trade_cards_given": 4, "trade_cards_received": 4, "bank_trades": 3, "bank_cards_given": 9, "bank_cards_received": 3, "built": {"settlement": 5, "city": 3, "road": 9, "ship": 5}, "dev_cards_played": {"knight": 0, "victory_point": 0, "monopoly": 0, "road_building": 0, "year_of_plenty": 0}, "longest_road_length": 12, "max_hand": 10, "fog_discovered": 0, "steals_by_victim": {"ld": 4, "dh": 1}, "trade_partners": {"dh": 3}}
+      },
+      "timeline": {
+        "turn": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 18, 22, 23, 24, 25, 27, 28, 29, 30, 31, 32, 33, 35, 37, 41, 42, 43, 45, 46, 47, 49, 50, 51, 52, 53, 54, 55, 56, 58, 59, 61, 62, 63, 64, 65, 67, 68, 69, 70, 72, 73, 74, 76, 77, 78],
+        "vp": {
+          "ld": [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 7, 7, 7],
+          "dh": [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 6, 6, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 8, 8, 8, 8],
+          "nd": [2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 5, 5, 5, 5, 5, 5, 6, 6, 6, 6, 6, 6, 7, 7, 7, 7, 7, 7, 8, 8, 8, 8, 8, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 12, 12, 12, 12, 12, 13, 13, 13, 13, 13, 13, 13, 16]
+        },
+        "cards_from_dice": {
+          "ld": [0, 1, 2, 3, 4, 4, 5, 5, 5, 5, 6, 6, 7, 8, 8, 8, 9, 9, 10, 11, 11, 12, 12, 13, 14, 14, 15, 16, 18, 18, 20, 21, 22, 23, 26, 27, 28, 31, 31, 31, 32, 34, 34, 35, 35, 36, 39, 41, 41, 42, 44, 46, 49, 49, 50, 53, 55, 56, 58, 61, 64],
+          "dh": [0, 0, 0, 0, 0, 2, 2, 3, 4, 5, 5, 6, 6, 6, 7, 8, 8, 10, 12, 14, 15, 15, 15, 15, 15, 15, 15, 15, 17, 19, 19, 19, 20, 20, 20, 20, 21, 21, 24, 26, 27, 27, 31, 31, 33, 36, 36, 36, 39, 39, 39, 39, 39, 39, 43, 43, 43, 47, 47, 50, 50],
+          "nd": [0, 0, 1, 2, 3, 3, 3, 5, 7, 7, 8, 10, 10, 10, 11, 13, 13, 14, 14, 14, 16, 16, 17, 19, 21, 21, 22, 24, 25, 27, 27, 28, 30, 31, 32, 35, 38, 39, 40, 42, 46, 46, 49, 51, 53, 57, 59, 59, 60, 63, 66, 69, 71, 72, 76, 78, 78, 82, 85, 86, 88]
+        }
+      }
+    },
+    "2026-01-11-b": {
+      "twosheep_id": "-OiidM_6gGa3_pO6WNX0",
+      "players": {
+        "dh": {"resources_from_dice": 65, "production": {"wood": 8, "brick": 4, "sheep": 5, "wheat": 39, "ore": 9}, "gold_from_dice": 0, "expected_from_dice": 68.111, "blocked_by_robber": 14, "opening_dots": 18, "rolls": 28, "sevens_rolled": 4, "robber_moves": 4, "steals": 4, "stolen_from": 6, "discards": 0, "cards_discarded": 0, "monopoly_cards": 0, "monopoly_lost": 1, "trades": 8, "trade_cards_given": 8, "trade_cards_received": 12, "bank_trades": 13, "bank_cards_given": 26, "bank_cards_received": 13, "built": {"settlement": 5, "city": 3, "road": 6, "ship": 2}, "dev_cards_played": {"knight": 0, "victory_point": 0, "monopoly": 0, "road_building": 1, "year_of_plenty": 0}, "longest_road_length": 8, "max_hand": 13, "fog_discovered": 0, "steals_by_victim": {"ld": 3, "nd": 1}, "trade_partners": {"ld": 3, "nd": 5}},
+        "ld": {"resources_from_dice": 73, "production": {"wood": 20, "brick": 10, "sheep": 22, "wheat": 12, "ore": 9}, "gold_from_dice": 0, "expected_from_dice": 72.944, "blocked_by_robber": 11, "opening_dots": 19, "rolls": 27, "sevens_rolled": 8, "robber_moves": 12, "steals": 11, "stolen_from": 10, "discards": 1, "cards_discarded": 4, "monopoly_cards": 0, "monopoly_lost": 1, "trades": 5, "trade_cards_given": 6, "trade_cards_received": 5, "bank_trades": 6, "bank_cards_given": 24, "bank_cards_received": 6, "built": {"settlement": 3, "city": 1, "road": 6, "ship": 0}, "dev_cards_played": {"knight": 4, "victory_point": 0, "monopoly": 0, "road_building": 0, "year_of_plenty": 0}, "longest_road_length": 6, "max_hand": 11, "fog_discovered": 0, "steals_by_victim": {"dh": 5, "nd": 6}, "trade_partners": {"dh": 3, "nd": 2}},
+        "nd": {"resources_from_dice": 50, "production": {"wood": 0, "brick": 15, "sheep": 17, "wheat": 13, "ore": 4}, "gold_from_dice": 1, "expected_from_dice": 63.417, "blocked_by_robber": 9, "opening_dots": 21, "rolls": 27, "sevens_rolled": 6, "robber_moves": 9, "steals": 8, "stolen_from": 7, "discards": 0, "cards_discarded": 0, "monopoly_cards": 2, "monopoly_lost": 0, "trades": 7, "trade_cards_given": 10, "trade_cards_received": 7, "bank_trades": 2, "bank_cards_given": 7, "bank_cards_received": 2, "built": {"settlement": 2, "city": 1, "road": 4, "ship": 2}, "dev_cards_played": {"knight": 3, "victory_point": 0, "monopoly": 1, "road_building": 1, "year_of_plenty": 1}, "longest_road_length": 7, "max_hand": 9, "fog_discovered": 0, "steals_by_victim": {"dh": 1, "ld": 7}, "trade_partners": {"dh": 5, "ld": 2}}
+      },
+      "timeline": {
+        "turn": [0, 1, 5, 10, 11, 13, 16, 17, 19, 21, 22, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 53, 54, 56, 57, 58, 59, 60, 61, 66, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82],
+        "vp": {
+          "dh": [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 8, 8, 8, 8, 8, 9, 9, 9, 9, 9, 9, 9, 9, 9, 11, 11, 11, 14],
+          "ld": [2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 9, 9, 9, 9, 9, 9, 9, 10, 10, 10, 10, 10, 10, 10, 10, 11, 11, 11, 11, 11, 11, 11, 9, 9],
+          "nd": [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 5, 5, 5, 5, 5, 5, 5, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 11, 9]
+        },
+        "cards_from_dice": {
+          "dh": [0, 1, 1, 2, 2, 2, 2, 3, 4, 5, 5, 5, 5, 5, 6, 6, 8, 8, 10, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 13, 13, 15, 17, 17, 19, 19, 21, 23, 25, 28, 31, 33, 33, 33, 35, 35, 37, 39, 42, 42, 42, 45, 45, 47, 50, 53, 56, 59, 62, 65],
+          "ld": [0, 1, 2, 2, 3, 4, 5, 6, 7, 9, 11, 12, 12, 13, 15, 15, 16, 16, 17, 18, 19, 20, 22, 23, 24, 25, 26, 27, 28, 28, 29, 31, 33, 35, 36, 37, 38, 39, 41, 42, 43, 44, 46, 46, 48, 49, 52, 55, 56, 57, 58, 61, 62, 63, 65, 67, 69, 70, 72, 73],
+          "nd": [0, 0, 2, 3, 5, 7, 9, 9, 9, 9, 11, 11, 11, 12, 12, 13, 13, 14, 14, 16, 17, 18, 20, 20, 21, 21, 22, 23, 23, 23, 24, 24, 24, 26, 27, 28, 30, 31, 32, 32, 32, 33, 37, 37, 38, 38, 38, 38, 38, 38, 39, 39, 40, 42, 42, 42, 42, 44, 48, 50]
+        }
+      }
+    },
+    "2026-01-13-a": {
+      "twosheep_id": "-Oiqkt5ndsWVt5b2jDVj",
+      "players": {
+        "nd": {"resources_from_dice": 61, "production": {"wood": 20, "brick": 18, "sheep": 14, "wheat": 7, "ore": 2}, "gold_from_dice": 0, "expected_from_dice": 50.972, "blocked_by_robber": 1, "opening_dots": 22, "rolls": 22, "sevens_rolled": 1, "robber_moves": 1, "steals": 1, "stolen_from": 2, "discards": 1, "cards_discarded": 4, "monopoly_cards": 4, "monopoly_lost": 0, "trades": 5, "trade_cards_given": 5, "trade_cards_received": 5, "bank_trades": 4, "bank_cards_given": 12, "bank_cards_received": 4, "built": {"settlement": 3, "city": 0, "road": 13, "ship": 4}, "dev_cards_played": {"knight": 0, "victory_point": 0, "monopoly": 1, "road_building": 0, "year_of_plenty": 0}, "longest_road_length": 17, "max_hand": 12, "fog_discovered": 0, "steals_by_victim": {"dh": 1}, "trade_partners": {"ld": 2, "dh": 3}},
+        "ld": {"resources_from_dice": 77, "production": {"wood": 28, "brick": 12, "sheep": 14, "wheat": 3, "ore": 7}, "gold_from_dice": 13, "expected_from_dice": 58.5, "blocked_by_robber": 6, "opening_dots": 22, "rolls": 22, "sevens_rolled": 3, "robber_moves": 3, "steals": 3, "stolen_from": 4, "discards": 2, "cards_discarded": 9, "monopoly_cards": 0, "monopoly_lost": 4, "trades": 5, "trade_cards_given": 6, "trade_cards_received": 5, "bank_trades": 1, "bank_cards_given": 4, "bank_cards_received": 1, "built": {"settlement": 4, "city": 2, "road": 2, "ship": 14}, "dev_cards_played": {"knight": 0, "victory_point": 0, "monopoly": 0, "road_building": 0, "year_of_plenty": 0}, "longest_road_length": 17, "max_hand": 13, "fog_discovered": 0, "steals_by_victim": {"nd": 1, "dh": 2}, "trade_partners": {"nd": 2, "dh": 3}},
+        "dh": {"resources_from_dice": 88, "production": {"wood": 29, "brick": 1, "sheep": 49, "wheat": 5, "ore": 4}, "gold_from_dice": 0, "expected_from_dice": 93.889, "blocked_by_robber": 10, "opening_dots": 24, "rolls": 22, "sevens_rolled": 5, "robber_moves": 5, "steals": 5, "stolen_from": 3, "discards": 3, "cards_discarded": 14, "monopoly_cards": 2, "monopoly_lost": 2, "trades": 6, "trade_cards_given": 6, "trade_cards_received": 7, "bank_trades": 9, "bank_cards_given": 32, "bank_cards_received": 10, "built": {"settlement": 5, "city": 3, "road": 2, "ship": 7}, "dev_cards_played": {"knight": 0, "victory_point": 0, "monopoly": 1, "road_building": 0, "year_of_plenty": 0}, "longest_road_length": 8, "max_hand": 14, "fog_discovered": 0, "steals_by_victim": {"nd": 1, "ld": 4}, "trade_partners": {"nd": 3, "ld": 3}}
+      },
+      "timeline": {
+        "turn": [0, 1, 2, 4, 5, 6, 8, 10, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 27, 28, 29, 30, 31, 32, 33, 34, 36, 37, 38, 39, 40, 42, 43, 44, 45, 46, 47, 48, 49, 50, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 64, 65, 66],
+        "vp": {
+          "nd": [2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 11, 11, 11, 11, 11, 11, 9, 9, 9, 9, 9, 9, 9, 9, 11, 9, 12, 12, 12],
+          "ld": [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7, 8, 8, 8, 11, 11, 13, 13, 13, 13, 13, 13, 13, 13, 11, 13, 11, 12, 12],
+          "dh": [2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 5, 5, 6, 6, 6, 6, 6, 6, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 11, 9, 9, 12, 12, 12, 12, 12, 12, 12, 12, 13, 13, 13, 13, 13, 13, 13, 13, 14]
+        },
+        "cards_from_dice": {
+          "nd": [0, 1, 2, 3, 4, 4, 5, 6, 7, 7, 8, 10, 11, 11, 12, 14, 15, 15, 16, 17, 18, 19, 20, 21, 22, 23, 23, 24, 24, 26, 26, 27, 29, 31, 32, 34, 34, 35, 35, 35, 37, 39, 42, 42, 42, 44, 44, 46, 48, 48, 50, 53, 53, 55, 57, 59, 59, 61],
+          "ld": [0, 1, 2, 3, 4, 4, 5, 6, 7, 7, 8, 8, 9, 9, 11, 11, 12, 12, 13, 13, 15, 17, 18, 19, 20, 20, 21, 22, 22, 24, 25, 26, 26, 28, 30, 32, 33, 35, 37, 38, 39, 42, 42, 45, 47, 50, 52, 55, 58, 58, 61, 61, 64, 67, 70, 71, 74, 77],
+          "dh": [0, 1, 2, 3, 4, 5, 6, 8, 9, 9, 10, 10, 12, 12, 13, 13, 15, 16, 18, 18, 20, 22, 25, 28, 31, 31, 33, 36, 36, 38, 38, 41, 41, 43, 46, 48, 50, 53, 55, 55, 58, 60, 60, 62, 63, 65, 66, 68, 70, 71, 73, 73, 76, 78, 80, 83, 86, 88]
+        }
+      }
+    },
+    "2026-01-13-b": {
+      "twosheep_id": "-OiqujYb_H9EOXJPtw_S",
+      "players": {
+        "dh": {"resources_from_dice": 94, "production": {"wood": 13, "brick": 7, "sheep": 17, "wheat": 39, "ore": 18}, "gold_from_dice": 0, "expected_from_dice": 85.611, "blocked_by_robber": 5, "opening_dots": 19, "rolls": 25, "sevens_rolled": 4, "robber_moves": 5, "steals": 5, "stolen_from": 4, "discards": 1, "cards_discarded": 4, "monopoly_cards": 0, "monopoly_lost": 0, "trades": 2, "trade_cards_given": 2, "trade_cards_received": 2, "bank_trades": 14, "bank_cards_given": 42, "bank_cards_received": 14, "built": {"settlement": 6, "city": 4, "road": 6, "ship": 2}, "dev_cards_played": {"knight": 1, "victory_point": 0, "monopoly": 0, "road_building": 0, "year_of_plenty": 0}, "longest_road_length": 4, "max_hand": 17, "fog_discovered": 0, "steals_by_victim": {"nd": 3, "ld": 2}, "trade_partners": {"nd": 1, "ld": 1}},
+        "nd": {"resources_from_dice": 75, "production": {"wood": 9, "brick": 6, "sheep": 16, "wheat": 22, "ore": 22}, "gold_from_dice": 0, "expected_from_dice": 75.694, "blocked_by_robber": 6, "opening_dots": 17, "rolls": 24, "sevens_rolled": 3, "robber_moves": 5, "steals": 4, "stolen_from": 4, "discards": 2, "cards_discarded": 9, "monopoly_cards": 0, "monopoly_lost": 0, "trades": 4, "trade_cards_given": 5, "trade_cards_received": 4, "bank_trades": 4, "bank_cards_given": 13, "bank_cards_received": 4, "built": {"settlement": 3, "city": 4, "road": 6, "ship": 1}, "dev_cards_played": {"knight": 2, "victory_point": 0, "monopoly": 0, "road_building": 1, "year_of_plenty": 0}, "longest_road_length": 7, "max_hand": 14, "fog_discovered": 0, "steals_by_victim": {"dh": 3, "ld": 1}, "trade_partners": {"dh": 1, "ld": 3}},
+        "ld": {"resources_from_dice": 76, "production": {"wood": 61, "brick": 11, "sheep": 3, "wheat": 1, "ore": 0}, "gold_from_dice": 0, "expected_from_dice": 75.639, "blocked_by_robber": 5, "opening_dots": 22, "rolls": 24, "sevens_rolled": 3, "robber_moves": 4, "steals": 2, "stolen_from": 3, "discards": 1, "cards_discarded": 4, "monopoly_cards": 0, "monopoly_lost": 0, "trades": 4, "trade_cards_given": 4, "trade_cards_received": 5, "bank_trades": 14, "bank_cards_given": 40, "bank_cards_received": 19, "built": {"settlement": 4, "city": 2, "road": 4, "ship": 6}, "dev_cards_played": {"knight": 1, "victory_point": 0, "monopoly": 0, "road_building": 0, "year_of_plenty": 0}, "longest_road_length": 7, "max_hand": 10, "fog_discovered": 0, "steals_by_victim": {"dh": 1, "nd": 1}, "trade_partners": {"dh": 1, "nd": 3}}
+      },
+      "timeline": {
+        "turn": [0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 14, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 34, 35, 36, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 51, 52, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 70, 71, 72, 73],
+        "vp": {
+          "dh": [2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 6, 6, 6, 6, 6, 6, 7, 7, 7, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 10, 10, 10, 10, 10, 11, 11, 11, 14],
+          "nd": [2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7, 9, 9, 9, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11],
+          "ld": [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10]
+        },
+        "cards_from_dice": {
+          "dh": [0, 2, 3, 4, 6, 6, 6, 6, 6, 8, 8, 10, 10, 11, 11, 11, 11, 11, 12, 12, 12, 13, 14, 15, 16, 16, 17, 18, 19, 20, 22, 22, 25, 26, 26, 27, 28, 31, 32, 35, 39, 43, 45, 49, 49, 49, 50, 54, 58, 62, 62, 66, 66, 70, 72, 73, 74, 74, 75, 75, 76, 80, 80, 87, 94],
+          "nd": [0, 0, 1, 2, 2, 3, 4, 4, 6, 6, 8, 8, 10, 10, 11, 13, 14, 16, 16, 18, 20, 22, 22, 24, 24, 27, 29, 29, 29, 29, 29, 32, 32, 32, 32, 32, 32, 34, 34, 34, 34, 34, 36, 38, 40, 42, 42, 44, 46, 48, 53, 55, 57, 61, 65, 65, 65, 67, 67, 69, 69, 71, 75, 75, 75],
+          "ld": [0, 0, 1, 2, 2, 2, 3, 3, 5, 5, 5, 5, 7, 8, 8, 10, 10, 12, 12, 12, 14, 15, 16, 17, 18, 21, 22, 24, 24, 24, 24, 24, 24, 26, 26, 28, 30, 31, 33, 33, 33, 33, 35, 37, 41, 45, 47, 49, 49, 49, 54, 54, 58, 58, 58, 60, 62, 65, 67, 70, 72, 76, 76, 76, 76]
         }
       }
     },
@@ -1046,6 +1406,48 @@
         }
       }
     },
+    "2026-02-12-a": {
+      "twosheep_id": "-OlJapx8VlifMy4PoQIi",
+      "players": {
+        "ms": {"resources_from_dice": 54, "production": {"wood": 11, "brick": 1, "sheep": 12, "wheat": 15, "ore": 6}, "gold_from_dice": 9, "expected_from_dice": 53.361, "blocked_by_robber": 7, "opening_dots": 19, "rolls": 26, "sevens_rolled": 6, "robber_moves": 10, "steals": 10, "stolen_from": 10, "discards": 0, "cards_discarded": 0, "monopoly_cards": 0, "monopoly_lost": 0, "trades": 5, "trade_cards_given": 6, "trade_cards_received": 6, "bank_trades": 2, "bank_cards_given": 6, "bank_cards_received": 2, "built": {"settlement": 3, "city": 0, "road": 0, "ship": 10}, "dev_cards_played": {"knight": 4, "victory_point": 0, "monopoly": 0, "road_building": 1, "year_of_plenty": 0}, "longest_road_length": 9, "max_hand": 10, "fog_discovered": 0, "steals_by_victim": {"nd": 9, "a": 1}, "trade_partners": {"nd": 2, "a": 3}},
+        "nd": {"resources_from_dice": 71, "production": {"wood": 9, "brick": 20, "sheep": 8, "wheat": 16, "ore": 11}, "gold_from_dice": 7, "expected_from_dice": 65.417, "blocked_by_robber": 15, "opening_dots": 21, "rolls": 25, "sevens_rolled": 6, "robber_moves": 9, "steals": 8, "stolen_from": 13, "discards": 1, "cards_discarded": 4, "monopoly_cards": 0, "monopoly_lost": 0, "trades": 3, "trade_cards_given": 3, "trade_cards_received": 3, "bank_trades": 3, "bank_cards_given": 9, "bank_cards_received": 3, "built": {"settlement": 3, "city": 2, "road": 7, "ship": 3}, "dev_cards_played": {"knight": 3, "victory_point": 0, "monopoly": 0, "road_building": 0, "year_of_plenty": 0}, "longest_road_length": 11, "max_hand": 12, "fog_discovered": 0, "steals_by_victim": {"ms": 8}, "trade_partners": {"ms": 2, "a": 1}},
+        "a": {"resources_from_dice": 45, "production": {"wood": 8, "brick": 0, "sheep": 20, "wheat": 15, "ore": 2}, "gold_from_dice": 0, "expected_from_dice": 46.111, "blocked_by_robber": 1, "opening_dots": 20, "rolls": 25, "sevens_rolled": 4, "robber_moves": 6, "steals": 6, "stolen_from": 1, "discards": 3, "cards_discarded": 13, "monopoly_cards": 0, "monopoly_lost": 0, "trades": 4, "trade_cards_given": 5, "trade_cards_received": 5, "bank_trades": 3, "bank_cards_given": 12, "bank_cards_received": 3, "built": {"settlement": 1, "city": 0, "road": 5, "ship": 0}, "dev_cards_played": {"knight": 2, "victory_point": 0, "monopoly": 0, "road_building": 0, "year_of_plenty": 0}, "longest_road_length": 4, "max_hand": 11, "fog_discovered": 0, "steals_by_victim": {"ms": 2, "nd": 4}, "trade_partners": {"ms": 3, "nd": 1}}
+      },
+      "timeline": {
+        "turn": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 15, 16, 17, 19, 20, 21, 22, 23, 24, 25, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 39, 40, 41, 42, 43, 44, 45, 47, 48, 49, 50, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 68, 69, 70, 71, 72, 73, 74, 76],
+        "vp": {
+          "ms": [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 7, 7, 7, 10, 10, 10, 11, 11, 11, 11, 9, 9, 11, 11, 11, 11, 11, 12, 12, 12, 13, 13, 14],
+          "nd": [2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 7, 7, 7, 7, 7, 9, 9, 9, 12, 10, 10, 10, 10, 10, 10, 10, 11, 11, 11, 13, 13, 11, 11, 11, 11, 11, 11, 11, 11, 11, 12, 12],
+          "a": [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4]
+        },
+        "cards_from_dice": {
+          "ms": [0, 1, 2, 3, 3, 3, 4, 5, 5, 5, 6, 7, 7, 8, 9, 9, 10, 10, 10, 11, 12, 13, 14, 14, 14, 16, 17, 17, 19, 19, 20, 21, 23, 24, 24, 25, 27, 29, 30, 30, 31, 31, 31, 31, 31, 33, 33, 35, 37, 39, 39, 39, 39, 41, 42, 42, 42, 44, 44, 45, 47, 47, 48, 49, 51, 52, 54],
+          "nd": [0, 1, 1, 1, 2, 2, 3, 4, 4, 4, 4, 5, 6, 7, 9, 10, 10, 11, 12, 13, 14, 15, 17, 18, 18, 20, 21, 22, 24, 25, 27, 27, 29, 30, 31, 31, 33, 35, 35, 36, 36, 37, 38, 39, 39, 41, 42, 43, 45, 46, 47, 47, 48, 52, 55, 55, 55, 55, 56, 57, 58, 59, 61, 63, 64, 66, 71],
+          "a": [0, 0, 2, 4, 4, 5, 5, 5, 5, 6, 7, 7, 7, 7, 8, 8, 10, 11, 11, 11, 11, 12, 13, 13, 13, 14, 15, 15, 16, 16, 16, 18, 19, 20, 21, 23, 23, 23, 26, 26, 29, 30, 30, 31, 31, 31, 32, 33, 33, 34, 35, 35, 36, 37, 37, 37, 37, 37, 38, 38, 39, 40, 41, 42, 43, 44, 45]
+        }
+      }
+    },
+    "2026-02-12-b": {
+      "twosheep_id": "-OlJf01OBhv5rHa4REBf",
+      "players": {
+        "nd": {"resources_from_dice": 83, "production": {"wood": 3, "brick": 19, "sheep": 23, "wheat": 9, "ore": 29}, "gold_from_dice": 0, "expected_from_dice": 74.75, "blocked_by_robber": 14, "opening_dots": 19, "rolls": 30, "sevens_rolled": 3, "robber_moves": 4, "steals": 4, "stolen_from": 6, "discards": 4, "cards_discarded": 18, "monopoly_cards": 0, "monopoly_lost": 4, "trades": 3, "trade_cards_given": 4, "trade_cards_received": 3, "bank_trades": 6, "bank_cards_given": 24, "bank_cards_received": 6, "built": {"settlement": 2, "city": 3, "road": 2, "ship": 3}, "dev_cards_played": {"knight": 1, "victory_point": 0, "monopoly": 0, "road_building": 0, "year_of_plenty": 0}, "longest_road_length": 5, "max_hand": 21, "fog_discovered": 0, "steals_by_victim": {"ms": 1, "a": 3}, "trade_partners": {"ms": 3}},
+        "ms": {"resources_from_dice": 71, "production": {"wood": 10, "brick": 7, "sheep": 21, "wheat": 31, "ore": 0}, "gold_from_dice": 2, "expected_from_dice": 86.389, "blocked_by_robber": 6, "opening_dots": 20, "rolls": 30, "sevens_rolled": 5, "robber_moves": 7, "steals": 6, "stolen_from": 4, "discards": 2, "cards_discarded": 8, "monopoly_cards": 8, "monopoly_lost": 0, "trades": 6, "trade_cards_given": 8, "trade_cards_received": 7, "bank_trades": 6, "bank_cards_given": 22, "bank_cards_received": 7, "built": {"settlement": 3, "city": 2, "road": 5, "ship": 2}, "dev_cards_played": {"knight": 2, "victory_point": 0, "monopoly": 2, "road_building": 2, "year_of_plenty": 1}, "longest_road_length": 7, "max_hand": 14, "fog_discovered": 0, "steals_by_victim": {"nd": 3, "a": 3}, "trade_partners": {"nd": 3, "a": 3}},
+        "a": {"resources_from_dice": 98, "production": {"wood": 9, "brick": 37, "sheep": 21, "wheat": 10, "ore": 20}, "gold_from_dice": 1, "expected_from_dice": 103.0, "blocked_by_robber": 24, "opening_dots": 24, "rolls": 30, "sevens_rolled": 5, "robber_moves": 7, "steals": 6, "stolen_from": 6, "discards": 0, "cards_discarded": 0, "monopoly_cards": 0, "monopoly_lost": 4, "trades": 3, "trade_cards_given": 3, "trade_cards_received": 5, "bank_trades": 21, "bank_cards_given": 60, "bank_cards_received": 21, "built": {"settlement": 4, "city": 3, "road": 7, "ship": 2}, "dev_cards_played": {"knight": 2, "victory_point": 0, "monopoly": 0, "road_building": 0, "year_of_plenty": 0}, "longest_road_length": 11, "max_hand": 12, "fog_discovered": 0, "steals_by_victim": {"nd": 3, "ms": 3}, "trade_partners": {"ms": 3}}
+      },
+      "timeline": {
+        "turn": [0, 1, 2, 3, 4, 5, 6, 7, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 25, 28, 29, 30, 31, 32, 33, 35, 36, 37, 38, 39, 41, 42, 43, 44, 45, 46, 47, 48, 50, 52, 55, 56, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 77, 79, 80, 81, 83, 84, 85, 86, 87, 88, 89, 90],
+        "vp": {
+          "nd": [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 9, 9, 9],
+          "ms": [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 8, 8, 8, 8, 8, 8, 9, 9, 9, 9, 9, 10, 10, 10, 12, 12, 12, 13, 13],
+          "a": [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 10, 10, 10, 10, 10, 10, 10, 10, 10, 11, 11, 11, 11, 11, 11, 12, 12, 12, 12, 12, 13, 13, 13, 14]
+        },
+        "cards_from_dice": {
+          "nd": [0, 0, 0, 1, 3, 4, 6, 7, 7, 7, 9, 10, 11, 11, 12, 13, 13, 14, 15, 17, 17, 17, 20, 23, 25, 28, 30, 30, 33, 33, 35, 35, 37, 37, 37, 41, 41, 41, 41, 42, 46, 46, 49, 49, 49, 49, 49, 49, 49, 49, 49, 52, 52, 52, 53, 57, 57, 57, 57, 57, 61, 61, 61, 61, 65, 65, 69, 70, 74, 78, 78, 83],
+          "ms": [0, 1, 2, 3, 4, 5, 6, 6, 7, 8, 9, 9, 9, 10, 10, 10, 11, 11, 11, 12, 13, 14, 15, 16, 16, 18, 18, 18, 20, 21, 21, 21, 21, 21, 21, 23, 25, 25, 26, 29, 31, 32, 32, 33, 34, 38, 42, 43, 44, 45, 45, 45, 45, 45, 46, 46, 47, 49, 51, 51, 51, 53, 54, 59, 62, 67, 67, 69, 69, 69, 71, 71],
+          "a": [0, 2, 2, 2, 3, 3, 4, 5, 6, 6, 7, 8, 9, 12, 13, 15, 16, 17, 18, 20, 20, 20, 22, 24, 25, 27, 29, 29, 31, 31, 33, 34, 36, 37, 38, 40, 41, 41, 45, 45, 48, 48, 49, 49, 53, 53, 53, 57, 58, 58, 60, 62, 64, 66, 66, 68, 73, 75, 77, 77, 79, 79, 85, 85, 88, 88, 90, 90, 92, 94, 96, 98]
+        }
+      }
+    },
     "2026-02-15-a": {
       "twosheep_id": "-OlZ54NnyQXfeiV4WYBT",
       "players": {
@@ -1085,6 +1487,27 @@
           "jd": [0, 1, 2, 2, 2, 3, 4, 5, 5, 5, 6, 6, 7, 8, 8, 9, 10, 11, 12, 13, 14, 14, 14, 15, 16, 16, 16, 16, 17, 17, 17, 17, 18, 19, 20, 21, 22, 23, 24, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 34, 35, 36, 37, 38, 39],
           "nd": [0, 0, 0, 1, 3, 4, 4, 5, 7, 7, 7, 8, 9, 10, 11, 11, 11, 11, 11, 11, 12, 12, 13, 14, 15, 15, 17, 17, 17, 19, 19, 21, 21, 23, 25, 26, 26, 26, 28, 28, 29, 30, 31, 32, 33, 35, 38, 41, 43, 43, 43, 44, 45, 47, 50, 51],
           "ms": [0, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 9, 10, 11, 12, 12, 13, 14, 14, 15, 16, 16, 17, 18, 19, 21, 22, 22, 24, 26, 26, 27, 29, 31, 33, 34, 34, 36, 37, 39, 41, 42, 45, 48, 48, 49, 51, 53, 56, 57, 58, 61, 61, 62, 65, 68]
+        }
+      }
+    },
+    "2026-03-11-a": {
+      "twosheep_id": "-OnUkghCL5rbtjZ8T98F",
+      "players": {
+        "a": {"resources_from_dice": 54, "production": {"wood": 23, "brick": 0, "sheep": 3, "wheat": 19, "ore": 9}, "gold_from_dice": 0, "expected_from_dice": 60.028, "blocked_by_robber": 11, "opening_dots": 21, "rolls": 25, "sevens_rolled": 6, "robber_moves": 7, "steals": 7, "stolen_from": 1, "discards": 1, "cards_discarded": 4, "monopoly_cards": 0, "monopoly_lost": 2, "trades": 8, "trade_cards_given": 8, "trade_cards_received": 9, "bank_trades": 5, "bank_cards_given": 20, "bank_cards_received": 5, "built": {"settlement": 2, "city": 1, "road": 9, "ship": 2}, "dev_cards_played": {"knight": 1, "victory_point": 0, "monopoly": 0, "road_building": 0, "year_of_plenty": 0}, "longest_road_length": 12, "max_hand": 11, "fog_discovered": 0, "steals_by_victim": {"nd": 3, "ms": 4}, "trade_partners": {"nd": 1, "ms": 7}},
+        "nd": {"resources_from_dice": 58, "production": {"wood": 23, "brick": 5, "sheep": 8, "wheat": 11, "ore": 2}, "gold_from_dice": 9, "expected_from_dice": 58.972, "blocked_by_robber": 5, "opening_dots": 19, "rolls": 25, "sevens_rolled": 0, "robber_moves": 0, "steals": 0, "stolen_from": 6, "discards": 0, "cards_discarded": 0, "monopoly_cards": 0, "monopoly_lost": 3, "trades": 2, "trade_cards_given": 4, "trade_cards_received": 3, "bank_trades": 5, "bank_cards_given": 13, "bank_cards_received": 5, "built": {"settlement": 3, "city": 0, "road": 5, "ship": 6}, "dev_cards_played": {"knight": 0, "victory_point": 0, "monopoly": 0, "road_building": 0, "year_of_plenty": 0}, "longest_road_length": 6, "max_hand": 10, "fog_discovered": 0, "steals_by_victim": {}, "trade_partners": {"a": 1, "ms": 1}},
+        "ms": {"resources_from_dice": 65, "production": {"wood": 9, "brick": 22, "sheep": 23, "wheat": 0, "ore": 7}, "gold_from_dice": 4, "expected_from_dice": 54.167, "blocked_by_robber": 8, "opening_dots": 20, "rolls": 25, "sevens_rolled": 2, "robber_moves": 4, "steals": 4, "stolen_from": 4, "discards": 0, "cards_discarded": 0, "monopoly_cards": 5, "monopoly_lost": 0, "trades": 8, "trade_cards_given": 9, "trade_cards_received": 9, "bank_trades": 3, "bank_cards_given": 12, "bank_cards_received": 3, "built": {"settlement": 3, "city": 0, "road": 2, "ship": 11}, "dev_cards_played": {"knight": 3, "victory_point": 0, "monopoly": 1, "road_building": 1, "year_of_plenty": 1}, "longest_road_length": 13, "max_hand": 13, "fog_discovered": 0, "steals_by_victim": {"a": 1, "nd": 3}, "trade_partners": {"a": 7, "nd": 1}}
+      },
+      "timeline": {
+        "turn": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 20, 21, 22, 23, 24, 25, 28, 29, 30, 31, 32, 33, 35, 36, 38, 39, 41, 42, 43, 44, 45, 46, 47, 50, 51, 53, 54, 55, 56, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75],
+        "vp": {
+          "a": [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 5, 5, 5, 5, 5, 5, 5, 5, 5, 6, 6, 6, 6, 6, 6, 6, 6, 6, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 7, 9, 9, 7, 7, 7, 7],
+          "nd": [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 5, 5, 5, 5, 5, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
+          "ms": [2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 9, 9, 9, 9, 9, 9, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 11, 11, 11, 13, 11, 11, 13, 13, 13, 15]
+        },
+        "cards_from_dice": {
+          "a": [0, 0, 1, 3, 3, 5, 7, 8, 8, 9, 10, 10, 12, 13, 14, 14, 16, 17, 17, 17, 17, 19, 20, 20, 20, 21, 21, 21, 22, 23, 24, 26, 26, 26, 26, 27, 29, 32, 36, 36, 36, 37, 37, 38, 38, 38, 42, 42, 42, 44, 45, 45, 46, 46, 46, 46, 48, 48, 49, 49, 50, 50, 50, 51, 52, 54],
+          "nd": [0, 0, 0, 2, 2, 4, 6, 6, 6, 6, 7, 7, 9, 10, 10, 11, 13, 14, 15, 16, 16, 18, 18, 18, 18, 19, 20, 20, 21, 22, 23, 25, 26, 26, 27, 27, 30, 32, 34, 34, 35, 35, 36, 36, 37, 38, 40, 41, 41, 44, 44, 44, 45, 45, 46, 46, 49, 50, 50, 51, 52, 53, 53, 54, 55, 58],
+          "ms": [0, 2, 2, 2, 4, 4, 4, 5, 7, 8, 8, 11, 11, 11, 12, 12, 12, 12, 13, 14, 15, 15, 16, 17, 18, 18, 19, 22, 22, 22, 22, 22, 23, 26, 28, 29, 29, 29, 29, 30, 32, 33, 35, 36, 36, 38, 39, 39, 40, 40, 41, 44, 46, 49, 51, 54, 54, 54, 55, 55, 57, 59, 62, 64, 65, 65]
         }
       }
     },
@@ -1130,6 +1553,30 @@
           "ms": [0, 0, 1, 2, 2, 4, 5, 6, 6, 7, 9, 11, 11, 13, 14, 15, 16, 17, 17, 18, 18, 18, 18, 18, 19, 19, 20, 20, 20, 20, 21, 22, 23, 25, 25, 26, 27, 27, 28, 28, 28, 28, 28, 28, 28, 29, 29, 30, 32, 32, 33, 34, 34, 35, 35, 36, 36, 36, 36, 39, 39, 39, 39, 40, 40, 40, 41, 42, 44, 44, 45, 46, 47, 47, 47, 47, 49, 49, 49],
           "mb": [0, 1, 2, 2, 2, 3, 3, 3, 4, 4, 5, 6, 6, 7, 9, 9, 11, 11, 12, 14, 14, 14, 15, 16, 16, 16, 18, 18, 19, 20, 21, 23, 25, 26, 26, 27, 29, 30, 32, 33, 34, 34, 34, 34, 34, 36, 38, 40, 41, 43, 43, 45, 47, 48, 50, 52, 54, 56, 57, 58, 58, 59, 60, 62, 62, 64, 66, 66, 69, 71, 73, 73, 73, 73, 73, 73, 75, 77, 80],
           "nd": [0, 1, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 5, 6, 6, 7, 7, 8, 9, 10, 10, 11, 12, 13, 13, 13, 13, 14, 15, 16, 17, 18, 19, 20, 21, 21, 22, 22, 24, 25, 28, 28, 29, 29, 30, 31, 32, 33, 34, 36, 37, 38, 39, 39, 40, 41, 41, 44, 45, 47, 48, 52, 56, 56, 57, 58, 59, 61, 62]
+        }
+      }
+    },
+    "2026-03-24-a": {
+      "twosheep_id": "-OoXjgFoiiwk-nsXe3qy",
+      "players": {
+        "jd": {"resources_from_dice": 31, "production": {"wood": 6, "brick": 5, "sheep": 0, "wheat": 14, "ore": 6}, "gold_from_dice": 0, "expected_from_dice": 37.167, "blocked_by_robber": 2, "opening_dots": 19, "rolls": 16, "sevens_rolled": 3, "robber_moves": 4, "steals": 4, "stolen_from": 1, "discards": 1, "cards_discarded": 4, "monopoly_cards": 7, "monopoly_lost": 1, "trades": 11, "trade_cards_given": 12, "trade_cards_received": 13, "bank_trades": 2, "bank_cards_given": 8, "bank_cards_received": 2, "built": {"settlement": 2, "city": 0, "road": 3, "ship": 0}, "dev_cards_played": {"knight": 1, "victory_point": 0, "monopoly": 1, "road_building": 0, "year_of_plenty": 1}, "longest_road_length": 3, "max_hand": 12, "fog_discovered": 0, "steals_by_victim": {"ms": 3, "ld": 1}, "trade_partners": {"nd": 3, "ld": 8}},
+        "nd": {"resources_from_dice": 67, "production": {"wood": 4, "brick": 22, "sheep": 9, "wheat": 4, "ore": 28}, "gold_from_dice": 0, "expected_from_dice": 58.417, "blocked_by_robber": 0, "opening_dots": 16, "rolls": 16, "sevens_rolled": 0, "robber_moves": 2, "steals": 2, "stolen_from": 0, "discards": 2, "cards_discarded": 8, "monopoly_cards": 0, "monopoly_lost": 0, "trades": 7, "trade_cards_given": 8, "trade_cards_received": 8, "bank_trades": 7, "bank_cards_given": 18, "bank_cards_received": 7, "built": {"settlement": 3, "city": 2, "road": 3, "ship": 0}, "dev_cards_played": {"knight": 3, "victory_point": 0, "monopoly": 0, "road_building": 0, "year_of_plenty": 0}, "longest_road_length": 2, "max_hand": 12, "fog_discovered": 0, "steals_by_victim": {"ms": 1, "ld": 1}, "trade_partners": {"jd": 3, "ms": 3, "ld": 1}},
+        "ms": {"resources_from_dice": 64, "production": {"wood": 4, "brick": 10, "sheep": 9, "wheat": 30, "ore": 11}, "gold_from_dice": 0, "expected_from_dice": 67.194, "blocked_by_robber": 10, "opening_dots": 19, "rolls": 15, "sevens_rolled": 3, "robber_moves": 5, "steals": 5, "stolen_from": 6, "discards": 3, "cards_discarded": 12, "monopoly_cards": 1, "monopoly_lost": 5, "trades": 4, "trade_cards_given": 4, "trade_cards_received": 4, "bank_trades": 1, "bank_cards_given": 4, "bank_cards_received": 1, "built": {"settlement": 1, "city": 3, "road": 7, "ship": 0}, "dev_cards_played": {"knight": 2, "victory_point": 0, "monopoly": 1, "road_building": 1, "year_of_plenty": 0}, "longest_road_length": 7, "max_hand": 14, "fog_discovered": 0, "steals_by_victim": {"jd": 1, "ld": 4}, "trade_partners": {"nd": 3, "ld": 1}},
+        "ld": {"resources_from_dice": 65, "production": {"wood": 0, "brick": 8, "sheep": 23, "wheat": 30, "ore": 4}, "gold_from_dice": 0, "expected_from_dice": 54.806, "blocked_by_robber": 16, "opening_dots": 21, "rolls": 15, "sevens_rolled": 2, "robber_moves": 2, "steals": 2, "stolen_from": 6, "discards": 0, "cards_discarded": 0, "monopoly_cards": 0, "monopoly_lost": 2, "trades": 10, "trade_cards_given": 11, "trade_cards_received": 10, "bank_trades": 11, "bank_cards_given": 34, "bank_cards_received": 13, "built": {"settlement": 3, "city": 2, "road": 8, "ship": 0}, "dev_cards_played": {"knight": 0, "victory_point": 0, "monopoly": 0, "road_building": 1, "year_of_plenty": 0}, "longest_road_length": 8, "max_hand": 12, "fog_discovered": 0, "steals_by_victim": {"ms": 2}, "trade_partners": {"jd": 8, "nd": 1, "ms": 1}}
+      },
+      "timeline": {
+        "turn": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 26, 27, 28, 29, 30, 31, 32, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 48, 49, 50, 51, 52, 53, 54, 57, 58, 59, 60, 62],
+        "vp": {
+          "jd": [2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 6, 6, 6, 6, 6, 6, 6],
+          "nd": [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 8, 8, 8, 8, 8, 8, 9, 9, 9, 11],
+          "ms": [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 6, 6, 6, 6, 7, 7, 7, 7, 7, 7, 7, 9, 9, 9, 9, 9, 9, 9, 7, 7],
+          "ld": [2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 8, 8, 8, 8, 8, 8, 6, 7, 7, 7, 7, 7, 7, 9, 9]
+        },
+        "cards_from_dice": {
+          "jd": [0, 1, 1, 2, 2, 2, 3, 5, 5, 5, 5, 5, 5, 5, 5, 5, 6, 7, 8, 8, 8, 9, 9, 9, 10, 10, 12, 12, 13, 13, 13, 14, 15, 15, 16, 16, 17, 17, 18, 18, 20, 22, 22, 22, 23, 23, 24, 25, 26, 26, 27, 28, 30, 30, 30, 31, 31],
+          "nd": [0, 0, 1, 1, 2, 3, 3, 3, 4, 5, 6, 8, 10, 12, 14, 14, 14, 14, 14, 15, 16, 16, 18, 20, 20, 21, 21, 23, 23, 25, 27, 27, 27, 29, 31, 34, 34, 37, 38, 40, 40, 40, 40, 42, 44, 46, 47, 48, 48, 50, 52, 54, 54, 59, 62, 64, 67],
+          "ms": [0, 0, 1, 1, 2, 3, 3, 4, 5, 6, 7, 8, 9, 10, 11, 11, 12, 13, 15, 16, 17, 19, 21, 22, 24, 24, 26, 27, 29, 31, 32, 34, 34, 34, 36, 37, 39, 39, 41, 42, 44, 46, 46, 48, 50, 52, 54, 56, 56, 56, 58, 60, 60, 62, 64, 64, 64],
+          "ld": [0, 1, 2, 3, 4, 5, 6, 6, 7, 8, 9, 10, 11, 12, 13, 13, 15, 17, 17, 18, 19, 19, 20, 22, 24, 24, 24, 26, 26, 27, 29, 29, 31, 31, 33, 34, 36, 36, 38, 41, 41, 41, 41, 44, 46, 49, 49, 51, 54, 54, 56, 58, 61, 63, 65, 65, 65]
         }
       }
     },
@@ -1286,6 +1733,54 @@
         }
       }
     },
+    "2026-09-11-a": {
+      "twosheep_id": "-P1ISTDQfWsypxcUzRqi",
+      "players": {
+        "a": {"resources_from_dice": 45, "production": {"wood": 13, "brick": 5, "sheep": 22, "wheat": 3, "ore": 2}, "gold_from_dice": 0, "expected_from_dice": 44.472, "blocked_by_robber": 0, "opening_dots": 18, "rolls": 18, "sevens_rolled": 4, "robber_moves": 5, "steals": 4, "stolen_from": 2, "discards": 2, "cards_discarded": 9, "monopoly_cards": 0, "monopoly_lost": 1, "trades": 4, "trade_cards_given": 4, "trade_cards_received": 4, "bank_trades": 4, "bank_cards_given": 16, "bank_cards_received": 4, "built": {"settlement": 1, "city": 0, "road": 8, "ship": 0}, "dev_cards_played": {"knight": 1, "victory_point": 0, "monopoly": 0, "road_building": 0, "year_of_plenty": 0}, "longest_road_length": 9, "max_hand": 12, "fog_discovered": 0, "steals_by_victim": {"dh": 4}, "trade_partners": {"ms": 3, "dh": 1}},
+        "ld": {"resources_from_dice": 51, "production": {"wood": 21, "brick": 1, "sheep": 9, "wheat": 2, "ore": 18}, "gold_from_dice": 0, "expected_from_dice": 57.75, "blocked_by_robber": 4, "opening_dots": 21, "rolls": 18, "sevens_rolled": 4, "robber_moves": 6, "steals": 6, "stolen_from": 2, "discards": 0, "cards_discarded": 0, "monopoly_cards": 0, "monopoly_lost": 2, "trades": 6, "trade_cards_given": 8, "trade_cards_received": 6, "bank_trades": 7, "bank_cards_given": 20, "bank_cards_received": 7, "built": {"settlement": 2, "city": 2, "road": 6, "ship": 0}, "dev_cards_played": {"knight": 2, "victory_point": 0, "monopoly": 0, "road_building": 0, "year_of_plenty": 0}, "longest_road_length": 5, "max_hand": 10, "fog_discovered": 0, "steals_by_victim": {"ms": 1, "dh": 5}, "trade_partners": {"ms": 1, "dh": 5}},
+        "ms": {"resources_from_dice": 54, "production": {"wood": 15, "brick": 3, "sheep": 15, "wheat": 15, "ore": 6}, "gold_from_dice": 0, "expected_from_dice": 48.417, "blocked_by_robber": 2, "opening_dots": 18, "rolls": 17, "sevens_rolled": 3, "robber_moves": 5, "steals": 5, "stolen_from": 1, "discards": 2, "cards_discarded": 8, "monopoly_cards": 3, "monopoly_lost": 0, "trades": 5, "trade_cards_given": 5, "trade_cards_received": 6, "bank_trades": 5, "bank_cards_given": 13, "bank_cards_received": 5, "built": {"settlement": 3, "city": 1, "road": 3, "ship": 0}, "dev_cards_played": {"knight": 3, "victory_point": 0, "monopoly": 1, "road_building": 0, "year_of_plenty": 0}, "longest_road_length": 2, "max_hand": 11, "fog_discovered": 0, "steals_by_victim": {"a": 1, "ld": 1, "dh": 3}, "trade_partners": {"a": 3, "ld": 1, "dh": 1}},
+        "dh": {"resources_from_dice": 63, "production": {"wood": 26, "brick": 18, "sheep": 7, "wheat": 12, "ore": 0}, "gold_from_dice": 0, "expected_from_dice": 64.25, "blocked_by_robber": 12, "opening_dots": 22, "rolls": 17, "sevens_rolled": 2, "robber_moves": 2, "steals": 2, "stolen_from": 12, "discards": 1, "cards_discarded": 4, "monopoly_cards": 0, "monopoly_lost": 0, "trades": 7, "trade_cards_given": 8, "trade_cards_received": 9, "bank_trades": 7, "bank_cards_given": 27, "bank_cards_received": 12, "built": {"settlement": 3, "city": 2, "road": 6, "ship": 0}, "dev_cards_played": {"knight": 0, "victory_point": 0, "monopoly": 0, "road_building": 1, "year_of_plenty": 0}, "longest_road_length": 4, "max_hand": 13, "fog_discovered": 0, "steals_by_victim": {"a": 1, "ld": 1}, "trade_partners": {"a": 1, "ld": 5, "ms": 1}}
+      },
+      "timeline": {
+        "turn": [0, 1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 20, 21, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 34, 35, 36, 37, 39, 42, 43, 44, 45, 46, 48, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 62, 63, 64, 65, 66, 67, 69, 70],
+        "vp": {
+          "a": [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5],
+          "ld": [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 6, 6, 6, 6, 7, 7, 7, 7],
+          "ms": [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 6, 6, 6, 6, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 9, 9, 11],
+          "dh": [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 6, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7, 7, 7, 7, 7, 7, 7]
+        },
+        "cards_from_dice": {
+          "a": [0, 0, 1, 2, 3, 4, 5, 6, 7, 7, 8, 9, 10, 10, 11, 12, 12, 12, 13, 13, 14, 14, 14, 15, 15, 15, 17, 17, 18, 19, 20, 21, 22, 24, 24, 25, 25, 27, 29, 29, 31, 32, 33, 34, 34, 34, 35, 36, 38, 38, 40, 41, 41, 43, 43, 43, 44, 44, 45, 45],
+          "ld": [0, 1, 2, 3, 4, 4, 4, 4, 5, 6, 6, 6, 6, 7, 8, 8, 9, 10, 10, 11, 11, 12, 13, 14, 16, 18, 19, 21, 21, 21, 21, 21, 21, 21, 24, 24, 27, 28, 29, 31, 32, 32, 32, 32, 34, 37, 39, 39, 39, 41, 42, 42, 42, 43, 47, 48, 48, 51, 51, 51],
+          "ms": [0, 1, 2, 3, 3, 4, 5, 5, 5, 6, 6, 7, 8, 9, 10, 11, 12, 13, 13, 14, 14, 15, 16, 16, 17, 18, 18, 19, 19, 21, 23, 25, 25, 26, 27, 29, 30, 32, 34, 35, 37, 37, 37, 37, 38, 39, 39, 39, 40, 41, 44, 45, 45, 48, 50, 50, 53, 54, 54, 54],
+          "dh": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 12, 13, 14, 14, 14, 15, 17, 18, 20, 22, 22, 24, 26, 26, 26, 28, 29, 31, 33, 33, 36, 36, 38, 38, 39, 40, 42, 43, 43, 43, 46, 48, 48, 48, 52, 55, 57, 58, 58, 58, 60, 60, 60, 62, 62, 63, 63]
+        }
+      }
+    },
+    "2026-09-14-a": {
+      "twosheep_id": "-P1XOMn-slCcl7twi12T",
+      "players": {
+        "dh": {"resources_from_dice": 68, "production": {"wood": 22, "brick": 0, "sheep": 19, "wheat": 19, "ore": 8}, "gold_from_dice": 0, "expected_from_dice": 73.917, "blocked_by_robber": 5, "opening_dots": 22, "rolls": 17, "sevens_rolled": 3, "robber_moves": 4, "steals": 4, "stolen_from": 6, "discards": 1, "cards_discarded": 5, "monopoly_cards": 0, "monopoly_lost": 0, "trades": 4, "trade_cards_given": 5, "trade_cards_received": 5, "bank_trades": 7, "bank_cards_given": 28, "bank_cards_received": 7, "built": {"settlement": 2, "city": 3, "road": 2, "ship": 0}, "dev_cards_played": {"knight": 1, "victory_point": 0, "monopoly": 0, "road_building": 0, "year_of_plenty": 1}, "longest_road_length": 2, "max_hand": 14, "fog_discovered": 0, "steals_by_victim": {"ms": 1, "nd": 1, "ld": 2}, "trade_partners": {"ms": 3, "nd": 1}},
+        "ms": {"resources_from_dice": 56, "production": {"wood": 0, "brick": 11, "sheep": 16, "wheat": 11, "ore": 18}, "gold_from_dice": 0, "expected_from_dice": 68.056, "blocked_by_robber": 0, "opening_dots": 22, "rolls": 17, "sevens_rolled": 4, "robber_moves": 7, "steals": 7, "stolen_from": 3, "discards": 2, "cards_discarded": 10, "monopoly_cards": 0, "monopoly_lost": 0, "trades": 5, "trade_cards_given": 6, "trade_cards_received": 5, "bank_trades": 3, "bank_cards_given": 9, "bank_cards_received": 3, "built": {"settlement": 2, "city": 2, "road": 6, "ship": 0}, "dev_cards_played": {"knight": 3, "victory_point": 0, "monopoly": 0, "road_building": 1, "year_of_plenty": 1}, "longest_road_length": 8, "max_hand": 10, "fog_discovered": 0, "steals_by_victim": {"dh": 3, "nd": 3, "ld": 1}, "trade_partners": {"dh": 3, "ld": 2}},
+        "nd": {"resources_from_dice": 63, "production": {"wood": 31, "brick": 24, "sheep": 7, "wheat": 0, "ore": 1}, "gold_from_dice": 0, "expected_from_dice": 56.5, "blocked_by_robber": 5, "opening_dots": 21, "rolls": 16, "sevens_rolled": 3, "robber_moves": 3, "steals": 3, "stolen_from": 4, "discards": 3, "cards_discarded": 12, "monopoly_cards": 0, "monopoly_lost": 0, "trades": 6, "trade_cards_given": 6, "trade_cards_received": 8, "bank_trades": 10, "bank_cards_given": 22, "bank_cards_received": 10, "built": {"settlement": 3, "city": 2, "road": 9, "ship": 0}, "dev_cards_played": {"knight": 0, "victory_point": 0, "monopoly": 0, "road_building": 1, "year_of_plenty": 0}, "longest_road_length": 7, "max_hand": 9, "fog_discovered": 0, "steals_by_victim": {"dh": 2, "ms": 1}, "trade_partners": {"dh": 1, "ld": 5}},
+        "ld": {"resources_from_dice": 46, "production": {"wood": 17, "brick": 0, "sheep": 10, "wheat": 15, "ore": 4}, "gold_from_dice": 0, "expected_from_dice": 52.028, "blocked_by_robber": 11, "opening_dots": 17, "rolls": 16, "sevens_rolled": 1, "robber_moves": 2, "steals": 2, "stolen_from": 3, "discards": 1, "cards_discarded": 5, "monopoly_cards": 0, "monopoly_lost": 0, "trades": 7, "trade_cards_given": 8, "trade_cards_received": 7, "bank_trades": 4, "bank_cards_given": 12, "bank_cards_received": 4, "built": {"settlement": 2, "city": 2, "road": 5, "ship": 0}, "dev_cards_played": {"knight": 1, "victory_point": 0, "monopoly": 0, "road_building": 0, "year_of_plenty": 0}, "longest_road_length": 4, "max_hand": 11, "fog_discovered": 0, "steals_by_victim": {"dh": 1, "ms": 1}, "trade_partners": {"ms": 2, "nd": 5}}
+      },
+      "timeline": {
+        "turn": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 20, 22, 23, 24, 25, 26, 27, 29, 30, 31, 34, 35, 36, 37, 38, 39, 40, 41, 43, 44, 45, 48, 49, 50, 51, 52, 54, 55, 56, 57, 59, 60, 61, 62, 63, 65, 66],
+        "vp": {
+          "dh": [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 7, 7, 7, 7, 7, 7, 7, 7, 7, 8, 8, 8, 9, 9, 9, 9, 9],
+          "ms": [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 7, 7, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 10],
+          "nd": [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 5, 5, 5, 5, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7, 7, 7, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 9, 9, 7],
+          "ld": [2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6]
+        },
+        "cards_from_dice": {
+          "dh": [0, 1, 1, 2, 2, 2, 3, 4, 5, 6, 7, 8, 9, 11, 11, 11, 12, 15, 15, 17, 19, 19, 19, 19, 21, 21, 24, 24, 26, 29, 29, 29, 32, 36, 36, 36, 38, 40, 42, 44, 46, 51, 51, 51, 53, 56, 58, 58, 60, 60, 64, 68, 68, 68, 68, 68],
+          "ms": [0, 1, 3, 4, 5, 6, 6, 7, 7, 8, 9, 10, 10, 10, 11, 11, 12, 12, 13, 13, 14, 15, 16, 18, 18, 21, 21, 22, 22, 22, 23, 26, 26, 26, 30, 31, 31, 31, 31, 32, 32, 32, 34, 38, 39, 42, 42, 43, 43, 43, 47, 49, 50, 53, 56, 56],
+          "nd": [0, 0, 0, 0, 1, 2, 3, 3, 4, 4, 4, 4, 6, 7, 8, 8, 8, 9, 11, 13, 13, 14, 15, 17, 19, 19, 20, 21, 23, 24, 25, 25, 26, 27, 27, 28, 30, 32, 34, 36, 38, 39, 39, 40, 43, 44, 47, 49, 52, 53, 54, 54, 56, 59, 63, 63],
+          "ld": [0, 0, 1, 3, 3, 4, 4, 6, 6, 9, 12, 12, 12, 13, 13, 13, 16, 17, 17, 17, 17, 19, 21, 21, 21, 21, 22, 24, 24, 25, 27, 27, 28, 29, 29, 31, 31, 31, 31, 31, 31, 32, 33, 36, 36, 37, 37, 39, 39, 39, 40, 44, 46, 46, 46, 46]
+        }
+      }
+    },
     "2026-09-20-a": {
       "twosheep_id": "-P20jropoJeBIuQmjhjU",
       "players": {
@@ -1403,6 +1898,30 @@
           "dh": [0, 1, 2, 3, 4, 4, 5, 6, 8, 10, 11, 13, 13, 14, 15, 17, 19, 19, 22, 22, 25, 25, 28, 28, 28, 30, 30, 31, 34, 35, 36, 37, 39, 39, 41, 44, 46, 48, 48, 48, 48, 49, 52, 52, 54, 57, 60, 63, 64, 65, 65, 66, 68, 71, 72, 73, 75, 77, 81, 81, 81, 83, 86, 88, 89, 89, 91, 93, 94, 96, 98, 102, 106, 108, 112],
           "nd": [0, 1, 2, 2, 3, 3, 4, 5, 6, 6, 8, 9, 9, 11, 13, 13, 14, 14, 15, 15, 16, 16, 17, 17, 17, 18, 20, 20, 21, 21, 23, 23, 23, 23, 24, 25, 25, 26, 26, 27, 28, 30, 32, 33, 34, 36, 37, 38, 38, 38, 39, 39, 40, 42, 42, 42, 44, 46, 47, 51, 52, 54, 58, 60, 60, 64, 65, 67, 67, 68, 69, 73, 77, 79, 82],
           "ms": [0, 0, 0, 0, 1, 2, 2, 2, 2, 2, 3, 3, 4, 5, 6, 6, 6, 7, 7, 9, 9, 11, 11, 14, 17, 17, 17, 20, 20, 23, 24, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 28, 28, 28, 28, 28, 29, 30, 33, 36, 36, 39, 39, 39, 40, 43, 43, 43, 44, 44, 44, 45, 45, 45, 48, 48, 48, 48, 51, 51, 51, 51, 51, 52, 54]
+        }
+      }
+    },
+    "2026-10-03-c": {
+      "twosheep_id": "-P31aUEI43NuUzgnF8Sf",
+      "players": {
+        "dh": {"resources_from_dice": 81, "production": {"wood": 30, "brick": 10, "sheep": 11, "wheat": 16, "ore": 14}, "gold_from_dice": 0, "expected_from_dice": 69.278, "blocked_by_robber": 6, "opening_dots": 21, "rolls": 19, "sevens_rolled": 3, "robber_moves": 3, "steals": 3, "stolen_from": 5, "discards": 2, "cards_discarded": 8, "monopoly_cards": 0, "monopoly_lost": 2, "trades": 7, "trade_cards_given": 11, "trade_cards_received": 9, "bank_trades": 3, "bank_cards_given": 9, "bank_cards_received": 3, "built": {"settlement": 4, "city": 3, "road": 1, "ship": 7}, "dev_cards_played": {"knight": 0, "victory_point": 0, "monopoly": 0, "road_building": 0, "year_of_plenty": 0}, "longest_road_length": 8, "max_hand": 17, "fog_discovered": 0, "steals_by_victim": {"ms": 3}, "trade_partners": {"ms": 2, "nd": 2, "ld": 3}},
+        "ms": {"resources_from_dice": 91, "production": {"wood": 13, "brick": 25, "sheep": 38, "wheat": 7, "ore": 2}, "gold_from_dice": 6, "expected_from_dice": 85.528, "blocked_by_robber": 2, "opening_dots": 21, "rolls": 19, "sevens_rolled": 2, "robber_moves": 4, "steals": 4, "stolen_from": 8, "discards": 0, "cards_discarded": 0, "monopoly_cards": 5, "monopoly_lost": 0, "trades": 7, "trade_cards_given": 7, "trade_cards_received": 8, "bank_trades": 9, "bank_cards_given": 37, "bank_cards_received": 12, "built": {"settlement": 4, "city": 2, "road": 11, "ship": 0}, "dev_cards_played": {"knight": 2, "victory_point": 0, "monopoly": 1, "road_building": 1, "year_of_plenty": 1}, "longest_road_length": 12, "max_hand": 15, "fog_discovered": 0, "steals_by_victim": {"dh": 3, "ld": 1}, "trade_partners": {"dh": 2, "nd": 2, "ld": 3}},
+        "nd": {"resources_from_dice": 56, "production": {"wood": 11, "brick": 23, "sheep": 8, "wheat": 6, "ore": 8}, "gold_from_dice": 0, "expected_from_dice": 55.111, "blocked_by_robber": 0, "opening_dots": 16, "rolls": 19, "sevens_rolled": 2, "robber_moves": 3, "steals": 3, "stolen_from": 3, "discards": 0, "cards_discarded": 0, "monopoly_cards": 0, "monopoly_lost": 1, "trades": 4, "trade_cards_given": 5, "trade_cards_received": 5, "bank_trades": 4, "bank_cards_given": 8, "bank_cards_received": 4, "built": {"settlement": 2, "city": 2, "road": 10, "ship": 2}, "dev_cards_played": {"knight": 1, "victory_point": 0, "monopoly": 0, "road_building": 0, "year_of_plenty": 0}, "longest_road_length": 7, "max_hand": 18, "fog_discovered": 0, "steals_by_victim": {"dh": 1, "ms": 2}, "trade_partners": {"dh": 2, "ms": 2}},
+        "ld": {"resources_from_dice": 64, "production": {"wood": 0, "brick": 13, "sheep": 12, "wheat": 16, "ore": 23}, "gold_from_dice": 0, "expected_from_dice": 55.139, "blocked_by_robber": 7, "opening_dots": 18, "rolls": 19, "sevens_rolled": 4, "robber_moves": 8, "steals": 7, "stolen_from": 1, "discards": 0, "cards_discarded": 0, "monopoly_cards": 0, "monopoly_lost": 2, "trades": 6, "trade_cards_given": 7, "trade_cards_received": 8, "bank_trades": 6, "bank_cards_given": 18, "bank_cards_received": 6, "built": {"settlement": 3, "city": 2, "road": 3, "ship": 1}, "dev_cards_played": {"knight": 4, "victory_point": 0, "monopoly": 0, "road_building": 0, "year_of_plenty": 0}, "longest_road_length": 4, "max_hand": 15, "fog_discovered": 0, "steals_by_victim": {"dh": 1, "ms": 3, "nd": 3}, "trade_partners": {"dh": 3, "ms": 3}}
+      },
+      "timeline": {
+        "turn": [0, 1, 2, 4, 5, 6, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 32, 33, 34, 35, 36, 37, 38, 40, 42, 43, 45, 46, 47, 48, 49, 50, 51, 52, 53, 55, 56, 57, 58, 59, 60, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76],
+        "vp": {
+          "dh": [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 8, 6, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 9, 9, 9, 9, 10, 10, 10, 10, 13, 13, 13, 13],
+          "ms": [2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 7, 7, 7, 7, 7, 7, 7, 7, 7, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 11, 11, 11, 11, 11, 11, 11, 11, 12, 10, 10, 12, 13, 13, 13],
+          "nd": [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 6, 6, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7, 7, 7, 7, 7, 8, 8, 8, 8, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 11, 11, 9, 9, 9, 9],
+          "ld": [2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 14]
+        },
+        "cards_from_dice": {
+          "dh": [0, 1, 1, 2, 3, 4, 4, 6, 6, 8, 8, 10, 11, 13, 13, 15, 15, 15, 17, 17, 18, 18, 18, 19, 20, 22, 22, 22, 22, 22, 24, 25, 25, 26, 27, 27, 28, 29, 32, 32, 33, 34, 34, 35, 38, 38, 39, 41, 42, 43, 47, 47, 49, 52, 53, 55, 56, 58, 60, 63, 65, 67, 69, 75, 81],
+          "ms": [0, 1, 2, 3, 4, 5, 5, 7, 9, 11, 13, 15, 16, 17, 18, 19, 19, 21, 23, 23, 23, 26, 27, 27, 28, 31, 33, 33, 35, 35, 38, 39, 39, 39, 39, 39, 42, 43, 45, 45, 45, 46, 46, 47, 50, 53, 54, 57, 58, 59, 61, 61, 64, 67, 68, 69, 70, 74, 76, 80, 83, 84, 87, 89, 91],
+          "nd": [0, 0, 1, 1, 1, 1, 1, 1, 2, 2, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 6, 7, 7, 8, 9, 9, 9, 11, 11, 13, 13, 14, 14, 15, 16, 18, 19, 20, 20, 22, 22, 23, 25, 26, 26, 26, 27, 30, 31, 32, 32, 35, 35, 35, 39, 40, 44, 48, 49, 53, 54, 55, 56, 56, 56],
+          "ld": [0, 1, 1, 1, 2, 3, 3, 3, 3, 3, 3, 3, 5, 5, 5, 5, 7, 7, 7, 7, 8, 8, 8, 9, 12, 12, 12, 14, 14, 16, 16, 16, 16, 17, 18, 20, 20, 20, 20, 22, 24, 27, 29, 33, 33, 33, 37, 37, 41, 43, 43, 45, 48, 48, 48, 53, 53, 53, 55, 55, 57, 62, 64, 64, 64]
         }
       }
     },

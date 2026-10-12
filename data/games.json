@@ -2567,6 +2567,129 @@
       "events": null
     },
     {
+      "id": "2025-04-15-a",
+      "date": "2025-04-15",
+      "platform": "twosheep",
+      "source": "twosheep import: game summary",
+      "twosheep_id": "-ONwWCpM9Ap_8TwERn2-",
+      "settings": {
+        "vp_to_win": 14,
+        "expansion": "seafarers",
+        "scenario": "new_shores",
+        "notes": ""
+      },
+      "n_seats": 4,
+      "turns": 84,
+      "duration_seconds": null,
+      "winner": "jd",
+      "players": [
+        {
+          "player": "nd",
+          "seat": 1,
+          "game_color": "blue",
+          "vp": 8,
+          "resources_from_dice": 49,
+          "dev_cards_bought": {
+            "knight": 0,
+            "victory_point": 0,
+            "road_building": 0,
+            "year_of_plenty": 0,
+            "monopoly": 0
+          },
+          "vp_breakdown": {
+            "settlements": 4,
+            "cities": 2,
+            "vp_cards": 0,
+            "largest_army": 0,
+            "longest_road": 0,
+            "islands": 2
+          }
+        },
+        {
+          "player": "ms",
+          "seat": 2,
+          "game_color": "black",
+          "vp": 8,
+          "resources_from_dice": 36,
+          "dev_cards_bought": {
+            "knight": 0,
+            "victory_point": 1,
+            "road_building": 0,
+            "year_of_plenty": 0,
+            "monopoly": 0
+          },
+          "vp_breakdown": {
+            "settlements": 3,
+            "cities": 2,
+            "vp_cards": 1,
+            "largest_army": 0,
+            "longest_road": 0,
+            "islands": 2
+          }
+        },
+        {
+          "player": "ld",
+          "seat": 3,
+          "game_color": "green",
+          "vp": 9,
+          "resources_from_dice": 63,
+          "dev_cards_bought": {
+            "knight": 3,
+            "victory_point": 0,
+            "road_building": 1,
+            "year_of_plenty": 0,
+            "monopoly": 0
+          },
+          "vp_breakdown": {
+            "settlements": 3,
+            "cities": 4,
+            "vp_cards": 0,
+            "largest_army": 2,
+            "longest_road": 0,
+            "islands": 0
+          }
+        },
+        {
+          "player": "jd",
+          "seat": 4,
+          "game_color": "teal",
+          "vp": 14,
+          "resources_from_dice": 94,
+          "dev_cards_bought": {
+            "knight": 1,
+            "victory_point": 0,
+            "road_building": 0,
+            "year_of_plenty": 0,
+            "monopoly": 0
+          },
+          "vp_breakdown": {
+            "settlements": 4,
+            "cities": 6,
+            "vp_cards": 0,
+            "largest_army": 0,
+            "longest_road": 2,
+            "islands": 2
+          }
+        }
+      ],
+      "dice": {
+        "counts": {
+          "2": 5,
+          "3": 6,
+          "4": 8,
+          "5": 8,
+          "6": 8,
+          "7": 15,
+          "8": 8,
+          "9": 9,
+          "10": 8,
+          "11": 6,
+          "12": 3
+        }
+      },
+      "events": null
+    },
+    {
       "id": "2025-05-03-a",
       "date": "2025-05-03",
       "platform": "twosheep",
@@ -4873,6 +4996,107 @@
       "events": null
     },
     {
+      "id": "2025-11-01-a",
+      "date": "2025-11-01",
+      "platform": "twosheep",
+      "source": "twosheep import: game summary",
+      "twosheep_id": "-Od0xX5Y8zzxCSTnEp59",
+      "settings": {
+        "vp_to_win": 12,
+        "expansion": "seafarers",
+        "scenario": "fog_islands",
+        "notes": ""
+      },
+      "n_seats": 3,
+      "turns": 109,
+      "duration_seconds": null,
+      "winner": "jd",
+      "players": [
+        {
+          "player": "jd",
+          "seat": 1,
+          "game_color": "blue",
+          "vp": 12,
+          "resources_from_dice": 140,
+          "dev_cards_bought": {
+            "knight": 5,
+            "victory_point": 0,
+            "road_building": 0,
+            "year_of_plenty": 0,
+            "monopoly": 0
+          },
+          "vp_breakdown": {
+            "settlements": 4,
+            "cities": 4,
+            "vp_cards": 0,
+            "largest_army": 2,
+            "longest_road": 2,
+            "islands": 0
+          }
+        },
+        {
+          "player": "ms",
+          "seat": 2,
+          "game_color": "black",
+          "vp": 6,
+          "resources_from_dice": 82,
+          "dev_cards_bought": {
+            "knight": 3,
+            "victory_point": 1,
+            "road_building": 2,
+            "year_of_plenty": 2,
+            "monopoly": 0
+          },
+          "vp_breakdown": {
+            "settlements": 5,
+            "cities": 0,
+            "vp_cards": 1,
+            "largest_army": 0,
+            "longest_road": 0,
+            "islands": 0
+          }
+        },
+        {
+          "player": "a",
+          "seat": 3,
+          "game_color": "teal",
+          "vp": 11,
+          "resources_from_dice": 65,
+          "dev_cards_bought": {
+            "knight": 1,
+            "victory_point": 4,
+            "road_building": 0,
+            "year_of_plenty": 0,
+            "monopoly": 1
+          },
+          "vp_breakdown": {
+            "settlements": 3,
+            "cities": 4,
+            "vp_cards": 4,
+            "largest_army": 0,
+            "longest_road": 0,
+            "islands": 0
+          }
+        }
+      ],
+      "dice": {
+        "counts": {
+          "2": 4,
+          "3": 6,
+          "4": 11,
+          "5": 13,
+          "6": 12,
+          "7": 13,
+          "8": 19,
+          "9": 13,
+          "10": 10,
+          "11": 6,
+          "12": 2
+        }
+      },
+      "events": null
+    },
+    {
       "id": "2025-11-04-a",
       "date": "2025-11-04",
       "platform": "twosheep",
@@ -5013,6 +5237,1521 @@
           "10": 12,
           "11": 0,
           "12": 1
+        }
+      },
+      "events": null
+    },
+    {
+      "id": "2025-11-09-a",
+      "date": "2025-11-09",
+      "platform": "twosheep",
+      "source": "twosheep import: game summary",
+      "twosheep_id": "-OdfI-nyGAt4_ckdEMif",
+      "settings": {
+        "vp_to_win": 13,
+        "expansion": "seafarers",
+        "scenario": "four_islands",
+        "notes": ""
+      },
+      "n_seats": 3,
+      "turns": 92,
+      "duration_seconds": null,
+      "winner": "jd",
+      "players": [
+        {
+          "player": "ms",
+          "seat": 1,
+          "game_color": "black",
+          "vp": 7,
+          "resources_from_dice": 79,
+          "dev_cards_bought": {
+            "knight": 1,
+            "victory_point": 0,
+            "road_building": 0,
+            "year_of_plenty": 0,
+            "monopoly": 0
+          },
+          "vp_breakdown": {
+            "settlements": 3,
+            "cities": 4,
+            "vp_cards": 0,
+            "largest_army": 0,
+            "longest_road": 0,
+            "islands": 0
+          }
+        },
+        {
+          "player": "jd",
+          "seat": 2,
+          "game_color": "blue",
+          "vp": 13,
+          "resources_from_dice": 73,
+          "dev_cards_bought": {
+            "knight": 2,
+            "victory_point": 0,
+            "road_building": 0,
+            "year_of_plenty": 0,
+            "monopoly": 0
+          },
+          "vp_breakdown": {
+            "settlements": 1,
+            "cities": 8,
+            "vp_cards": 0,
+            "largest_army": 0,
+            "longest_road": 2,
+            "islands": 2
+          }
+        },
+        {
+          "player": "a",
+          "seat": 3,
+          "game_color": "red",
+          "vp": 8,
+          "resources_from_dice": 49,
+          "dev_cards_bought": {
+            "knight": 0,
+            "victory_point": 2,
+            "road_building": 0,
+            "year_of_plenty": 1,
+            "monopoly": 0
+          },
+          "vp_breakdown": {
+            "settlements": 4,
+            "cities": 2,
+            "vp_cards": 2,
+            "largest_army": 0,
+            "longest_road": 0,
+            "islands": 0
+          }
+        }
+      ],
+      "dice": {
+        "counts": {
+          "2": 0,
+          "3": 6,
+          "4": 3,
+          "5": 11,
+          "6": 19,
+          "7": 19,
+          "8": 9,
+          "9": 12,
+          "10": 7,
+          "11": 3,
+          "12": 3
+        }
+      },
+      "events": null
+    },
+    {
+      "id": "2026-01-07-a",
+      "date": "2026-01-07",
+      "platform": "twosheep",
+      "source": "twosheep import: game summary",
+      "twosheep_id": "-OiPYecZixFtvHjiq0oY",
+      "settings": {
+        "vp_to_win": 10,
+        "expansion": "seafarers",
+        "scenario": "through_the_desert",
+        "notes": ""
+      },
+      "n_seats": 3,
+      "turns": 43,
+      "duration_seconds": null,
+      "winner": "nd",
+      "players": [
+        {
+          "player": "nd",
+          "seat": 1,
+          "game_color": "orange",
+          "vp": 10,
+          "resources_from_dice": 40,
+          "dev_cards_bought": {
+            "knight": 0,
+            "victory_point": 0,
+            "road_building": 0,
+            "year_of_plenty": 0,
+            "monopoly": 0
+          },
+          "vp_breakdown": {
+            "settlements": 4,
+            "cities": 2,
+            "vp_cards": 0,
+            "largest_army": 0,
+            "longest_road": 2,
+            "islands": 2
+          }
+        },
+        {
+          "player": "ld",
+          "seat": 2,
+          "game_color": "pink",
+          "vp": 3,
+          "resources_from_dice": 37,
+          "dev_cards_bought": {
+            "knight": 1,
+            "victory_point": 0,
+            "road_building": 0,
+            "year_of_plenty": 0,
+            "monopoly": 0
+          },
+          "vp_breakdown": {
+            "settlements": 3,
+            "cities": 0,
+            "vp_cards": 0,
+            "largest_army": 0,
+            "longest_road": 0,
+            "islands": 0
+          }
+        },
+        {
+          "player": "dh",
+          "seat": 3,
+          "game_color": "purple",
+          "vp": 6,
+          "resources_from_dice": 43,
+          "dev_cards_bought": {
+            "knight": 0,
+            "victory_point": 0,
+            "road_building": 0,
+            "year_of_plenty": 0,
+            "monopoly": 0
+          },
+          "vp_breakdown": {
+            "settlements": 2,
+            "cities": 4,
+            "vp_cards": 0,
+            "largest_army": 0,
+            "longest_road": 0,
+            "islands": 0
+          }
+        }
+      ],
+      "dice": {
+        "counts": {
+          "2": 0,
+          "3": 0,
+          "4": 9,
+          "5": 5,
+          "6": 4,
+          "7": 4,
+          "8": 11,
+          "9": 4,
+          "10": 4,
+          "11": 2,
+          "12": 0
+        }
+      },
+      "events": null
+    },
+    {
+      "id": "2026-01-07-b",
+      "date": "2026-01-07",
+      "platform": "twosheep",
+      "source": "twosheep import: game summary",
+      "twosheep_id": "-OiPd9iwe5WJuOzKjdJi",
+      "settings": {
+        "vp_to_win": 16,
+        "expansion": "seafarers",
+        "scenario": "through_the_desert",
+        "notes": ""
+      },
+      "n_seats": 3,
+      "turns": 55,
+      "duration_seconds": null,
+      "winner": "dh",
+      "players": [
+        {
+          "player": "dh",
+          "seat": 1,
+          "game_color": "black",
+          "vp": 16,
+          "resources_from_dice": 79,
+          "dev_cards_bought": {
+            "knight": 3,
+            "victory_point": 1,
+            "road_building": 0,
+            "year_of_plenty": 0,
+            "monopoly": 0
+          },
+          "vp_breakdown": {
+            "settlements": 5,
+            "cities": 4,
+            "vp_cards": 1,
+            "largest_army": 2,
+            "longest_road": 2,
+            "islands": 2
+          }
+        },
+        {
+          "player": "nd",
+          "seat": 2,
+          "game_color": "orange",
+          "vp": 11,
+          "resources_from_dice": 65,
+          "dev_cards_bought": {
+            "knight": 1,
+            "victory_point": 0,
+            "road_building": 0,
+            "year_of_plenty": 0,
+            "monopoly": 0
+          },
+          "vp_breakdown": {
+            "settlements": 5,
+            "cities": 2,
+            "vp_cards": 0,
+            "largest_army": 0,
+            "longest_road": 0,
+            "islands": 4
+          }
+        },
+        {
+          "player": "ld",
+          "seat": 3,
+          "game_color": "pink",
+          "vp": 10,
+          "resources_from_dice": 38,
+          "dev_cards_bought": {
+            "knight": 0,
+            "victory_point": 1,
+            "road_building": 0,
+            "year_of_plenty": 0,
+            "monopoly": 0
+          },
+          "vp_breakdown": {
+            "settlements": 3,
+            "cities": 2,
+            "vp_cards": 1,
+            "largest_army": 0,
+            "longest_road": 0,
+            "islands": 4
+          }
+        }
+      ],
+      "dice": {
+        "counts": {
+          "2": 1,
+          "3": 2,
+          "4": 2,
+          "5": 7,
+          "6": 11,
+          "7": 9,
+          "8": 9,
+          "9": 8,
+          "10": 3,
+          "11": 3,
+          "12": 0
+        }
+      },
+      "events": null
+    },
+    {
+      "id": "2026-01-07-c",
+      "date": "2026-01-07",
+      "platform": "twosheep",
+      "source": "twosheep import: game summary",
+      "twosheep_id": "-OiPloL6Q5p9WIK-stdL",
+      "settings": {
+        "vp_to_win": 14,
+        "expansion": "seafarers",
+        "scenario": "new_shores",
+        "notes": ""
+      },
+      "n_seats": 3,
+      "turns": 53,
+      "duration_seconds": null,
+      "winner": "dh",
+      "players": [
+        {
+          "player": "nd",
+          "seat": 1,
+          "game_color": "orange",
+          "vp": 6,
+          "resources_from_dice": 34,
+          "dev_cards_bought": {
+            "knight": 1,
+            "victory_point": 0,
+            "road_building": 0,
+            "year_of_plenty": 0,
+            "monopoly": 0
+          },
+          "vp_breakdown": {
+            "settlements": 4,
+            "cities": 0,
+            "vp_cards": 0,
+            "largest_army": 0,
+            "longest_road": 0,
+            "islands": 2
+          }
+        },
+        {
+          "player": "dh",
+          "seat": 2,
+          "game_color": "black",
+          "vp": 15,
+          "resources_from_dice": 74,
+          "dev_cards_bought": {
+            "knight": 0,
+            "victory_point": 0,
+            "road_building": 0,
+            "year_of_plenty": 0,
+            "monopoly": 0
+          },
+          "vp_breakdown": {
+            "settlements": 3,
+            "cities": 8,
+            "vp_cards": 0,
+            "largest_army": 0,
+            "longest_road": 0,
+            "islands": 4
+          }
+        },
+        {
+          "player": "ld",
+          "seat": 3,
+          "game_color": "pink",
+          "vp": 8,
+          "resources_from_dice": 25,
+          "dev_cards_bought": {
+            "knight": 1,
+            "victory_point": 0,
+            "road_building": 0,
+            "year_of_plenty": 0,
+            "monopoly": 0
+          },
+          "vp_breakdown": {
+            "settlements": 2,
+            "cities": 2,
+            "vp_cards": 0,
+            "largest_army": 0,
+            "longest_road": 2,
+            "islands": 2
+          }
+        }
+      ],
+      "dice": {
+        "counts": {
+          "2": 1,
+          "3": 2,
+          "4": 3,
+          "5": 5,
+          "6": 7,
+          "7": 7,
+          "8": 9,
+          "9": 6,
+          "10": 6,
+          "11": 5,
+          "12": 2
+        }
+      },
+      "events": null
+    },
+    {
+      "id": "2026-01-07-d",
+      "date": "2026-01-07",
+      "platform": "twosheep",
+      "source": "twosheep import: game summary",
+      "twosheep_id": "-OiPrJT-QIfPZ7jWopa4",
+      "settings": {
+        "vp_to_win": 16,
+        "expansion": "seafarers",
+        "scenario": "new_shores",
+        "notes": ""
+      },
+      "n_seats": 3,
+      "turns": 86,
+      "duration_seconds": null,
+      "winner": "nd",
+      "players": [
+        {
+          "player": "dh",
+          "seat": 1,
+          "game_color": "black",
+          "vp": 10,
+          "resources_from_dice": 61,
+          "dev_cards_bought": {
+            "knight": 0,
+            "victory_point": 1,
+            "road_building": 0,
+            "year_of_plenty": 0,
+            "monopoly": 0
+          },
+          "vp_breakdown": {
+            "settlements": 5,
+            "cities": 2,
+            "vp_cards": 1,
+            "largest_army": 0,
+            "longest_road": 0,
+            "islands": 2
+          }
+        },
+        {
+          "player": "nd",
+          "seat": 2,
+          "game_color": "orange",
+          "vp": 16,
+          "resources_from_dice": 97,
+          "dev_cards_bought": {
+            "knight": 3,
+            "victory_point": 2,
+            "road_building": 0,
+            "year_of_plenty": 2,
+            "monopoly": 1
+          },
+          "vp_breakdown": {
+            "settlements": 4,
+            "cities": 6,
+            "vp_cards": 2,
+            "largest_army": 0,
+            "longest_road": 2,
+            "islands": 2
+          }
+        },
+        {
+          "player": "ld",
+          "seat": 3,
+          "game_color": "pink",
+          "vp": 8,
+          "resources_from_dice": 56,
+          "dev_cards_bought": {
+            "knight": 5,
+            "victory_point": 1,
+            "road_building": 0,
+            "year_of_plenty": 0,
+            "monopoly": 0
+          },
+          "vp_breakdown": {
+            "settlements": 1,
+            "cities": 4,
+            "vp_cards": 1,
+            "largest_army": 2,
+            "longest_road": 0,
+            "islands": 0
+          }
+        }
+      ],
+      "dice": {
+        "counts": {
+          "2": 2,
+          "3": 5,
+          "4": 12,
+          "5": 8,
+          "6": 12,
+          "7": 19,
+          "8": 9,
+          "9": 6,
+          "10": 7,
+          "11": 3,
+          "12": 3
+        }
+      },
+      "events": null
+    },
+    {
+      "id": "2026-01-08-a",
+      "date": "2026-01-08",
+      "platform": "twosheep",
+      "source": "twosheep import: game summary",
+      "twosheep_id": "-OiTpGC2VivZoySIzEZg",
+      "settings": {
+        "vp_to_win": 16,
+        "expansion": "seafarers",
+        "scenario": "new_shores",
+        "notes": ""
+      },
+      "n_seats": 3,
+      "turns": 89,
+      "duration_seconds": null,
+      "winner": "ld",
+      "players": [
+        {
+          "player": "nd",
+          "seat": 1,
+          "game_color": "orange",
+          "vp": 15,
+          "resources_from_dice": 104,
+          "dev_cards_bought": {
+            "knight": 3,
+            "victory_point": 0,
+            "road_building": 1,
+            "year_of_plenty": 0,
+            "monopoly": 1
+          },
+          "vp_breakdown": {
+            "settlements": 5,
+            "cities": 4,
+            "vp_cards": 0,
+            "largest_army": 0,
+            "longest_road": 0,
+            "islands": 6
+          }
+        },
+        {
+          "player": "ld",
+          "seat": 2,
+          "game_color": "pink",
+          "vp": 16,
+          "resources_from_dice": 99,
+          "dev_cards_bought": {
+            "knight": 1,
+            "victory_point": 0,
+            "road_building": 0,
+            "year_of_plenty": 0,
+            "monopoly": 0
+          },
+          "vp_breakdown": {
+            "settlements": 4,
+            "cities": 6,
+            "vp_cards": 0,
+            "largest_army": 0,
+            "longest_road": 2,
+            "islands": 4
+          }
+        },
+        {
+          "player": "dh",
+          "seat": 3,
+          "game_color": "black",
+          "vp": 11,
+          "resources_from_dice": 71,
+          "dev_cards_bought": {
+            "knight": 2,
+            "victory_point": 1,
+            "road_building": 0,
+            "year_of_plenty": 0,
+            "monopoly": 0
+          },
+          "vp_breakdown": {
+            "settlements": 4,
+            "cities": 4,
+            "vp_cards": 1,
+            "largest_army": 0,
+            "longest_road": 0,
+            "islands": 2
+          }
+        }
+      ],
+      "dice": {
+        "counts": {
+          "2": 2,
+          "3": 4,
+          "4": 6,
+          "5": 6,
+          "6": 10,
+          "7": 21,
+          "8": 13,
+          "9": 17,
+          "10": 4,
+          "11": 4,
+          "12": 2
+        }
+      },
+      "events": null
+    },
+    {
+      "id": "2026-01-08-b",
+      "date": "2026-01-08",
+      "platform": "twosheep",
+      "source": "twosheep import: game summary",
+      "twosheep_id": "-OiTzh75lHjMpI77IR8h",
+      "settings": {
+        "vp_to_win": 16,
+        "expansion": "seafarers",
+        "scenario": "new_shores",
+        "notes": ""
+      },
+      "n_seats": 3,
+      "turns": 67,
+      "duration_seconds": null,
+      "winner": "dh",
+      "players": [
+        {
+          "player": "dh",
+          "seat": 1,
+          "game_color": "black",
+          "vp": 17,
+          "resources_from_dice": 93,
+          "dev_cards_bought": {
+            "knight": 2,
+            "victory_point": 0,
+            "road_building": 1,
+            "year_of_plenty": 0,
+            "monopoly": 0
+          },
+          "vp_breakdown": {
+            "settlements": 3,
+            "cities": 8,
+            "vp_cards": 0,
+            "largest_army": 0,
+            "longest_road": 2,
+            "islands": 4
+          }
+        },
+        {
+          "player": "nd",
+          "seat": 2,
+          "game_color": "orange",
+          "vp": 9,
+          "resources_from_dice": 60,
+          "dev_cards_bought": {
+            "knight": 1,
+            "victory_point": 0,
+            "road_building": 0,
+            "year_of_plenty": 0,
+            "monopoly": 0
+          },
+          "vp_breakdown": {
+            "settlements": 3,
+            "cities": 4,
+            "vp_cards": 0,
+            "largest_army": 0,
+            "longest_road": 0,
+            "islands": 2
+          }
+        },
+        {
+          "player": "ld",
+          "seat": 3,
+          "game_color": "pink",
+          "vp": 9,
+          "resources_from_dice": 75,
+          "dev_cards_bought": {
+            "knight": 3,
+            "victory_point": 2,
+            "road_building": 0,
+            "year_of_plenty": 2,
+            "monopoly": 1
+          },
+          "vp_breakdown": {
+            "settlements": 3,
+            "cities": 4,
+            "vp_cards": 2,
+            "largest_army": 0,
+            "longest_road": 0,
+            "islands": 0
+          }
+        }
+      ],
+      "dice": {
+        "counts": {
+          "2": 1,
+          "3": 2,
+          "4": 6,
+          "5": 10,
+          "6": 10,
+          "7": 9,
+          "8": 12,
+          "9": 7,
+          "10": 4,
+          "11": 3,
+          "12": 3
+        }
+      },
+      "events": null
+    },
+    {
+      "id": "2026-01-09-a",
+      "date": "2026-01-09",
+      "platform": "twosheep",
+      "source": "twosheep import: game summary",
+      "twosheep_id": "-OiZ7WQAJgOTlT3NAuXu",
+      "settings": {
+        "vp_to_win": 13,
+        "expansion": "seafarers",
+        "scenario": "fog_islands",
+        "notes": ""
+      },
+      "n_seats": 3,
+      "turns": 74,
+      "duration_seconds": null,
+      "winner": "dh",
+      "players": [
+        {
+          "player": "nd",
+          "seat": 1,
+          "game_color": "orange",
+          "vp": 7,
+          "resources_from_dice": 69,
+          "dev_cards_bought": {
+            "knight": 1,
+            "victory_point": 0,
+            "road_building": 0,
+            "year_of_plenty": 1,
+            "monopoly": 0
+          },
+          "vp_breakdown": {
+            "settlements": 5,
+            "cities": 2,
+            "vp_cards": 0,
+            "largest_army": 0,
+            "longest_road": 0,
+            "islands": 0
+          }
+        },
+        {
+          "player": "dh",
+          "seat": 2,
+          "game_color": "yellow",
+          "vp": 14,
+          "resources_from_dice": 113,
+          "dev_cards_bought": {
+            "knight": 3,
+            "victory_point": 0,
+            "road_building": 0,
+            "year_of_plenty": 0,
+            "monopoly": 0
+          },
+          "vp_breakdown": {
+            "settlements": 4,
+            "cities": 8,
+            "vp_cards": 0,
+            "largest_army": 0,
+            "longest_road": 2,
+            "islands": 0
+          }
+        },
+        {
+          "player": "ld",
+          "seat": 3,
+          "game_color": "pink",
+          "vp": 10,
+          "resources_from_dice": 85,
+          "dev_cards_bought": {
+            "knight": 0,
+            "victory_point": 1,
+            "road_building": 1,
+            "year_of_plenty": 0,
+            "monopoly": 0
+          },
+          "vp_breakdown": {
+            "settlements": 5,
+            "cities": 4,
+            "vp_cards": 1,
+            "largest_army": 0,
+            "longest_road": 0,
+            "islands": 0
+          }
+        }
+      ],
+      "dice": {
+        "counts": {
+          "2": 2,
+          "3": 3,
+          "4": 4,
+          "5": 7,
+          "6": 12,
+          "7": 10,
+          "8": 8,
+          "9": 12,
+          "10": 5,
+          "11": 7,
+          "12": 4
+        }
+      },
+      "events": null
+    },
+    {
+      "id": "2026-01-10-a",
+      "date": "2026-01-10",
+      "platform": "twosheep",
+      "source": "twosheep import: game summary",
+      "twosheep_id": "-OidAc-UJhnMGjuYLtqj",
+      "settings": {
+        "vp_to_win": 14,
+        "expansion": "seafarers",
+        "scenario": "fog_islands",
+        "notes": ""
+      },
+      "n_seats": 3,
+      "turns": 63,
+      "duration_seconds": null,
+      "winner": "dh",
+      "players": [
+        {
+          "player": "ld",
+          "seat": 1,
+          "game_color": "pink",
+          "vp": 7,
+          "resources_from_dice": 49,
+          "dev_cards_bought": {
+            "knight": 3,
+            "victory_point": 0,
+            "road_building": 0,
+            "year_of_plenty": 0,
+            "monopoly": 0
+          },
+          "vp_breakdown": {
+            "settlements": 5,
+            "cities": 0,
+            "vp_cards": 0,
+            "largest_army": 2,
+            "longest_road": 0,
+            "islands": 0
+          }
+        },
+        {
+          "player": "nd",
+          "seat": 2,
+          "game_color": "orange",
+          "vp": 5,
+          "resources_from_dice": 26,
+          "dev_cards_bought": {
+            "knight": 0,
+            "victory_point": 0,
+            "road_building": 0,
+            "year_of_plenty": 0,
+            "monopoly": 0
+          },
+          "vp_breakdown": {
+            "settlements": 5,
+            "cities": 0,
+            "vp_cards": 0,
+            "largest_army": 0,
+            "longest_road": 0,
+            "islands": 0
+          }
+        },
+        {
+          "player": "dh",
+          "seat": 3,
+          "game_color": "yellow",
+          "vp": 14,
+          "resources_from_dice": 101,
+          "dev_cards_bought": {
+            "knight": 1,
+            "victory_point": 0,
+            "road_building": 0,
+            "year_of_plenty": 1,
+            "monopoly": 0
+          },
+          "vp_breakdown": {
+            "settlements": 4,
+            "cities": 8,
+            "vp_cards": 0,
+            "largest_army": 0,
+            "longest_road": 2,
+            "islands": 0
+          }
+        }
+      ],
+      "dice": {
+        "counts": {
+          "2": 4,
+          "3": 2,
+          "4": 11,
+          "5": 4,
+          "6": 4,
+          "7": 3,
+          "8": 10,
+          "9": 9,
+          "10": 9,
+          "11": 6,
+          "12": 1
+        }
+      },
+      "events": null
+    },
+    {
+      "id": "2026-01-10-b",
+      "date": "2026-01-10",
+      "platform": "twosheep",
+      "source": "twosheep import: game summary",
+      "twosheep_id": "-OidIMwzMok-Pe7xs9Uu",
+      "settings": {
+        "vp_to_win": 12,
+        "expansion": "seafarers",
+        "scenario": "fog_islands",
+        "notes": ""
+      },
+      "n_seats": 3,
+      "turns": 77,
+      "duration_seconds": null,
+      "winner": "nd",
+      "players": [
+        {
+          "player": "dh",
+          "seat": 1,
+          "game_color": "yellow",
+          "vp": 10,
+          "resources_from_dice": 65,
+          "dev_cards_bought": {
+            "knight": 1,
+            "victory_point": 0,
+            "road_building": 0,
+            "year_of_plenty": 0,
+            "monopoly": 0
+          },
+          "vp_breakdown": {
+            "settlements": 2,
+            "cities": 8,
+            "vp_cards": 0,
+            "largest_army": 0,
+            "longest_road": 0,
+            "islands": 0
+          }
+        },
+        {
+          "player": "nd",
+          "seat": 2,
+          "game_color": "orange",
+          "vp": 13,
+          "resources_from_dice": 75,
+          "dev_cards_bought": {
+            "knight": 1,
+            "victory_point": 2,
+            "road_building": 0,
+            "year_of_plenty": 0,
+            "monopoly": 0
+          },
+          "vp_breakdown": {
+            "settlements": 3,
+            "cities": 6,
+            "vp_cards": 2,
+            "largest_army": 0,
+            "longest_road": 2,
+            "islands": 0
+          }
+        },
+        {
+          "player": "ld",
+          "seat": 3,
+          "game_color": "pink",
+          "vp": 9,
+          "resources_from_dice": 79,
+          "dev_cards_bought": {
+            "knight": 1,
+            "victory_point": 1,
+            "road_building": 0,
+            "year_of_plenty": 0,
+            "monopoly": 0
+          },
+          "vp_breakdown": {
+            "settlements": 4,
+            "cities": 4,
+            "vp_cards": 1,
+            "largest_army": 0,
+            "longest_road": 0,
+            "islands": 0
+          }
+        }
+      ],
+      "dice": {
+        "counts": {
+          "2": 2,
+          "3": 6,
+          "4": 8,
+          "5": 9,
+          "6": 11,
+          "7": 15,
+          "8": 10,
+          "9": 8,
+          "10": 3,
+          "11": 3,
+          "12": 2
+        }
+      },
+      "events": null
+    },
+    {
+      "id": "2026-01-10-c",
+      "date": "2026-01-10",
+      "platform": "twosheep",
+      "source": "twosheep import: game summary",
+      "twosheep_id": "-OidVPKkjM0lwCeoOwZT",
+      "settings": {
+        "vp_to_win": 14,
+        "expansion": "seafarers",
+        "scenario": "new_shores",
+        "notes": ""
+      },
+      "n_seats": 3,
+      "turns": 69,
+      "duration_seconds": null,
+      "winner": "dh",
+      "players": [
+        {
+          "player": "ld",
+          "seat": 1,
+          "game_color": "pink",
+          "vp": 3,
+          "resources_from_dice": 34,
+          "dev_cards_bought": {
+            "knight": 2,
+            "victory_point": 0,
+            "road_building": 0,
+            "year_of_plenty": 0,
+            "monopoly": 0
+          },
+          "vp_breakdown": {
+            "settlements": 3,
+            "cities": 0,
+            "vp_cards": 0,
+            "largest_army": 0,
+            "longest_road": 0,
+            "islands": 0
+          }
+        },
+        {
+          "player": "nd",
+          "seat": 2,
+          "game_color": "orange",
+          "vp": 7,
+          "resources_from_dice": 43,
+          "dev_cards_bought": {
+            "knight": 1,
+            "victory_point": 0,
+            "road_building": 0,
+            "year_of_plenty": 0,
+            "monopoly": 0
+          },
+          "vp_breakdown": {
+            "settlements": 3,
+            "cities": 2,
+            "vp_cards": 0,
+            "largest_army": 0,
+            "longest_road": 0,
+            "islands": 2
+          }
+        },
+        {
+          "player": "dh",
+          "seat": 3,
+          "game_color": "yellow",
+          "vp": 14,
+          "resources_from_dice": 106,
+          "dev_cards_bought": {
+            "knight": 1,
+            "victory_point": 2,
+            "road_building": 0,
+            "year_of_plenty": 1,
+            "monopoly": 0
+          },
+          "vp_breakdown": {
+            "settlements": 2,
+            "cities": 8,
+            "vp_cards": 2,
+            "largest_army": 0,
+            "longest_road": 2,
+            "islands": 0
+          }
+        }
+      ],
+      "dice": {
+        "counts": {
+          "2": 1,
+          "3": 4,
+          "4": 4,
+          "5": 10,
+          "6": 13,
+          "7": 9,
+          "8": 6,
+          "9": 5,
+          "10": 5,
+          "11": 7,
+          "12": 5
+        }
+      },
+      "events": null
+    },
+    {
+      "id": "2026-01-11-a",
+      "date": "2026-01-11",
+      "platform": "twosheep",
+      "source": "twosheep import: game summary",
+      "twosheep_id": "-OiiTJEw5Hkg1y3NIKe-",
+      "settings": {
+        "vp_to_win": 14,
+        "expansion": "seafarers",
+        "scenario": "new_shores",
+        "notes": ""
+      },
+      "n_seats": 3,
+      "turns": 78,
+      "duration_seconds": null,
+      "winner": "nd",
+      "players": [
+        {
+          "player": "ld",
+          "seat": 1,
+          "game_color": "pink",
+          "vp": 7,
+          "resources_from_dice": 64,
+          "dev_cards_bought": {
+            "knight": 4,
+            "victory_point": 0,
+            "road_building": 0,
+            "year_of_plenty": 0,
+            "monopoly": 1
+          },
+          "vp_breakdown": {
+            "settlements": 3,
+            "cities": 2,
+            "vp_cards": 0,
+            "largest_army": 2,
+            "longest_road": 0,
+            "islands": 0
+          }
+        },
+        {
+          "player": "dh",
+          "seat": 2,
+          "game_color": "yellow",
+          "vp": 8,
+          "resources_from_dice": 50,
+          "dev_cards_bought": {
+            "knight": 0,
+            "victory_point": 0,
+            "road_building": 0,
+            "year_of_plenty": 0,
+            "monopoly": 0
+          },
+          "vp_breakdown": {
+            "settlements": 2,
+            "cities": 6,
+            "vp_cards": 0,
+            "largest_army": 0,
+            "longest_road": 0,
+            "islands": 0
+          }
+        },
+        {
+          "player": "nd",
+          "seat": 3,
+          "game_color": "orange",
+          "vp": 16,
+          "resources_from_dice": 88,
+          "dev_cards_bought": {
+            "knight": 0,
+            "victory_point": 0,
+            "road_building": 0,
+            "year_of_plenty": 0,
+            "monopoly": 0
+          },
+          "vp_breakdown": {
+            "settlements": 4,
+            "cities": 6,
+            "vp_cards": 0,
+            "largest_army": 0,
+            "longest_road": 2,
+            "islands": 4
+          }
+        }
+      ],
+      "dice": {
+        "counts": {
+          "2": 2,
+          "3": 5,
+          "4": 7,
+          "5": 3,
+          "6": 11,
+          "7": 16,
+          "8": 6,
+          "9": 9,
+          "10": 9,
+          "11": 7,
+          "12": 3
+        }
+      },
+      "events": null
+    },
+    {
+      "id": "2026-01-11-b",
+      "date": "2026-01-11",
+      "platform": "twosheep",
+      "source": "twosheep import: game summary",
+      "twosheep_id": "-OiidM_6gGa3_pO6WNX0",
+      "settings": {
+        "vp_to_win": 14,
+        "expansion": "seafarers",
+        "scenario": "new_shores",
+        "notes": ""
+      },
+      "n_seats": 3,
+      "turns": 82,
+      "duration_seconds": null,
+      "winner": "dh",
+      "players": [
+        {
+          "player": "dh",
+          "seat": 1,
+          "game_color": "green",
+          "vp": 14,
+          "resources_from_dice": 65,
+          "dev_cards_bought": {
+            "knight": 0,
+            "victory_point": 0,
+            "road_building": 1,
+            "year_of_plenty": 0,
+            "monopoly": 0
+          },
+          "vp_breakdown": {
+            "settlements": 4,
+            "cities": 6,
+            "vp_cards": 0,
+            "largest_army": 0,
+            "longest_road": 2,
+            "islands": 2
+          }
+        },
+        {
+          "player": "ld",
+          "seat": 2,
+          "game_color": "pink",
+          "vp": 9,
+          "resources_from_dice": 73,
+          "dev_cards_bought": {
+            "knight": 5,
+            "victory_point": 1,
+            "road_building": 0,
+            "year_of_plenty": 0,
+            "monopoly": 0
+          },
+          "vp_breakdown": {
+            "settlements": 4,
+            "cities": 2,
+            "vp_cards": 1,
+            "largest_army": 2,
+            "longest_road": 0,
+            "islands": 0
+          }
+        },
+        {
+          "player": "nd",
+          "seat": 3,
+          "game_color": "orange",
+          "vp": 9,
+          "resources_from_dice": 50,
+          "dev_cards_bought": {
+            "knight": 3,
+            "victory_point": 2,
+            "road_building": 1,
+            "year_of_plenty": 1,
+            "monopoly": 1
+          },
+          "vp_breakdown": {
+            "settlements": 3,
+            "cities": 2,
+            "vp_cards": 2,
+            "largest_army": 0,
+            "longest_road": 0,
+            "islands": 2
+          }
+        }
+      ],
+      "dice": {
+        "counts": {
+          "2": 2,
+          "3": 3,
+          "4": 5,
+          "5": 9,
+          "6": 13,
+          "7": 18,
+          "8": 8,
+          "9": 8,
+          "10": 9,
+          "11": 5,
+          "12": 2
+        }
+      },
+      "events": null
+    },
+    {
+      "id": "2026-01-13-a",
+      "date": "2026-01-13",
+      "platform": "twosheep",
+      "source": "twosheep import: game summary",
+      "twosheep_id": "-Oiqkt5ndsWVt5b2jDVj",
+      "settings": {
+        "vp_to_win": 14,
+        "expansion": "seafarers",
+        "scenario": "through_the_desert",
+        "notes": ""
+      },
+      "n_seats": 3,
+      "turns": 66,
+      "duration_seconds": null,
+      "winner": "dh",
+      "players": [
+        {
+          "player": "nd",
+          "seat": 1,
+          "game_color": "green",
+          "vp": 12,
+          "resources_from_dice": 61,
+          "dev_cards_bought": {
+            "knight": 0,
+            "victory_point": 1,
+            "road_building": 0,
+            "year_of_plenty": 0,
+            "monopoly": 1
+          },
+          "vp_breakdown": {
+            "settlements": 5,
+            "cities": 0,
+            "vp_cards": 1,
+            "largest_army": 0,
+            "longest_road": 2,
+            "islands": 4
+          }
+        },
+        {
+          "player": "ld",
+          "seat": 2,
+          "game_color": "pink",
+          "vp": 12,
+          "resources_from_dice": 77,
+          "dev_cards_bought": {
+            "knight": 0,
+            "victory_point": 0,
+            "road_building": 0,
+            "year_of_plenty": 0,
+            "monopoly": 0
+          },
+          "vp_breakdown": {
+            "settlements": 4,
+            "cities": 4,
+            "vp_cards": 0,
+            "largest_army": 0,
+            "longest_road": 0,
+            "islands": 4
+          }
+        },
+        {
+          "player": "dh",
+          "seat": 3,
+          "game_color": "red",
+          "vp": 14,
+          "resources_from_dice": 88,
+          "dev_cards_bought": {
+            "knight": 0,
+            "victory_point": 0,
+            "road_building": 0,
+            "year_of_plenty": 0,
+            "monopoly": 1
+          },
+          "vp_breakdown": {
+            "settlements": 4,
+            "cities": 6,
+            "vp_cards": 0,
+            "largest_army": 0,
+            "longest_road": 0,
+            "islands": 4
+          }
+        }
+      ],
+      "dice": {
+        "counts": {
+          "2": 4,
+          "3": 2,
+          "4": 6,
+          "5": 7,
+          "6": 14,
+          "7": 9,
+          "8": 8,
+          "9": 9,
+          "10": 3,
+          "11": 4,
+          "12": 0
+        }
+      },
+      "events": null
+    },
+    {
+      "id": "2026-01-13-b",
+      "date": "2026-01-13",
+      "platform": "twosheep",
+      "source": "twosheep import: game summary",
+      "twosheep_id": "-OiqujYb_H9EOXJPtw_S",
+      "settings": {
+        "vp_to_win": 13,
+        "expansion": "seafarers",
+        "scenario": "four_islands",
+        "notes": ""
+      },
+      "n_seats": 3,
+      "turns": 73,
+      "duration_seconds": null,
+      "winner": "dh",
+      "players": [
+        {
+          "player": "dh",
+          "seat": 1,
+          "game_color": "purple",
+          "vp": 14,
+          "resources_from_dice": 94,
+          "dev_cards_bought": {
+            "knight": 1,
+            "victory_point": 0,
+            "road_building": 0,
+            "year_of_plenty": 0,
+            "monopoly": 0
+          },
+          "vp_breakdown": {
+            "settlements": 4,
+            "cities": 8,
+            "vp_cards": 0,
+            "largest_army": 0,
+            "longest_road": 0,
+            "islands": 2
+          }
+        },
+        {
+          "player": "nd",
+          "seat": 2,
+          "game_color": "green",
+          "vp": 11,
+          "resources_from_dice": 75,
+          "dev_cards_bought": {
+            "knight": 3,
+            "victory_point": 0,
+            "road_building": 1,
+            "year_of_plenty": 0,
+            "monopoly": 0
+          },
+          "vp_breakdown": {
+            "settlements": 1,
+            "cities": 8,
+            "vp_cards": 0,
+            "largest_army": 0,
+            "longest_road": 2,
+            "islands": 0
+          }
+        },
+        {
+          "player": "ld",
+          "seat": 3,
+          "game_color": "pink",
+          "vp": 10,
+          "resources_from_dice": 76,
+          "dev_cards_bought": {
+            "knight": 1,
+            "victory_point": 0,
+            "road_building": 0,
+            "year_of_plenty": 0,
+            "monopoly": 0
+          },
+          "vp_breakdown": {
+            "settlements": 4,
+            "cities": 4,
+            "vp_cards": 0,
+            "largest_army": 0,
+            "longest_road": 0,
+            "islands": 2
+          }
+        }
+      ],
+      "dice": {
+        "counts": {
+          "2": 2,
+          "3": 3,
+          "4": 5,
+          "5": 8,
+          "6": 14,
+          "7": 10,
+          "8": 11,
+          "9": 7,
+          "10": 8,
+          "11": 2,
+          "12": 3
         }
       },
       "events": null
@@ -5220,6 +6959,208 @@
       "events": null
     },
     {
+      "id": "2026-02-12-a",
+      "date": "2026-02-12",
+      "platform": "twosheep",
+      "source": "twosheep import: game summary",
+      "twosheep_id": "-OlJapx8VlifMy4PoQIi",
+      "settings": {
+        "vp_to_win": 14,
+        "expansion": "seafarers",
+        "scenario": "new_shores",
+        "notes": ""
+      },
+      "n_seats": 3,
+      "turns": 76,
+      "duration_seconds": null,
+      "winner": "ms",
+      "players": [
+        {
+          "player": "ms",
+          "seat": 1,
+          "game_color": "black",
+          "vp": 14,
+          "resources_from_dice": 54,
+          "dev_cards_bought": {
+            "knight": 4,
+            "victory_point": 3,
+            "road_building": 1,
+            "year_of_plenty": 0,
+            "monopoly": 0
+          },
+          "vp_breakdown": {
+            "settlements": 5,
+            "cities": 0,
+            "vp_cards": 3,
+            "largest_army": 2,
+            "longest_road": 0,
+            "islands": 4
+          }
+        },
+        {
+          "player": "nd",
+          "seat": 2,
+          "game_color": "green",
+          "vp": 12,
+          "resources_from_dice": 71,
+          "dev_cards_bought": {
+            "knight": 3,
+            "victory_point": 1,
+            "road_building": 0,
+            "year_of_plenty": 0,
+            "monopoly": 0
+          },
+          "vp_breakdown": {
+            "settlements": 3,
+            "cities": 4,
+            "vp_cards": 1,
+            "largest_army": 0,
+            "longest_road": 2,
+            "islands": 2
+          }
+        },
+        {
+          "player": "a",
+          "seat": 3,
+          "game_color": "blue",
+          "vp": 4,
+          "resources_from_dice": 45,
+          "dev_cards_bought": {
+            "knight": 3,
+            "victory_point": 1,
+            "road_building": 0,
+            "year_of_plenty": 0,
+            "monopoly": 0
+          },
+          "vp_breakdown": {
+            "settlements": 3,
+            "cities": 0,
+            "vp_cards": 1,
+            "largest_army": 0,
+            "longest_road": 0,
+            "islands": 0
+          }
+        }
+      ],
+      "dice": {
+        "counts": {
+          "2": 2,
+          "3": 8,
+          "4": 4,
+          "5": 12,
+          "6": 8,
+          "7": 16,
+          "8": 14,
+          "9": 4,
+          "10": 6,
+          "11": 2,
+          "12": 0
+        }
+      },
+      "events": null
+    },
+    {
+      "id": "2026-02-12-b",
+      "date": "2026-02-12",
+      "platform": "twosheep",
+      "source": "twosheep import: game summary",
+      "twosheep_id": "-OlJf01OBhv5rHa4REBf",
+      "settings": {
+        "vp_to_win": 14,
+        "expansion": "seafarers",
+        "scenario": "new_shores",
+        "notes": ""
+      },
+      "n_seats": 3,
+      "turns": 90,
+      "duration_seconds": null,
+      "winner": "a",
+      "players": [
+        {
+          "player": "nd",
+          "seat": 1,
+          "game_color": "green",
+          "vp": 9,
+          "resources_from_dice": 83,
+          "dev_cards_bought": {
+            "knight": 1,
+            "victory_point": 0,
+            "road_building": 0,
+            "year_of_plenty": 0,
+            "monopoly": 0
+          },
+          "vp_breakdown": {
+            "settlements": 1,
+            "cities": 6,
+            "vp_cards": 0,
+            "largest_army": 0,
+            "longest_road": 0,
+            "islands": 2
+          }
+        },
+        {
+          "player": "ms",
+          "seat": 2,
+          "game_color": "black",
+          "vp": 13,
+          "resources_from_dice": 71,
+          "dev_cards_bought": {
+            "knight": 2,
+            "victory_point": 4,
+            "road_building": 2,
+            "year_of_plenty": 1,
+            "monopoly": 2
+          },
+          "vp_breakdown": {
+            "settlements": 3,
+            "cities": 4,
+            "vp_cards": 4,
+            "largest_army": 0,
+            "longest_road": 0,
+            "islands": 2
+          }
+        },
+        {
+          "player": "a",
+          "seat": 3,
+          "game_color": "blue",
+          "vp": 14,
+          "resources_from_dice": 98,
+          "dev_cards_bought": {
+            "knight": 2,
+            "victory_point": 1,
+            "road_building": 0,
+            "year_of_plenty": 0,
+            "monopoly": 0
+          },
+          "vp_breakdown": {
+            "settlements": 3,
+            "cities": 6,
+            "vp_cards": 1,
+            "largest_army": 0,
+            "longest_road": 2,
+            "islands": 2
+          }
+        }
+      ],
+      "dice": {
+        "counts": {
+          "2": 2,
+          "3": 4,
+          "4": 9,
+          "5": 11,
+          "6": 13,
+          "7": 13,
+          "8": 9,
+          "9": 6,
+          "10": 13,
+          "11": 7,
+          "12": 3
+        }
+      },
+      "events": null
+    },
+    {
       "id": "2026-02-15-a",
       "date": "2026-02-15",
       "platform": "twosheep",
@@ -5417,6 +7358,107 @@
           "10": 6,
           "11": 4,
           "12": 4
+        }
+      },
+      "events": null
+    },
+    {
+      "id": "2026-03-11-a",
+      "date": "2026-03-11",
+      "platform": "twosheep",
+      "source": "twosheep import: game summary",
+      "twosheep_id": "-OnUkghCL5rbtjZ8T98F",
+      "settings": {
+        "vp_to_win": 14,
+        "expansion": "seafarers",
+        "scenario": "new_shores",
+        "notes": ""
+      },
+      "n_seats": 3,
+      "turns": 75,
+      "duration_seconds": null,
+      "winner": "ms",
+      "players": [
+        {
+          "player": "a",
+          "seat": 1,
+          "game_color": "blue",
+          "vp": 7,
+          "resources_from_dice": 54,
+          "dev_cards_bought": {
+            "knight": 1,
+            "victory_point": 0,
+            "road_building": 0,
+            "year_of_plenty": 0,
+            "monopoly": 0
+          },
+          "vp_breakdown": {
+            "settlements": 3,
+            "cities": 2,
+            "vp_cards": 0,
+            "largest_army": 0,
+            "longest_road": 0,
+            "islands": 2
+          }
+        },
+        {
+          "player": "nd",
+          "seat": 2,
+          "game_color": "green",
+          "vp": 7,
+          "resources_from_dice": 58,
+          "dev_cards_bought": {
+            "knight": 0,
+            "victory_point": 0,
+            "road_building": 0,
+            "year_of_plenty": 0,
+            "monopoly": 0
+          },
+          "vp_breakdown": {
+            "settlements": 5,
+            "cities": 0,
+            "vp_cards": 0,
+            "largest_army": 0,
+            "longest_road": 0,
+            "islands": 2
+          }
+        },
+        {
+          "player": "ms",
+          "seat": 3,
+          "game_color": "black",
+          "vp": 15,
+          "resources_from_dice": 65,
+          "dev_cards_bought": {
+            "knight": 4,
+            "victory_point": 2,
+            "road_building": 1,
+            "year_of_plenty": 1,
+            "monopoly": 2
+          },
+          "vp_breakdown": {
+            "settlements": 5,
+            "cities": 0,
+            "vp_cards": 2,
+            "largest_army": 2,
+            "longest_road": 2,
+            "islands": 4
+          }
+        }
+      ],
+      "dice": {
+        "counts": {
+          "2": 1,
+          "3": 5,
+          "4": 8,
+          "5": 6,
+          "6": 14,
+          "7": 8,
+          "8": 14,
+          "9": 9,
+          "10": 3,
+          "11": 5,
+          "12": 2
         }
       },
       "events": null
@@ -5641,6 +7683,129 @@
           "10": 7,
           "11": 4,
           "12": 3
+        }
+      },
+      "events": null
+    },
+    {
+      "id": "2026-03-24-a",
+      "date": "2026-03-24",
+      "platform": "twosheep",
+      "source": "twosheep import: game summary",
+      "twosheep_id": "-OoXjgFoiiwk-nsXe3qy",
+      "settings": {
+        "vp_to_win": 10,
+        "expansion": "base",
+        "scenario": null,
+        "notes": ""
+      },
+      "n_seats": 4,
+      "turns": 62,
+      "duration_seconds": null,
+      "winner": "nd",
+      "players": [
+        {
+          "player": "jd",
+          "seat": 1,
+          "game_color": "blue",
+          "vp": 6,
+          "resources_from_dice": 31,
+          "dev_cards_bought": {
+            "knight": 2,
+            "victory_point": 2,
+            "road_building": 0,
+            "year_of_plenty": 1,
+            "monopoly": 1
+          },
+          "vp_breakdown": {
+            "settlements": 4,
+            "cities": 0,
+            "vp_cards": 2,
+            "largest_army": 0,
+            "longest_road": 0,
+            "islands": 0
+          }
+        },
+        {
+          "player": "nd",
+          "seat": 2,
+          "game_color": "green",
+          "vp": 11,
+          "resources_from_dice": 67,
+          "dev_cards_bought": {
+            "knight": 5,
+            "victory_point": 2,
+            "road_building": 0,
+            "year_of_plenty": 0,
+            "monopoly": 0
+          },
+          "vp_breakdown": {
+            "settlements": 3,
+            "cities": 4,
+            "vp_cards": 2,
+            "largest_army": 2,
+            "longest_road": 0,
+            "islands": 0
+          }
+        },
+        {
+          "player": "ms",
+          "seat": 3,
+          "game_color": "black",
+          "vp": 7,
+          "resources_from_dice": 64,
+          "dev_cards_bought": {
+            "knight": 2,
+            "victory_point": 1,
+            "road_building": 1,
+            "year_of_plenty": 0,
+            "monopoly": 1
+          },
+          "vp_breakdown": {
+            "settlements": 0,
+            "cities": 6,
+            "vp_cards": 1,
+            "largest_army": 0,
+            "longest_road": 0,
+            "islands": 0
+          }
+        },
+        {
+          "player": "ld",
+          "seat": 4,
+          "game_color": "pink",
+          "vp": 9,
+          "resources_from_dice": 65,
+          "dev_cards_bought": {
+            "knight": 0,
+            "victory_point": 0,
+            "road_building": 1,
+            "year_of_plenty": 0,
+            "monopoly": 0
+          },
+          "vp_breakdown": {
+            "settlements": 3,
+            "cities": 4,
+            "vp_cards": 0,
+            "largest_army": 0,
+            "longest_road": 2,
+            "islands": 0
+          }
+        }
+      ],
+      "dice": {
+        "counts": {
+          "2": 1,
+          "3": 5,
+          "4": 5,
+          "5": 10,
+          "6": 6,
+          "7": 8,
+          "8": 14,
+          "9": 10,
+          "10": 3,
+          "11": 0,
+          "12": 0
         }
       },
       "events": null
@@ -6450,6 +8615,252 @@
       "events": null
     },
     {
+      "id": "2026-09-11-a",
+      "date": "2026-09-11",
+      "platform": "twosheep",
+      "source": "twosheep import: game summary",
+      "twosheep_id": "-P1ISTDQfWsypxcUzRqi",
+      "settings": {
+        "vp_to_win": 10,
+        "expansion": "base",
+        "scenario": null,
+        "notes": ""
+      },
+      "n_seats": 4,
+      "turns": 70,
+      "duration_seconds": null,
+      "winner": "ms",
+      "players": [
+        {
+          "player": "a",
+          "seat": 1,
+          "game_color": "blue",
+          "vp": 5,
+          "resources_from_dice": 45,
+          "dev_cards_bought": {
+            "knight": 1,
+            "victory_point": 0,
+            "road_building": 0,
+            "year_of_plenty": 0,
+            "monopoly": 0
+          },
+          "vp_breakdown": {
+            "settlements": 3,
+            "cities": 0,
+            "vp_cards": 0,
+            "largest_army": 0,
+            "longest_road": 2,
+            "islands": 0
+          }
+        },
+        {
+          "player": "ld",
+          "seat": 2,
+          "game_color": "yellow",
+          "vp": 7,
+          "resources_from_dice": 51,
+          "dev_cards_bought": {
+            "knight": 2,
+            "victory_point": 1,
+            "road_building": 0,
+            "year_of_plenty": 0,
+            "monopoly": 0
+          },
+          "vp_breakdown": {
+            "settlements": 2,
+            "cities": 4,
+            "vp_cards": 1,
+            "largest_army": 0,
+            "longest_road": 0,
+            "islands": 0
+          }
+        },
+        {
+          "player": "ms",
+          "seat": 3,
+          "game_color": "black",
+          "vp": 11,
+          "resources_from_dice": 54,
+          "dev_cards_bought": {
+            "knight": 3,
+            "victory_point": 3,
+            "road_building": 0,
+            "year_of_plenty": 0,
+            "monopoly": 1
+          },
+          "vp_breakdown": {
+            "settlements": 4,
+            "cities": 2,
+            "vp_cards": 3,
+            "largest_army": 2,
+            "longest_road": 0,
+            "islands": 0
+          }
+        },
+        {
+          "player": "dh",
+          "seat": 4,
+          "game_color": "purple",
+          "vp": 7,
+          "resources_from_dice": 63,
+          "dev_cards_bought": {
+            "knight": 0,
+            "victory_point": 0,
+            "road_building": 1,
+            "year_of_plenty": 0,
+            "monopoly": 0
+          },
+          "vp_breakdown": {
+            "settlements": 3,
+            "cities": 4,
+            "vp_cards": 0,
+            "largest_army": 0,
+            "longest_road": 0,
+            "islands": 0
+          }
+        }
+      ],
+      "dice": {
+        "counts": {
+          "2": 3,
+          "3": 3,
+          "4": 4,
+          "5": 5,
+          "6": 7,
+          "7": 13,
+          "8": 14,
+          "9": 9,
+          "10": 9,
+          "11": 2,
+          "12": 1
+        }
+      },
+      "events": null
+    },
+    {
+      "id": "2026-09-14-a",
+      "date": "2026-09-14",
+      "platform": "twosheep",
+      "source": "twosheep import: game summary",
+      "twosheep_id": "-P1XOMn-slCcl7twi12T",
+      "settings": {
+        "vp_to_win": 10,
+        "expansion": "base",
+        "scenario": null,
+        "notes": ""
+      },
+      "n_seats": 4,
+      "turns": 66,
+      "duration_seconds": null,
+      "winner": "ms",
+      "players": [
+        {
+          "player": "dh",
+          "seat": 1,
+          "game_color": "purple",
+          "vp": 9,
+          "resources_from_dice": 68,
+          "dev_cards_bought": {
+            "knight": 1,
+            "victory_point": 2,
+            "road_building": 0,
+            "year_of_plenty": 1,
+            "monopoly": 1
+          },
+          "vp_breakdown": {
+            "settlements": 1,
+            "cities": 6,
+            "vp_cards": 2,
+            "largest_army": 0,
+            "longest_road": 0,
+            "islands": 0
+          }
+        },
+        {
+          "player": "ms",
+          "seat": 2,
+          "game_color": "black",
+          "vp": 10,
+          "resources_from_dice": 56,
+          "dev_cards_bought": {
+            "knight": 4,
+            "victory_point": 0,
+            "road_building": 1,
+            "year_of_plenty": 1,
+            "monopoly": 0
+          },
+          "vp_breakdown": {
+            "settlements": 2,
+            "cities": 4,
+            "vp_cards": 0,
+            "largest_army": 2,
+            "longest_road": 2,
+            "islands": 0
+          }
+        },
+        {
+          "player": "nd",
+          "seat": 3,
+          "game_color": "green",
+          "vp": 7,
+          "resources_from_dice": 63,
+          "dev_cards_bought": {
+            "knight": 0,
+            "victory_point": 0,
+            "road_building": 1,
+            "year_of_plenty": 0,
+            "monopoly": 0
+          },
+          "vp_breakdown": {
+            "settlements": 3,
+            "cities": 4,
+            "vp_cards": 0,
+            "largest_army": 0,
+            "longest_road": 0,
+            "islands": 0
+          }
+        },
+        {
+          "player": "ld",
+          "seat": 4,
+          "game_color": "red",
+          "vp": 6,
+          "resources_from_dice": 46,
+          "dev_cards_bought": {
+            "knight": 1,
+            "victory_point": 0,
+            "road_building": 0,
+            "year_of_plenty": 0,
+            "monopoly": 0
+          },
+          "vp_breakdown": {
+            "settlements": 2,
+            "cities": 4,
+            "vp_cards": 0,
+            "largest_army": 0,
+            "longest_road": 0,
+            "islands": 0
+          }
+        }
+      ],
+      "dice": {
+        "counts": {
+          "2": 1,
+          "3": 8,
+          "4": 6,
+          "5": 5,
+          "6": 11,
+          "7": 11,
+          "8": 5,
+          "9": 7,
+          "10": 7,
+          "11": 4,
+          "12": 1
+        }
+      },
+      "events": null
+    },
+    {
       "id": "2026-09-20-a",
       "date": "2026-09-20",
       "platform": "twosheep",
@@ -7060,6 +9471,129 @@
           "10": 12,
           "11": 1,
           "12": 3
+        }
+      },
+      "events": null
+    },
+    {
+      "id": "2026-10-03-c",
+      "date": "2026-10-03",
+      "platform": "twosheep",
+      "source": "twosheep import: game summary",
+      "twosheep_id": "-P31aUEI43NuUzgnF8Sf",
+      "settings": {
+        "vp_to_win": 14,
+        "expansion": "seafarers",
+        "scenario": "through_the_desert",
+        "notes": ""
+      },
+      "n_seats": 4,
+      "turns": 76,
+      "duration_seconds": null,
+      "winner": "ld",
+      "players": [
+        {
+          "player": "dh",
+          "seat": 1,
+          "game_color": "purple",
+          "vp": 13,
+          "resources_from_dice": 81,
+          "dev_cards_bought": {
+            "knight": 0,
+            "victory_point": 0,
+            "road_building": 0,
+            "year_of_plenty": 0,
+            "monopoly": 0
+          },
+          "vp_breakdown": {
+            "settlements": 3,
+            "cities": 6,
+            "vp_cards": 0,
+            "largest_army": 0,
+            "longest_road": 0,
+            "islands": 4
+          }
+        },
+        {
+          "player": "ms",
+          "seat": 2,
+          "game_color": "red",
+          "vp": 13,
+          "resources_from_dice": 91,
+          "dev_cards_bought": {
+            "knight": 3,
+            "victory_point": 1,
+            "road_building": 1,
+            "year_of_plenty": 2,
+            "monopoly": 1
+          },
+          "vp_breakdown": {
+            "settlements": 4,
+            "cities": 4,
+            "vp_cards": 1,
+            "largest_army": 0,
+            "longest_road": 2,
+            "islands": 2
+          }
+        },
+        {
+          "player": "nd",
+          "seat": 3,
+          "game_color": "green",
+          "vp": 9,
+          "resources_from_dice": 56,
+          "dev_cards_bought": {
+            "knight": 1,
+            "victory_point": 1,
+            "road_building": 0,
+            "year_of_plenty": 0,
+            "monopoly": 0
+          },
+          "vp_breakdown": {
+            "settlements": 2,
+            "cities": 4,
+            "vp_cards": 1,
+            "largest_army": 0,
+            "longest_road": 0,
+            "islands": 2
+          }
+        },
+        {
+          "player": "ld",
+          "seat": 4,
+          "game_color": "black",
+          "vp": 14,
+          "resources_from_dice": 64,
+          "dev_cards_bought": {
+            "knight": 5,
+            "victory_point": 3,
+            "road_building": 0,
+            "year_of_plenty": 0,
+            "monopoly": 0
+          },
+          "vp_breakdown": {
+            "settlements": 3,
+            "cities": 4,
+            "vp_cards": 3,
+            "largest_army": 2,
+            "longest_road": 0,
+            "islands": 2
+          }
+        }
+      ],
+      "dice": {
+        "counts": {
+          "2": 4,
+          "3": 5,
+          "4": 8,
+          "5": 7,
+          "6": 10,
+          "7": 11,
+          "8": 7,
+          "9": 7,
+          "10": 8,
+          "11": 8,
+          "12": 1
         }
       },
       "events": null

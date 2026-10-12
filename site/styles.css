@@ -24,10 +24,11 @@
 
   /* TwoSheep piece colors, as each player's identity color (build.py player_colors picks the one they use most).
      Muted toward the header's tile tones (lumber, brick, grain, ore). Validated as a set for the colors in use
-     (black to yellow): every pair stays apart under protan and deutan simulation (OKLab dE >= 8) and in normal
-     vision (>= 15). Black and white are near-neutral on purpose. Red, pink and purple are unused so far. */
+     (black, white, green, pink, teal, purple, yellow as of 2026-10-11): every pair stays apart under protan and
+     deutan simulation (OKLab dE >= 8) and in normal vision (>= 15). Black and white are near-neutral on purpose.
+     Blue, orange and red are unused right now; re-validate when the set of most used colors changes. */
   --tc-black: #35312f; --tc-white: #b6bec8; --tc-green: #305c23; --tc-blue: #396598; --tc-teal: #3b9aa2;
-  --tc-orange: #c86b4f; --tc-yellow: #d7a446; --tc-red: #b9504a; --tc-pink: #c47a92; --tc-purple: #6d5a9e;
+  --tc-orange: #c86b4f; --tc-yellow: #d7a446; --tc-red: #b9504a; --tc-pink: #b65b65; --tc-purple: #5c3f86;
 
   --font: "Archivo", system-ui, -apple-system, "Segoe UI", sans-serif;
   --radius: 6px;
@@ -53,7 +54,7 @@
     --p1: #3987e5; --p2: #d95926; --p3: #199e70; --p4: #c98500;
     --p5: #d55181; --p6: #008300; --p7: #9085e9; --p8: #e66767;
     --tc-black: #6f6863; --tc-white: #f2eee6; --tc-green: #529d74; --tc-blue: #718bc3; --tc-teal: #7ecaca;
-    --tc-orange: #c67838; --tc-yellow: #e2c675; --tc-red: #d06a60; --tc-pink: #d495a8; --tc-purple: #9a8cc8;
+    --tc-orange: #c67838; --tc-yellow: #e2c675; --tc-red: #d06a60; --tc-pink: #d47eac; --tc-purple: #7d78ca;
   }
 }
 :root[data-theme="dark"] {
@@ -75,7 +76,7 @@
   --p1: #3987e5; --p2: #d95926; --p3: #199e70; --p4: #c98500;
   --p5: #d55181; --p6: #008300; --p7: #9085e9; --p8: #e66767;
   --tc-black: #6f6863; --tc-white: #f2eee6; --tc-green: #529d74; --tc-blue: #718bc3; --tc-teal: #7ecaca;
-  --tc-orange: #c67838; --tc-yellow: #e2c675; --tc-red: #d06a60; --tc-pink: #d495a8; --tc-purple: #9a8cc8;
+  --tc-orange: #c67838; --tc-yellow: #e2c675; --tc-red: #d06a60; --tc-pink: #d47eac; --tc-purple: #7d78ca;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
