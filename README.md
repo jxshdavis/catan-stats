@@ -17,24 +17,27 @@ Then open `dist/index.html` in a browser. Opening `site/index.html` shows a "No 
 ## After game night: importing from TwoSheep
 
 ```bash
-python scripts/fetch_twosheep.py              # local only: saves new game summaries to raw/twosheep/
+python scripts/fetch_twosheep.py --files      # local only: saves new game summaries and replay files to raw/twosheep/
+python scripts/twosheep_replay.py             # local only: replays each new game, saves its stats to raw/twosheep/
 python scripts/import_twosheep.py             # dry run: shows new games, links and conflicts
 python scripts/import_twosheep.py --write     # adds them to data/games.json
 python scripts/build.py
 ```
 
-The fetch script is kept out of this repo on purpose and lives only on the maintainer's computer. It pulls our own games' summaries from TwoSheep with the developer's permission (given 2026-10-11), one request a second at most, and saves them to `raw/twosheep/`, which is also not committed.
+The fetch and replay scripts are kept out of this repo on purpose and live only on the maintainer's computer. They pull our own games from TwoSheep with the developer's permission (given 2026-10-11), one request a second at most, and save everything to `raw/twosheep/`, which is also not committed.
 
-A summary has the date, start time, seats, colors, final VP, winner, VP target and map, but no dice, VP breakdown, dev cards or production. Games typed in from the end screen keep those, and the site says how many games each detail stat is based on.
+A summary has the date, start time, seats, colors, final VP, winner, VP target and map. The replay script plays each game back move by move and saves what it finds: dice, production, dev cards, VP breakdown, robber, trades, building and a turn-by-turn VP timeline. It checks every game as it goes (no hand goes negative, every 7-discard is half the hand, every final VP matches TwoSheep's) and skips any game that fails.
 
 The importer:
 
 - only takes finished games with 3 or more players;
 - matches people by TwoSheep account, not username, since names change all the time. Each player's accounts are listed in `players.json` as hashes (see below). Anyone else becomes a guest;
+- keeps a TwoSheep bot's seat as `bot-1` and records the seat count as `n_seats`. When a summary's seat numbers skip the bot's seat, the seats come from the game's color order;
 - imports each game once, keyed on `twosheep_id`, so re-running is safe;
 - links a hand-entered game to its replay when the players and VP match within a day, then fills only empty fields (seats, colors, VP target, scenario). Anything that disagrees is listed as a conflict and left alone;
 - adds any new TwoSheep names to each player's `aliases`;
-- lists TwoSheep map numbers it can't name yet. Add them to `TWOSHEEP_MAPS` in `scripts/import_twosheep.py` and re-run to fill in scenarios.
+- names maps from TwoSheep's game mode list (`TWOSHEEP_MAPS` in `scripts/import_twosheep.py`) and lists any number it doesn't know;
+- sets turns, dice, resources from dice, dev cards bought and VP breakdown from the replay stats, replacing anything typed in from the end screen (the replay is checked against TwoSheep's result; screenshots were not), lists each value it replaced, and rewrites `data/replays.json` with the rest.
 
 `python scripts/import_twosheep.py --accounts` lists every account in the fetched games with the usernames it has used and whose it is. To add someone, put their hash in a player's `twosheep_accounts` and re-run the import: their old guest rows become theirs.
 
@@ -97,40 +100,66 @@ Only `id`, `date`, `winner`, and each player's `player` and `vp` are required. T
 | `date` | `YYYY-MM-DD`. Games are ordered by date, then id, for ratings, so letter same-day games in the order they were played. |
 | `twosheep_id` | The replay id from `twosheep.io/replay/<id>`. Set by the importer; the game page links to the replay. |
 | `settings.expansion` | `"seafarers"` or `"base"`. Drives the game type filter. Add new types to `EXPANSIONS` in `scripts/build.py`. |
-| `settings.scenario` | For Seafarers: `"new_shores"`, `"four_islands"` or `"through_the_desert"`. Leave `null` if you don't remember; the game still counts under Seafarers. Add scenarios to `SCENARIOS` in `scripts/build.py`. |
-| `settings.vp_to_win` | Target VP, which varies by scenario. When missing, the winner's VP is used instead. |
-| `turns` | Turn count from the end screen. |
+| `settings.scenario` | For Seafarers: `"new_shores"`, `"four_islands"`, `"through_the_desert"`, `"fog_islands"`, `"six_islands"` or `"new_world"`. Leave `null` if you don't remember; the game still counts under Seafarers. Add scenarios to `SCENARIOS` in `scripts/build.py`. |
+| `settings.vp_to_win` | Target VP, which varies by scenario. TwoSheep leaves the default of 10 out of its summaries, so the importer fills 10 then. When missing, the winner's VP is used instead. |
+| `n_seats` | Number of seats in the game, bots included. Set by the importer; must equal the number of rows in `players`. |
+| `turns` | Turn count (number of rolls). |
 | `winner` | Player id of the winner. Must have the highest VP. |
-| `players[].player` | A player id from `players.json`, or `guest-1`, `guest-2`, ... for someone outside the group. |
+| `players[].player` | A player id from `players.json`, `guest-1`, `guest-2`, ... for someone outside the group, or `bot-1`, ... for a TwoSheep bot. A bot's `vp` is `null` until its replay is decoded, since TwoSheep's summary only scores humans. |
 | `players[].seat` | Turn order, 1 to n. Record it for everyone or for no one in a game. The end screen sorts by score, so note the order during the game. |
 | `players[].vp_breakdown` | VP from each source (not piece counts), so cities add 2 each. Must add up to `vp`. Keys: `settlements`, `cities`, `vp_cards`, `largest_army`, `longest_road`, `islands` (the flag column on TwoSheep's summary, Seafarers only), and `other` for anything else. |
 | `players[].dev_cards_bought` | Counts by card type, from the Dev Cards tab. |
-| `players[].resources_from_dice` | Production total from the Resources tab: resources from rolls only, ignoring trades, steals and cards. |
+| `players[].resources_from_dice` | Cards from dice rolls, gold picks included, ignoring trades, steals, dev cards and fog discoveries. Matches the production total on TwoSheep's Resources tab except in Fog Islands games, where that tab also counts cards for revealing fog. |
 | `dice.counts` | Roll counts for 2 through 12, from the Dice tab. |
 | `events` | Reserved for turn-by-turn logs if a proper import becomes possible. |
 
-The build stops with a clear message if, for example, a breakdown doesn't add up, the winner doesn't have the most VP, or a player id is unknown.
+### `data/replays.json`
+
+Written by the importer from decoded replays; don't edit it by hand. For each game id: `players` maps player id to that game's numbers (production by resource, expected production, robber, steals by victim, trades by partner, pieces built, dev cards played, opening dots and more), and `timeline` holds each player's VP and cards from dice after every turn that changed something (`turn` lists which).
+
+### `data/replay_events.json`
+
+Also written by the importer, from the version 2 decoder: every game's per-action logs. `seats` maps seat 1, 2, ... to player ids (guests and bots too), and seats inside the logs are those numbers. `states` holds each seat's VP, VP cards held, hand size, production pips (total and under the robber), cards spent by category, trades, steals, robber blocks by placer, monopoly losses, discards and the title holders after every roll and every turn, change-point encoded (a row lists only what changed; `scripts/series.py` fills rows in). `roll_log` has the cards each roll owed every seat; `robber_events` every robber and pirate move with the legal hexes and who could be robbed; plus `trade_events`, `dev_events`, `discard_events`, `monopoly_events`, `opening_picks` (with every legal corner at each pick) and `vp_events` (every change in board VP or a title, then the final reveal of VP cards). The group agreed to publish all of it, hidden information included.
+
+The build stops with a clear message if, for example, a breakdown doesn't add up, the winner doesn't have the most VP, a player id is unknown, or `replays.json` doesn't match `games.json`.
 
 ## How the stats work
+
+The site explains every model where it is shown: each statistic with a modeling choice has a small "i" button with the exact method. The code is split by topic:
+
+| File | What |
+|---|---|
+| `scripts/statlib.py` | The statistics toolkit, standard library only: conditional logit with Breslow ties and the Firth penalty, profile likelihood intervals, exploded (Plackett-Luce) logit, game-cluster and BCa bootstraps, sup-t bands, permutation tests, REML random effects and shrinkage, Mantel-Haenszel risk differences and rate ratios, Kaplan-Meier with Greenwood intervals, Wilson intervals, and the "vs the table" markers. One interval level (95%) and the guards (10 games for a player row, 15 for a badge, 30 for a model) live here. |
+| `scripts/insights.py` | Openings (the tested opening effect, robustness refits, best opener's wins, opening strength by player), seat effect, trade and bank profile, steal share, win recipe, dice calibration, "vs the table" markers, closest games. |
+| `scripts/series.py` | Reads the change-point encoded state rows in `replay_events.json`. |
+| `scripts/robber.py` | The shared robber model (hex choice and victim choice, 7s and knights fit separately, leave-one-mover-out expected counts, shrunk O/E), the leader tax, targeting beyond board state, cards lost to opponents, the Betrayal index (trade and rob) with its sensitivity rows, the trade partner model, pair robbery balance, roller premium, terms of trade, setup contention and the exploratory early-excess model. Fits are cached in `.cache/`. Front end: `site/network.js` (the Network page). |
+| `scripts/classes.py` | Spending and trading profile with the badge rule (REML, Q gate, shrinkage, losses-only check, stability), comebacks, first-to-c conversion, the draft-order grid and pick percentile, Kaplan-Meier timing (first dev card, first city, knight hold), dev draw luck and avoidable discards. Front end: `site/classes.js`. |
+| `scripts/momentum.py` | The board VP race, production engine, cumulative dice luck, dev card timeline, play of the game, the snowball test and its mechanism, production share by game stage, game-centered luck, luck-adjusted wins and where lucky cards leak. Pooled model fits are cached in `.cache/`. |
+
+Each topic module's front end is a script in `site/` that adds a page or page sections through `window.Pages` and `window.Hooks` (see the top of `site/app.js`); method notes are in `site/methods.js` and each module's script.
 
 - **Game type filter.** The build computes a complete set of stats for all games, for each expansion, and for each Seafarers scenario with at least one game. Each set is computed from scratch on its own games, ratings included. The site keeps the choice in the URL (`#/?view=seafarers/four_islands`), so a filtered page can be shared as a link.
 
 - **Rating.** A Plackett-Luce model over each game's full finishing order, updated game by game with the Weng-Lin Bayesian approximation ([openskill](https://github.com/vivekjoshy/openskill.py)). Everyone starts at μ = 25, σ = 8.33. The leaderboard ranks by μ − 3σ, and ratings are marked provisional below 5 games.
 - **Finishing order.** The winner is first. Others are ordered by VP, with equal VP sharing a place.
 - **Guests** are in the finishing order, so they move everyone else's ratings, but each guest enters every game at the prior (μ = 25, σ = 8.33) and nothing carries over. They get no stats and no head-to-head entries; they do count as opponents for beat rate.
+- **Bots** (TwoSheep's computer players) keep their seat. They count in n (expected wins use 1/n with n the number of seats) and as opponents for beat rate, but they are left out of the rating update and never listed.
 - **Win rate** has a 95% Wilson interval. **Expected wins** sums 1/n over games played. **Beat rate** is the share of opponents finished ahead of, so 3, 4 and 5 player games compare fairly.
 - **Dice** are compared to the 2d6 distribution with a chi-square test (10 degrees of freedom).
 - **Production index** is a player's resources from dice divided by the table average for that game.
+- **Dice luck** compares cards from dice with what a player's buildings would produce on average. Before each roll, every settlement adds 1 and every city 2 times the probability of each touching hex's number (dots / 36), skipping the robber's hex; the sum over the game is the expected count. The site shows actual / expected pooled over games, and the per-game difference.
+- **Opening dots** add the number dots (6 and 8 are 5, 2 and 12 are 1) under both starting settlements.
 
 All of it is computed in `scripts/build.py` and written to `dist/data/stats.json`. The front end in `site/` only renders that file.
 
 ## Project layout
 
 ```
-data/            players.json, games.json, site.json (title, subtitle, and player_names: "initials" or "usernames")
+data/            players.json, games.json, replays.json, site.json (title, subtitle, and player_names: "initials" or "usernames")
 scripts/build.py validation, stats, ratings; builds dist/
-scripts/fetch_twosheep.py   (local only, not in the repo) pulls game summaries into raw/
-scripts/import_twosheep.py  turns them into games.json entries
+scripts/fetch_twosheep.py   (local only, not in the repo) pulls game summaries and replay files into raw/
+scripts/twosheep_replay.py  (local only, not in the repo) replays each game into raw/twosheep/replay_stats/
+scripts/import_twosheep.py  turns them into games.json and replays.json entries
 tests/           unittest suite and synthetic fixtures
 site/            index.html, styles.css, app.js, charts.js (no build step, no dependencies)
 .github/         workflow that builds and deploys to Pages

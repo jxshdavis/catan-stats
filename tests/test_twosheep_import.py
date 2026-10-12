@@ -25,10 +25,13 @@ FIXTURES = ROOT / "tests" / "fixtures" / "twosheep"
 TZ = "America/Los_Angeles"
 
 
-class ImportTest(unittest.TestCase):
+class ImportCase(unittest.TestCase):
+    """A fresh copy of the fixture data in a temporary folder for each test."""
+
     def setUp(self):
         self.tmp = Path(tempfile.mkdtemp())
         self.data = self.tmp / "data"
+        self.replay_stats = self.tmp / "replay_stats"  # empty unless a test writes decoded replays
         shutil.copytree(FIXTURES / "data", self.data)
 
     def tearDown(self):
@@ -37,12 +40,15 @@ class ImportTest(unittest.TestCase):
     def run_import(self, *args):
         out = io.StringIO()
         with contextlib.redirect_stdout(out), contextlib.redirect_stderr(out):
-            code = imp.main(["--data", str(self.data), "--raw", str(FIXTURES / "replays"), "--tz", TZ, *args])
+            code = imp.main(["--data", str(self.data), "--raw", str(FIXTURES / "replays"), "--tz", TZ,
+                             "--replay-stats", str(self.replay_stats), *args])
         return code, out.getvalue()
 
     def games(self):
         return {g["id"]: g for g in json.loads((self.data / "games.json").read_text())["games"]}
 
+
+class ImportTest(ImportCase):
     def by_tsid(self):
         return {g.get("twosheep_id"): g for g in self.games().values()}
 
@@ -56,7 +62,7 @@ class ImportTest(unittest.TestCase):
     def test_filters_and_counts(self):
         code, out = self.run_import("--write")
         self.assertEqual(code, 0, out)
-        self.assertIn("3 new, 1 linked", out)
+        self.assertIn("4 new, 1 linked", out)
         self.assertIn("1 unfinished", out)
         self.assertIn("1 2 players", out)
         self.assertIn("1 0 winners marked", out)
@@ -98,8 +104,8 @@ class ImportTest(unittest.TestCase):
         self.run_import("--write")
         g = self.by_tsid()["-Rfix0003"]
         self.assertEqual(g["winner"], "cat")  # matched through Cat's older account
-        self.assertEqual(g["settings"]["expansion"], None)
-        self.assertEqual(g["settings"]["vp_to_win"], None)
+        self.assertEqual(g["settings"]["expansion"], "base")  # no map number means TwoSheep's default, base 4p
+        self.assertEqual(g["settings"]["vp_to_win"], 10)  # no target in the summary means TwoSheep's default
 
     def test_date_uses_time_zone(self):
         self.run_import("--write")
@@ -110,7 +116,7 @@ class ImportTest(unittest.TestCase):
         first = (self.data / "games.json").read_text()
         code, out = self.run_import("--write")
         self.assertEqual(code, 0, out)
-        self.assertIn("0 new, 0 linked to hand-entered games, 0 updated, 0 removed, 4 unchanged", out)
+        self.assertIn("0 new, 0 linked to hand-entered games, 0 updated, 0 removed, 5 unchanged", out)
         self.assertEqual((self.data / "games.json").read_text(), first)
 
     def test_new_account_turns_guest_into_player(self):
@@ -140,7 +146,7 @@ class ImportTest(unittest.TestCase):
         self.assertIn("removed 2026-01-10-b: two accounts of ana in one game", out)
         self.assertNotIn("-Rfix0002", self.by_tsid())
         code, out = self.run_import("--write")  # and it stays out
-        self.assertIn("0 removed, 3 unchanged", out)
+        self.assertIn("0 removed, 4 unchanged", out)
 
     def test_two_accounts_in_hand_entered_game_is_only_flagged(self):
         self.run_import("--write")
@@ -257,7 +263,7 @@ class GuestStatsTest(unittest.TestCase):
         # Ben finished 2nd of 4 behind a guest winner in -Rfix0002: beat 2 of 3 opponents there.
         g = next(g for g in self.stats["games"] if g["twosheep_id"] == "-Rfix0002")
         self.assertEqual(next(r["rank"] for r in g["players"] if r["player"] == "ben"), 2)
-        self.assertEqual(ben["games"], 4)
+        self.assertEqual(ben["games"], 5)
         self.assertEqual(ben["wins"], 0)
 
     def test_guest_starts_from_prior_each_game(self):
@@ -288,6 +294,212 @@ class GuestStatsTest(unittest.TestCase):
                          "players": [{"player": "ana", "vp": 10}, {"player": "ben", "vp": 3}]}
         errors, _ = build.validate(players, {"games": [g("a"), g("b")]})
         self.assertTrue(any("twosheep_id -X is already used" in e for e in errors))
+
+
+class BotSeatTest(ImportCase):
+    """-Rfix0008: a TwoSheep bot took seat 1 and the humans' own seat numbers start at 1 (like 2025-01-15-b).
+    The bot keeps its seat, counts in n, and its VP comes from the decoded replay."""
+
+    def setUp(self):
+        super().setUp()
+        self.replay_stats.mkdir()
+        rec = decoded_replay("-Rfix0008", [(None, 5), ("uid-ana", 6), ("uid-ben", 6), ("uid-cat", 10)])
+        (self.replay_stats / "-Rfix0008.json").write_text(json.dumps(rec))
+
+    def game(self):
+        return next(g for g in self.games().values() if g.get("twosheep_id") == "-Rfix0008")
+
+    def test_bot_seat_and_seat_fill(self):
+        code, out = self.run_import("--write")
+        self.assertEqual(code, 0, out)
+        g = self.game()
+        self.assertEqual(g["n_seats"], 4)
+        self.assertEqual([(r["player"], r["seat"], r["vp"]) for r in g["players"]],
+                         [("bot-1", 1, 5), ("ana", 2, 6), ("ben", 3, 6), ("cat", 4, 10)])
+        self.assertEqual(list(g)[list(g).index("settings") + 1], "n_seats")
+        code, out = self.run_import("--write")
+        self.assertIn("0 updated", out)  # the bot's VP from the replay survives a re-import
+
+    def test_event_logs_are_exported_with_a_seat_map(self):
+        rec = decoded_replay("-Rfix0008", [(None, 5), ("uid-ana", 6), ("uid-ben", 6), ("uid-cat", 10)])
+        rec.update(v2_events(4))
+        (self.replay_stats / "-Rfix0008.json").write_text(json.dumps(rec))
+        code, out = self.run_import("--write")
+        self.assertEqual(code, 0, out)
+        self.assertIn("1 with per-action logs", out)
+        ev = json.loads((self.data / "replay_events.json").read_text())["games"]
+        gid = self.game()["id"]
+        self.assertEqual(ev[gid]["seats"], ["bot-1", "ana", "ben", "cat"])
+        self.assertEqual(ev[gid]["robber_events"][0]["mover"], 2)  # seats stay 1-based numbers
+        self.assertEqual(set(ev[gid]) - {"twosheep_id", "decoder_version", "seats"}, set(imp.EVENT_KEYS))
+        self.assertNotIn("uid-", (self.data / "replay_events.json").read_text())
+
+    def test_bot_without_replay_has_no_vp(self):
+        shutil.rmtree(self.replay_stats)
+        self.run_import("--write")
+        bot = self.game()["players"][0]
+        self.assertEqual((bot["player"], bot["vp"]), ("bot-1", None))
+
+    def test_bot_counts_in_n_but_is_never_listed(self):
+        self.run_import("--write")
+        players = json.loads((self.data / "players.json").read_text())
+        games = json.loads((self.data / "games.json").read_text())
+        games["games"] = [g for g in games["games"] if g.get("twosheep_id") == "-Rfix0008"]
+        errors, _ = build.validate(players, games)
+        self.assertEqual(errors, [])
+        stats = build.compute_views(players, games)["views"]["all"]
+        g = stats["games"][0]
+        self.assertEqual((g["n_players"], g["n_bots"]), (4, 1))
+        self.assertNotIn("bot-1", [r["player"] for r in g["players"]])
+        ana = next(p for p in stats["players"] if p["id"] == "ana")
+        self.assertAlmostEqual(ana["expected_wins"], 0.25)
+        # Ana tied Ben for 2nd, beat the bot, lost to Cat: (1 + 0.5 + 0) / 3
+        self.assertAlmostEqual(ana["beat_rate"], 0.5)
+        self.assertFalse(any(build.is_bot(h["player"]) or build.is_bot(h["opponent"]) for h in stats["head_to_head"]))
+        no_bot = build.compute_views(players, {"games": [
+            {**games["games"][0], "players": games["games"][0]["players"][1:], "n_seats": 3}]})["views"]["all"]
+        self.assertEqual(ana["rating"], next(p for p in no_bot["players"] if p["id"] == "ana")["rating"])
+
+
+def decoded_replay(rid, seats, turns=50):
+    """A synthetic record in the format scripts/twosheep_replay.py writes. seats: [(account, vp)]."""
+    players = []
+    for i, (acct, vp) in enumerate(seats):
+        players.append({
+            "seat": i + 1, "account": acct, "color": "red", "vp": vp,
+            "vp_breakdown": {"settlements": vp, "cities": 0, "vp_cards": 0, "largest_army": 0, "longest_road": 0,
+                             "islands": 0},
+            "dev_cards_bought": {k: 0 for k in ["knight", "victory_point", "monopoly", "road_building", "year_of_plenty"]},
+            "dev_cards_played": {k: 0 for k in ["knight", "victory_point", "monopoly", "road_building", "year_of_plenty"]},
+            "resources_from_dice": 40 + i, "production": {"wood": 40 + i, "brick": 0, "sheep": 0, "wheat": 0, "ore": 0},
+            "gold_from_dice": 0, "expected_from_dice": 40.0, "blocked_by_robber": 1, "opening_dots": 20, "rolls": 10,
+            "sevens_rolled": 2, "robber_moves": 2, "steals": 2, "stolen_from": 1,
+            "steals_by_victim": {str(len(seats) - i): 2}, "discards": 0, "cards_discarded": 0,
+            "monopoly_cards": 0, "monopoly_lost": 0, "trades": 1, "trade_partners": {str(len(seats) - i): 1},
+            "trade_cards_given": 1, "trade_cards_received": 1, "bank_trades": 0, "bank_cards_given": 0,
+            "bank_cards_received": 0, "built": {"settlement": 1, "city": 0, "road": 2, "ship": 0},
+            "longest_road_length": 3, "max_hand": 8, "fog_discovered": 0,
+        })
+    return {
+        "replay_id": rid, "decoder_version": 1, "decoded_at": "2026-01-20T00:00:00+00:00", "turns": turns,
+        "dice": {str(k): (turns if k == 8 else 0) for k in range(2, 13)}, "roll_order": [8] * turns,
+        "players": players,
+        "timeline": {"turn": [0, turns], "vp": [[2] * len(seats), [vp for _, vp in seats]],
+                     "cards_from_dice": [[0] * len(seats), [40 + i for i in range(len(seats))]]},
+        "notes": [],
+    }
+
+
+def v2_events(n):
+    """Minimal decoder v2 per-action logs for an n-seat game."""
+    return {
+        "decoder_version": 2, "n_seats": n,
+        "states": [{"action_index": 9, "roll_index": 0, "kind": "roll", "actor": 1, "vp": [2] * n, "hand": [3] * n}],
+        "roll_log": [{"roll_index": 0, "action_index": 9, "roller": 1, "total": 8, "a_raw": [1] * n, "short": [0] * n}],
+        "robber_events": [{"action_index": 12, "roll_index": 1, "mover": 2, "cause": "seven", "pre_roll": False,
+                           "pirate": False, "hex": [0, 1], "prior_hex": [0, 0], "candidates": [], "public_vp": [2] * n,
+                           "hand": [3] * n, "eligible": [1], "victim": 1, "card": "wood"}],
+        "trade_events": [], "dev_events": [], "discard_events": [], "monopoly_events": [], "opening_picks": [],
+        "vp_events": [{"action_index": 50, "roll_index": 49, "own_turn": 0, "phase": "end", "actor": None,
+                       "action": "reveal", "changes": [], "board_vp": [2] * n}],
+    }
+
+
+class ReplayImportTest(ImportCase):
+    """Decoded replays: set the replay fields, replacing hand-entered values and reporting each one, and write data/replays.json."""
+
+    def write_replay(self, rec):
+        self.replay_stats.mkdir(exist_ok=True)
+        (self.replay_stats / f"{rec['replay_id']}.json").write_text(json.dumps(rec))
+
+    def replays(self):
+        return json.loads((self.data / "replays.json").read_text())["games"]
+
+    def setUp(self):
+        super().setUp()
+        # -Rfix0001 is linked to the hand-entered game, which already has turns = 60
+        self.write_replay(decoded_replay("-Rfix0001", [("uid-ben", 10), ("uid-ana", 14), ("uid-cat", 8)], turns=61))
+        # -Rfix0002 has two guests, matched to rows by seat
+        self.write_replay(decoded_replay("-Rfix0002", [("uid-zed", 13), ("uid-ana", 9), ("uid-dan", 9),
+                                                       ("uid-ben", 11)]))
+
+    def test_replay_fills_and_replaces_hand_entered_values(self):
+        code, out = self.run_import("--write")
+        self.assertEqual(code, 0, out)
+        g = self.games()["2026-01-10-a"]
+        self.assertEqual(g["turns"], 61)  # the replay wins over the hand-entered 60
+        self.assertIn("corrected 2026-01-10-a: turns was 60, now 61 from the replay", out)
+        self.assertEqual(g["dice"]["counts"]["8"], 61)
+        ben = next(r for r in g["players"] if r["player"] == "ben")
+        self.assertEqual(ben["resources_from_dice"], 40)
+        ana = next(r for r in g["players"] if r["player"] == "ana")
+        self.assertEqual(ana["vp_breakdown"]["settlements"], 14)
+        self.assertIn("ana vp_breakdown was", out)
+        self.assertNotIn("the replay says", out)
+
+    def test_replays_json_uses_player_ids(self):
+        self.run_import("--write")
+        reps = self.replays()
+        self.assertEqual(set(reps), {"2026-01-10-a", "2026-01-10-b"})
+        guests = reps["2026-01-10-b"]
+        self.assertEqual(set(guests["players"]), {"guest-1", "ana", "guest-2", "ben"})
+        self.assertEqual(guests["players"]["guest-1"]["steals_by_victim"], {"ben": 2})
+        self.assertEqual(guests["timeline"]["vp"]["ben"], [2, 11])
+        text = (self.data / "replays.json").read_text()
+        self.assertNotIn("uid-", text)  # raw account ids never land in data/
+
+    def test_vp_mismatch_is_not_imported(self):
+        self.write_replay(decoded_replay("-Rfix0001", [("uid-ben", 10), ("uid-ana", 13), ("uid-cat", 8)]))
+        code, out = self.run_import("--write")
+        self.assertEqual(code, 0, out)
+        self.assertNotIn("2026-01-10-a", self.replays())
+        self.assertIn("2026-01-10-a: the decoded replay's players or VP don't match this game", out)
+
+    def test_rerun_is_stable(self):
+        self.run_import("--write")
+        first = [(self.data / f).read_text() for f in ("games.json", "replays.json")]
+        self.run_import("--write")
+        self.assertEqual([(self.data / f).read_text() for f in ("games.json", "replays.json")], first)
+
+    def test_build_uses_replays(self):
+        self.run_import("--write")
+        out = self.tmp / "dist"
+        with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
+            self.assertEqual(build.build(data_dir=self.data, out_dir=out), 0)
+        stats = json.loads((out / "data" / "stats.json").read_text())
+        ana = next(p for p in stats["views"]["all"]["players"] if p["id"] == "ana")
+        self.assertEqual(ana["replay"]["games"], 2)
+        self.assertEqual(ana["replay"]["avg_steals"], 2)
+        self.assertEqual(stats["timelines"]["2026-01-10-b"]["vp"]["ben"][:3], [2, 2, 2])
+        self.assertEqual(len(stats["timelines"]["2026-01-10-b"]["vp"]["ben"]), 51)
+        self.assertIn("guest-1", stats["game_replays"]["2026-01-10-b"])
+
+    def test_two_seats_never_share_a_row(self):
+        # Typed seats that disagree with TwoSheep can put a guest's seat on a member's row with equal VP.
+        game = {"players": [{"player": "jd", "seat": 2, "vp": 8}, {"player": "guest-1", "seat": 1, "vp": 8},
+                            {"player": "ana", "seat": 3, "vp": 10}]}
+        rec = decoded_replay("-X", [("uid-jd", 8), ("uid-guest", 8), ("uid-ana", 10)])
+        owner = {imp.account_key("uid-jd"): "jd", imp.account_key("uid-ana"): "ana"}
+        self.assertIsNone(imp.replay_seats(game, rec, owner))
+
+    def test_rows_without_seats_keep_their_fields(self):
+        # A TwoSheep bot in the game leaves every seat unknown; refreshing must not drop replay fields.
+        existing = {"players": [{"player": "ana", "seat": None, "game_color": "red", "vp": 9, "resources_from_dice": 50},
+                                {"player": "ben", "seat": None, "game_color": "blue", "vp": 10, "resources_from_dice": 40}],
+                    "winner": "ben", "settings": {}}
+        new = {"players": [{"player": "ana", "seat": None, "game_color": "red", "vp": 9},
+                           {"player": "ben", "seat": None, "game_color": "blue", "vp": 10}],
+               "winner": "ben", "date": None, "settings": {"vp_to_win": None, "expansion": None, "scenario": None}}
+        imp.refresh_imported(existing, new)
+        self.assertEqual([r["resources_from_dice"] for r in existing["players"]], [50, 40])
+
+    def test_bad_replays_json_is_rejected(self):
+        self.run_import("--write")
+        reps = json.loads((self.data / "replays.json").read_text())
+        reps["games"]["2026-01-10-a"]["timeline"]["vp"]["ben"].append(3)
+        errors, _ = build.validate(json.loads((self.data / "players.json").read_text()),
+                                   json.loads((self.data / "games.json").read_text()), reps)
+        self.assertTrue(any("timeline.vp needs one value per turn" in e for e in errors))
 
 
 if __name__ == "__main__":

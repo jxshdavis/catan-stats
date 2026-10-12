@@ -1,0 +1,44 @@
+/* Network page: circular graph, side panel, ledger cells, pair balance and three-bar figures. */
+.net-head { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; margin: 4px 0 12px; }
+.net-grid { display: grid; grid-template-columns: 1fr; gap: 16px; align-items: start; }
+@media (min-width: 900px) { .net-grid { grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); } }
+.net-graph { padding: 8px; }
+.net-graph svg { display: block; margin: 0 auto; max-width: 100%; height: auto; }
+.net-graph svg text { font-size: 13px; fill: var(--ink); font-weight: 650; }
+.net-graph .edge { cursor: pointer; }
+.net-graph .edge:focus { outline: none; }
+.net-graph .edge:focus .hit, .net-graph .edge.on .hit { stroke: var(--wash); stroke-opacity: 1; }
+.net-graph .node { cursor: pointer; }
+.net-graph .node:focus { outline: none; }
+.net-graph .node:focus .focus-ring, .net-graph .node.on .focus-ring { stroke: var(--ink); }
+.net-panel { padding: 14px 16px; min-height: 120px; }
+.net-panel h3 { margin: 0 0 6px; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.net-panel h4 { margin: 14px 0 4px; font-size: 14px; font-weight: 700; color: var(--ink); }
+.net-panel p { margin: 4px 0; color: var(--ink-2); font-size: 14px; }
+.net-panel dl { display: grid; grid-template-columns: auto 1fr; gap: 3px 12px; margin: 4px 0; font-size: 14px; }
+.net-panel dt { color: var(--ink-2); }
+.net-panel dd { margin: 0; font-variant-numeric: tabular-nums; color: var(--ink); }
+.net-panel .flag { display: inline-block; font-size: 12px; color: var(--ink-2); border: 1px solid var(--axis); border-radius: 999px; padding: 0 7px; margin-left: 4px; }
+.net-legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 13px; color: var(--ink-2); margin: 8px 0 0; padding: 0; list-style: none; }
+.net-legend li { display: inline-flex; align-items: center; gap: 6px; }
+.net-legend .ln { display: inline-block; width: 26px; height: 0; border-top: 3px solid var(--c); border-radius: 2px; }
+.net-legend .ln.dash { border-top-style: dashed; border-top-width: 2px; }
+.net-legend .ring { display: inline-block; width: 12px; height: 12px; border-radius: 50%; border: 3px solid var(--c); }
+.net-legend .grad { display: inline-block; width: 90px; height: 8px; border-radius: 2px; }
+.flowbar { display: flex; height: 8px; border-radius: 2px; overflow: hidden; gap: 2px; margin: 2px 0 6px; }
+.flowbar span { display: block; height: 100%; }
+
+/* Cards ledger: one stacked bar per cell */
+.ledger td .cell { min-width: 84px; height: 58px; gap: 3px; }
+.ledger .stack { display: flex; gap: 2px; height: 8px; width: 64px; margin: 0 auto; }
+.ledger .stack span { display: block; height: 100%; border-radius: 1px; }
+.sw-st { --c: var(--ink); } .sw-bl { --c: var(--data); } .sw-mo { --c: var(--div-pos); }
+
+/* Pair balance and three-bar figure */
+.bal svg text, .tbar svg text { font-size: 12px; fill: var(--ink-2); }
+.bal svg text.lab, .tbar svg text.lab { fill: var(--ink); font-size: 13px; font-weight: 600; }
+.bal g[tabindex]:focus, .tbar g[tabindex]:focus { outline: none; }
+.bal g[tabindex]:focus rect.bg, .tbar g[tabindex]:focus rect.bg { fill: var(--wash); }
+
+.net-sec-note { margin-top: 6px; }
+.net-tiles .tile .v small { font-size: 15px; font-weight: 600; color: var(--ink-2); }

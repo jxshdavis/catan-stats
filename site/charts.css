@@ -1,0 +1,118 @@
+/* Styles for the stats primitives in charts.js (forest plot, null bands,
+   step chart, heat matrix, funnel, Level | Rate switch, "vs the table"
+   markers, info popovers). Loaded after styles.css. */
+
+:root {
+  /* "vs the table" marker: good and bad for the player, and within noise.
+     Checked with the dataviz validator: CVD dE at least 9 between good and bad in both themes,
+     every color at least 3:1 on the surface, page and wash. */
+  --vt-good: #006300;
+  --vt-bad: #d9534f;
+  --vt-flat: #6f808d;
+  --band: #d6e0e4;          /* chance band behind bars */
+}
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme="light"])) {
+    --vt-good: #3cc13c;
+    --vt-bad: #d64545;
+    --vt-flat: #82939d;
+    --band: #263d4c;
+  }
+}
+:root[data-theme="dark"] {
+  --vt-good: #3cc13c;
+  --vt-bad: #d64545;
+  --vt-flat: #82939d;
+  --band: #263d4c;
+}
+
+/* Legend swatches the new marks need (the base .legend lives in styles.css). */
+.legend .sw.dot { width: 10px; height: 10px; border-radius: 50%; }
+.legend .sw.ring { width: 10px; height: 10px; border-radius: 50%; background: transparent; box-shadow: inset 0 0 0 2px var(--c); }
+.legend .sw.vtick { width: 2px; height: 12px; border-radius: 1px; background: var(--ink); }
+.legend .sw.band { background: var(--band); }
+.legend .sw.rule { width: 1px; height: 12px; border-radius: 0; background: var(--muted); }
+.legend .sw.star { width: 12px; height: 12px; border-radius: 0; background: var(--c);
+  clip-path: polygon(50% 0, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%); }
+
+/* The tooltip sits on ink, so player chips inside it inherit the tooltip color. */
+.tip .who { color: inherit; gap: 6px; }
+.tip .sub { color: inherit; opacity: .78; }
+
+/* ---- Forest / coefficient plot ---------------------------------------- */
+.fp { display: flex; align-items: flex-start; gap: 10px; }
+.fp-labels { flex: none; min-width: 0; }
+.fp-lab {
+  display: flex; align-items: center; padding: 0 6px; border-radius: 3px;
+  font-size: 14px; line-height: 1.2; color: var(--ink);
+}
+.fp-lab-in { display: block; min-width: 0; overflow-wrap: anywhere; }
+.fp-lab.on { background: var(--wash); }
+.fp-lab .who { gap: 6px; }
+.fp-plot { flex: 1 1 auto; min-width: 0; }
+.fp-ends { display: flex; justify-content: space-between; gap: 12px; font-size: 12px; color: var(--muted); margin-top: 2px; }
+.fp-ends span:last-child { text-align: right; }
+.fp-title { font-size: 12px; color: var(--ink-2); text-align: center; margin-top: 4px; }
+.chart svg g[tabindex]:focus { outline: none; }
+.chart svg g[tabindex]:focus-visible > rect:first-child,
+.chart svg g[tabindex]:focus-visible > circle:first-child { stroke: var(--link); stroke-width: 2px; }
+
+/* ---- Bars with a null band -------------------------------------------- */
+.chart g.nb-g:hover .nb-bar, .chart g.nb-g:focus-visible .nb-bar { opacity: .82; }
+
+/* ---- Heat matrix (extends .matrix from styles.css) ---------------------- */
+.matrix th.corner { vertical-align: bottom; text-align: left; padding: 0 10px 8px 0; }
+.mx-corner { display: block; font-size: 12px; font-weight: 500; color: var(--muted); max-width: 9em; white-space: normal; line-height: 1.3; }
+.matrix .mx-cap { caption-side: top; text-align: left; font-size: 13px; color: var(--ink-2); padding-bottom: 8px; }
+.matrix td .cell[data-mx] { cursor: default; }
+.matrix td .cell[data-mx]:hover { box-shadow: inset 0 0 0 2px var(--ink-2); }
+
+/* ---- Level | Rate switch ------------------------------------------------ */
+.seg { display: inline-flex; padding: 2px; gap: 2px; border: 1px solid var(--hair); border-radius: 999px; background: var(--surface); }
+.seg button {
+  font: inherit; font-size: 13px; font-weight: 560; line-height: 1.2; color: var(--ink-2);
+  background: transparent; border: 0; border-radius: 999px; padding: 4px 12px; cursor: pointer; min-height: 28px;
+}
+.seg button:hover { color: var(--ink); background: var(--wash); }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--page); }
+
+/* ---- "vs the table" marker ---------------------------------------------- */
+.vt { display: inline-flex; align-items: center; gap: 3px; white-space: nowrap; font-size: 13px; font-weight: 600;
+  color: var(--ink-2); font-variant-numeric: tabular-nums; vertical-align: 1px; border-radius: 3px; }
+.vt .vt-ic { flex: none; display: inline-block; width: 9px; height: 11px; fill: currentColor; overflow: visible; }
+.vt-good .vt-ic { fill: var(--vt-good); }
+.vt-bad .vt-ic { fill: var(--vt-bad); }
+.vt-flat .vt-ic { fill: var(--vt-flat); }
+.vt[data-tip] { cursor: default; }
+.tile .v .tile-mk { margin-left: 4px; }
+.vt-legend { font-size: 12px; gap: 4px 14px; }
+.vt-legend .vt { gap: 1px; }
+.vt-legend .vt-dir { color: var(--muted); }
+@media (forced-colors: active) {
+  .vt-ic { fill: CanvasText !important; }
+}
+
+/* ---- Info button and popover -------------------------------------------- */
+.info { display: inline; position: static; }
+.info-btn {
+  display: inline-grid; place-items: center; width: 24px; height: 24px; margin: -4px -2px -4px 2px; padding: 0;
+  border: 0; border-radius: 50%; background: transparent; color: var(--muted); cursor: pointer; vertical-align: middle;
+  -webkit-tap-highlight-color: transparent;
+}
+.info .info-btn svg { display: block; width: 16px; height: 16px; overflow: visible; }
+.info-btn:hover, .info-btn[aria-expanded="true"] { color: var(--ink); }
+.info-btn:focus-visible { outline: 2px solid var(--link); outline-offset: 0; border-radius: 50%; }
+.info-pop {
+  position: fixed; z-index: 30; display: block; box-sizing: border-box;
+  width: max-content; max-width: min(46ch, calc(100vw - 16px)); max-height: min(60vh, 420px); overflow: auto;
+  padding: 10px 12px; border: 1px solid var(--axis); border-radius: var(--radius);
+  background: var(--surface); color: var(--ink-2); box-shadow: 0 6px 20px rgba(0, 0, 0, .16);
+  font-family: var(--font); font-size: 14px; font-weight: 400; line-height: 1.45; font-variation-settings: "wdth" 100;
+  letter-spacing: normal; text-align: left; text-transform: none; white-space: normal;
+}
+.info-pop[hidden] { display: none; }
+.info-h { display: block; color: var(--ink); font-weight: 650; font-size: 14px; margin-bottom: 4px; }
+.info-b { display: block; }
+.info-b p { margin: 0 0 6px; }
+.info-b p:last-child { margin-bottom: 0; }
+.with-info { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }

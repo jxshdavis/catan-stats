@@ -206,6 +206,7 @@ details.tv[open] summary { border-bottom: 1px solid var(--hair); }
 .matrix td .cell span { font-size: 12px; color: var(--ink-2); }
 .matrix td .cell.self { background: transparent; }
 .matrix tbody tr:hover td { background: transparent; }
+.divbar { display: block; width: 100%; height: 10px; }
 .scale { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--ink-2); margin-top: 12px; flex-wrap: wrap; }
 .scale .bar { width: 180px; height: 10px; border-radius: 2px;
   background: linear-gradient(90deg, var(--div-neg), var(--div-mid), var(--div-pos)); }
@@ -262,3 +263,41 @@ details.tv[open] summary { border-bottom: 1px solid var(--hair); }
 .filter .note { margin-top: 8px; }
 .filter + section.block { margin-top: 24px; }
 .chip.within { border-color: var(--ink); color: var(--ink); }
+
+/* ---- Findings: closeness strip and chips ---------------------------------- */
+.strip { display: grid; gap: 10px; padding: 4px 0; }
+.strip-row { display: grid; grid-template-columns: 120px 1fr; align-items: center; gap: 10px; }
+.strip-lab { font-size: 13px; color: var(--ink-2); }
+.strip-track { position: relative; height: 22px; border-bottom: 1px solid var(--hair); }
+.strip-dot { position: absolute; top: 5px; width: 12px; height: 12px; margin-left: -6px; border-radius: 50%;
+  background: var(--data); opacity: .55; border: 1.5px solid var(--surface); }
+.strip-dot.hot { background: var(--div-pos); opacity: 1; }
+.strip-dot.cold { background: var(--div-neg); opacity: .9; }
+.strip-dot:hover, .strip-dot:focus-visible { opacity: 1; transform: scale(1.3); }
+.strip-axis { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); padding-left: 130px; }
+.chipline { display: flex; flex-wrap: wrap; gap: 4px 6px; }
+.mini { font-size: 12px; padding: 1px 8px; border-radius: 999px; background: var(--wash); color: var(--ink-2); white-space: nowrap; }
+.spark { display: block; width: 100%; height: 24px; }
+h3 .sub { font-weight: 500; }
+@media (max-width: 640px) {
+  .strip-row { grid-template-columns: 1fr; gap: 2px; }
+  .strip-axis { padding-left: 0; }
+}
+.mk-key { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 16px; margin-top: 10px; }
+.mk-key .legend { margin: 0; }
+.mk-key .note { margin: 0; }
+.cell-mk { display: inline-block; min-width: 64px; text-align: left; }
+.cell-mk:empty { min-width: 0; }
+.tile .k .info, h2 .info, h3 .info, th .info { margin-left: 4px; }
+.race-ctl { display: flex; flex-wrap: wrap; gap: 8px 14px; margin: 4px 0 10px; }
+.callout { margin: 12px 0 0; max-width: 72ch; color: var(--ink); font-size: 15px; }
+.star-ic { color: var(--ink); }
+.three-col { display: grid; grid-template-columns: 1fr; gap: 16px; }
+@media (min-width: 860px) { .three-col { grid-template-columns: repeat(3, 1fr); } }
+h4 { font-size: 14px; font-weight: 650; margin: 0 0 6px; color: var(--ink-2); }
+.chips button.chip { cursor: pointer; font: inherit; font-size: 13px; padding: 3px 10px; }
+.dev-mk { position: absolute; top: 3px; width: 14px; height: 14px; margin-left: -7px; border-radius: 3px; font-size: 9px;
+  line-height: 14px; text-align: center; font-weight: 700; }
+.dev-mk.buy { border: 1.5px solid var(--ink-2); background: var(--surface); }
+.dev-mk.play { background: var(--c); color: #fff; min-width: 14px; width: auto; padding: 0 2px; }
+.dev-mk.static { position: static; display: inline-block; margin: 0; }

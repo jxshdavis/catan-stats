@@ -6,4 +6,5 @@ __pycache__/
 .cache/
 raw/
 scripts/fetch_twosheep.py
+scripts/twosheep_replay.py
 .env.example

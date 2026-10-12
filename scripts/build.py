@@ -23,6 +23,20 @@ from pathlib import Path
 
 from openskill.models import PlackettLuce
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import insights  # noqa: E402  (model-based and group stats)
+
+# Analysis modules that read the per-action logs. Each has KEY, and compute_all(games, replays, events, ctx)
+# for a result stored once at stats.json[KEY] (all games), and may have compute_view(games, replays,
+# events, ctx, all_result) for a per-view result at views[view][KEY]. ctx is built in compute_views.
+MODULES = []
+for _name in ("momentum", "robber", "classes"):
+    try:
+        MODULES.append(__import__(_name))
+    except ModuleNotFoundError as _e:
+        if _e.name != _name:
+            raise
+
 ROOT = Path(__file__).resolve().parent.parent
 DATA = ROOT / "data"
 SITE = ROOT / "site"
@@ -35,13 +49,22 @@ SCENARIOS = {  # per expansion; each one gets its own leaderboard filter
         "new_shores": "New Shores",
         "four_islands": "Four Islands",
         "through_the_desert": "Through the Desert",
+        "fog_islands": "Fog Islands",
+        "six_islands": "Six Islands",
+        "new_world": "New World",
     },
 }
 DEV_CARDS = ["knight", "victory_point", "road_building", "year_of_plenty", "monopoly"]
 DICE_FACES = list(range(2, 13))
 DICE_P = {s: (6 - abs(s - 7)) / 36 for s in DICE_FACES}
+# Per-game numbers from decoded replays that the site averages for each player.
+REPLAY_AVERAGES = ["resources_from_dice", "expected_from_dice", "blocked_by_robber", "opening_dots", "robber_moves",
+                   "steals", "stolen_from", "cards_discarded", "monopoly_cards", "trades", "trade_cards_given",
+                   "bank_trades", "bank_cards_given", "longest_road_length", "max_hand"]
+BUILT = ["settlement", "city", "road", "ship"]
 PROVISIONAL_GAMES = 5  # ratings with fewer games than this are flagged
 GUEST_PREFIX = "guest-"  # players outside players.json: rated fresh each game, never listed
+BOT_PREFIX = "bot-"  # TwoSheep bot seats: count in n and as opponents, never rated or listed
 
 
 # ---------------------------------------------------------------------------
@@ -63,6 +86,15 @@ def is_guest(pid):
     return isinstance(pid, str) and pid.startswith(GUEST_PREFIX)
 
 
+def is_bot(pid):
+    return isinstance(pid, str) and pid.startswith(BOT_PREFIX)
+
+
+def is_anon(pid):
+    """A seat that is never listed: a guest or a bot."""
+    return is_guest(pid) or is_bot(pid)
+
+
 NAME_MODES = ("initials", "usernames")  # site.json "player_names"
 
 
@@ -76,7 +108,7 @@ def display_name(p, mode="usernames"):
     return f"{base} ({p['initials']})" if p.get("initials") else base
 
 
-def validate(players_doc, games_doc):
+def validate(players_doc, games_doc, replays_doc=None):
     """Return (errors, warnings). Errors stop the build; warnings are printed."""
     errors, warnings = [], []
     players = players_doc.get("players", [])
@@ -98,8 +130,8 @@ def validate(players_doc, games_doc):
             errors.append(f"players.json: {p.get('id')}: initials must be 1 to 4 characters")
     if len([s for s in slots if s is not None]) != len(set(s for s in slots if s is not None)):
         warnings.append("players.json: two players share a color_slot, so charts will be hard to read")
-    if any(is_guest(i) for i in ids):
-        errors.append(f"players.json: ids starting with '{GUEST_PREFIX}' are reserved for guests")
+    if any(is_anon(i) for i in ids):
+        errors.append(f"players.json: ids starting with '{GUEST_PREFIX}' or '{BOT_PREFIX}' are reserved")
     owner = {}
     for p in players:
         for acct in p.get("twosheep_accounts", []):
@@ -132,18 +164,21 @@ def validate(players_doc, games_doc):
         if len(pids) != len(set(pids)):
             errors.append(f"{where}: a player appears twice")
         for pid in pids:
-            if pid not in known and not is_guest(pid):
+            if pid not in known and not is_anon(pid):
                 errors.append(f"{where}: unknown player '{pid}' (add them to players.json)")
-        if all(is_guest(pid) for pid in pids):
-            errors.append(f"{where}: every player is a guest")
-        if g.get("winner") not in pids:
+        if all(is_anon(pid) for pid in pids):
+            errors.append(f"{where}: every player is a guest or bot")
+        if g.get("winner") not in pids or is_bot(g.get("winner")):
             errors.append(f"{where}: winner '{g.get('winner')}' is not one of the players")
         for r in rows:
-            if not isinstance(r.get("vp"), int):
+            # A bot's VP is only known from a decoded replay, so it may be missing
+            if not isinstance(r.get("vp"), int) and not (is_bot(r.get("player")) and r.get("vp") is None):
                 errors.append(f"{where}: {r.get('player')}: vp must be an integer")
+        if g.get("n_seats") is not None and g["n_seats"] != len(rows):
+            errors.append(f"{where}: n_seats is {g['n_seats']} but {len(rows)} seats are listed")
         if len(errors) > start:
             continue
-        top = max(r["vp"] for r in rows)
+        top = max(r["vp"] for r in rows if r.get("vp") is not None)
         win_vp = next(r["vp"] for r in rows if r["player"] == g["winner"])
         if win_vp < top:
             errors.append(f"{where}: winner has {win_vp} VP but someone else has {top}")
@@ -177,7 +212,7 @@ def validate(players_doc, games_doc):
                 bad = set(vb) - set(VP_SOURCES)
                 if bad:
                     errors.append(f"{where}: {r['player']}: unknown vp_breakdown keys {sorted(bad)}")
-                elif sum(vb.values()) != r["vp"]:
+                elif r["vp"] is not None and sum(vb.values()) != r["vp"]:
                     errors.append(
                         f"{where}: {r['player']}: vp_breakdown adds to {sum(vb.values())}, vp is {r['vp']}")
             dc = r.get("dev_cards_bought")
@@ -191,7 +226,58 @@ def validate(players_doc, games_doc):
             elif g.get("turns") is not None and sum(dice.values()) != g["turns"]:
                 warnings.append(
                     f"{where}: dice rolls total {sum(dice.values())} but turns is {g['turns']}")
+
+    by_id = {g.get("id"): g for g in games_doc.get("games", [])}
+    for gid, rep in ((replays_doc or {}).get("games") or {}).items():
+        where = f"replays.json: game {gid}"
+        g = by_id.get(gid)
+        if g is None:
+            errors.append(f"{where}: no such game in games.json")
+            continue
+        if rep.get("twosheep_id") != g.get("twosheep_id"):
+            errors.append(f"{where}: twosheep_id doesn't match games.json")
+        pids = {r.get("player") for r in g.get("players", [])}
+        if set(rep.get("players", {})) != pids:
+            errors.append(f"{where}: players don't match games.json")
+        for key in ("vp", "cards_from_dice"):
+            series = (rep.get("timeline") or {}).get(key) or {}
+            if set(series) != pids or any(len(v) != len(rep["timeline"]["turn"]) for v in series.values()):
+                errors.append(f"{where}: timeline.{key} needs one value per turn for each player")
     return errors, warnings
+
+
+def replays_text(doc) -> str:
+    """replays.json with one line per player and per timeline series, so diffs stay readable."""
+    line = lambda v: json.dumps(v, ensure_ascii=False, separators=(", ", ": "))
+    out = ["{", f'  "schema_version": {line(doc["schema_version"])},', f'  "source": {line(doc["source"])},', '  "games": {']
+    games = list(doc["games"].items())
+    for i, (gid, g) in enumerate(games):
+        tl = g["timeline"]
+        players = ",\n".join(f"        {line(pid)}: {line(st)}" for pid, st in g["players"].items())
+        series = ",\n".join(
+            f"        {line(key)}: {{\n" + ",\n".join(f"          {line(pid)}: {line(v)}" for pid, v in tl[key].items())
+            + "\n        }" for key in ("vp", "cards_from_dice"))
+        out.append(f"    {line(gid)}: {{\n      \"twosheep_id\": {line(g['twosheep_id'])},\n"
+                   f"      \"players\": {{\n{players}\n      }},\n"
+                   f"      \"timeline\": {{\n        \"turn\": {line(tl['turn'])},\n{series}\n      }}\n"
+                   f"    }}" + ("," if i < len(games) - 1 else ""))
+    return "\n".join(out + ["  }", "}"]) + "\n"
+
+
+def events_text(doc) -> str:
+    """replay_events.json with one line per event row, so diffs stay readable."""
+    line = lambda v: json.dumps(v, ensure_ascii=False, separators=(",", ":"))
+    out = ["{", f'  "schema_version": {line(doc["schema_version"])},', f'  "source": {line(doc["source"])},', '  "games": {']
+    games = list(doc["games"].items())
+    for i, (gid, g) in enumerate(games):
+        parts = []
+        for k, v in g.items():
+            if isinstance(v, list) and v and isinstance(v[0], dict):
+                parts.append(f"      {line(k)}: [\n" + ",\n".join(f"        {line(x)}" for x in v) + "\n      ]")
+            else:
+                parts.append(f"      {line(k)}: {line(v)}")
+        out.append(f"    {line(gid)}: {{\n" + ",\n".join(parts) + "\n    }" + ("," if i < len(games) - 1 else ""))
+    return "\n".join(out + ["  }", "}"]) + "\n"
 
 
 # ---------------------------------------------------------------------------
@@ -199,8 +285,8 @@ def validate(players_doc, games_doc):
 # ---------------------------------------------------------------------------
 
 def finishing_ranks(game):
-    """Winner is rank 1. Others by VP, ties share a rank (1, 2, 3, 3, 5)."""
-    others = sorted((r for r in game["players"] if r["player"] != game["winner"]),
+    """Winner is rank 1. Others by VP, ties share a rank (1, 2, 3, 3, 5). A bot with unknown VP gets no rank."""
+    others = sorted((r for r in game["players"] if r["player"] != game["winner"] and r.get("vp") is not None),
                     key=lambda r: -r["vp"])
     ranks = {game["winner"]: 1}
     prev_vp, prev_rank = None, None
@@ -281,8 +367,18 @@ def mean(xs):
 # Main computation
 # ---------------------------------------------------------------------------
 
-def compute(players_doc, games, number_of, name_mode="usernames"):
-    """Every stat for one slice of games. number_of maps game id to its number among all games."""
+def replay_row(st):
+    """The replay numbers the game page shows for one player."""
+    keys = ["resources_from_dice", "production", "gold_from_dice", "expected_from_dice", "blocked_by_robber",
+            "opening_dots", "rolls", "sevens_rolled", "robber_moves", "steals", "stolen_from", "cards_discarded",
+            "monopoly_cards", "trades", "bank_trades", "built", "dev_cards_played", "longest_road_length", "max_hand"]
+    return {k: st[k] for k in keys}
+
+
+def compute(players_doc, games, number_of, name_mode="usernames", replays=None):
+    """Every stat for one slice of games. number_of maps game id to its number among all games.
+    replays maps game id to its data/replays.json entry, for the games that have one."""
+    replays = replays or {}
     players = {p["id"]: p for p in players_doc["players"]}
 
     model = PlackettLuce()
@@ -293,7 +389,10 @@ def compute(players_doc, games, number_of, name_mode="usernames"):
     by_count = {pid: defaultdict(lambda: {"games": 0, "wins": 0, "vp": []}) for pid in players}
     by_exp = {pid: defaultdict(lambda: {"games": 0, "wins": 0, "vp": [], "beat": []}) for pid in players}
     by_seat = {pid: defaultdict(lambda: {"games": 0, "wins": 0, "finish": []}) for pid in players}
-    h2h = defaultdict(lambda: {"games": 0, "ahead": 0, "behind": 0, "tied": 0, "wins": 0, "losses_to": 0})
+    h2h = defaultdict(lambda: {"games": 0, "ahead": 0, "behind": 0, "tied": 0, "wins": 0, "losses_to": 0,
+                               "replay_games": 0, "steals": 0, "trades": 0})
+    rp = {pid: defaultdict(list) for pid in players}  # per-game replay numbers
+    rp_tot = {pid: defaultdict(int) for pid in players}
     vp_src = {pid: defaultdict(int) for pid in players}
     dev = {pid: defaultdict(int) for pid in players}
     all_dice = {s: 0 for s in DICE_FACES}
@@ -301,16 +400,18 @@ def compute(players_doc, games, number_of, name_mode="usernames"):
 
     for idx, g in enumerate(games, start=1):
         rows = g["players"]
-        n = len(rows)
+        n = len(rows)  # every seat, bots included: expected wins and beat rate use it
+        replay = replays.get(g["id"])
         ranks = finishing_ranks(g)
-        win_vp = max(r["vp"] for r in rows)
+        win_vp = max(r["vp"] for r in rows if r.get("vp") is not None)
         target = (g.get("settings") or {}).get("vp_to_win") or win_vp
         prod_vals = [r.get("resources_from_dice") for r in rows if r.get("resources_from_dice") is not None]
         prod_mean = mean(prod_vals) if len(prod_vals) == n else None
 
         # Rating update: Plackett-Luce over the full finishing order. Guests enter at
         # the prior every game, so they inform everyone else's update but carry nothing over.
-        order = [r["player"] for r in rows]
+        # Bots are left out of the rating update.
+        order = [r["player"] for r in rows if not is_bot(r["player"])]
         current = {pid: model.rating(name=pid) if is_guest(pid) else ratings[pid] for pid in order}
         before = {pid: (current[pid].mu, current[pid].sigma) for pid in order}
         new = model.rate([[current[pid]] for pid in order], ranks=[ranks[pid] for pid in order])
@@ -321,6 +422,8 @@ def compute(players_doc, games, number_of, name_mode="usernames"):
         game_rows = []
         for r in rows:
             pid = r["player"]
+            if is_bot(pid):
+                continue
             rank = ranks[pid]
             if is_guest(pid):
                 game_rows.append({"player": pid, "guest": True, "rank": rank, "vp": r["vp"], "seat": r.get("seat"),
@@ -329,7 +432,7 @@ def compute(players_doc, games, number_of, name_mode="usernames"):
                                   "resources_from_dice": r.get("resources_from_dice"), "rating_change": None})
                 continue
             won = pid == g["winner"]
-            opp = [o for o in rows if o["player"] != pid]
+            opp = [o for o in rows if o["player"] != pid and o["player"] in ranks]
             beaten = sum(1 if ranks[pid] < ranks[o["player"]] else 0.5 if ranks[pid] == ranks[o["player"]] else 0
                          for o in opp)
             a = acc[pid]
@@ -364,12 +467,28 @@ def compute(players_doc, games, number_of, name_mode="usernames"):
                 dev[pid][k] += v
             if r.get("dev_cards_bought"):
                 dev[pid]["_games"] += 1
+            if replay:
+                st = replay["players"][pid]
+                for k in REPLAY_AVERAGES:
+                    rp[pid][k].append(st[k])
+                rp[pid]["luck"].append(st["resources_from_dice"] - st["expected_from_dice"])
+                rp[pid]["knights"].append(st["dev_cards_played"]["knight"])
+                for k in BUILT:
+                    rp[pid]["built_" + k].append(st["built"][k])
+                for k in ("resources_from_dice", "expected_from_dice", "rolls", "sevens_rolled"):
+                    rp_tot[pid][k] += st[k]
+                rp_tot[pid]["games"] += 1
+                rp_tot[pid]["max_hand"] = max(rp_tot[pid]["max_hand"], st["max_hand"])
             for o in opp:
-                if is_guest(o["player"]):
+                if is_anon(o["player"]):
                     continue
                 key = (pid, o["player"])
                 h = h2h[key]
                 h["games"] += 1
+                if replay:
+                    h["replay_games"] += 1
+                    h["steals"] += replay["players"][pid]["steals_by_victim"].get(o["player"], 0)
+                    h["trades"] += replay["players"][pid]["trade_partners"].get(o["player"], 0)
                 if ranks[pid] < ranks[o["player"]]:
                     h["ahead"] += 1
                 elif ranks[pid] > ranks[o["player"]]:
@@ -421,9 +540,11 @@ def compute(players_doc, games, number_of, name_mode="usernames"):
             "winner": g["winner"],
             "n_players": n,
             "n_guests": sum(1 for r in rows if is_guest(r["player"])),
+            "n_bots": sum(1 for r in rows if is_bot(r["player"])),
             "players": game_rows,
             "dice": dsum,
             "has_events": bool(g.get("events")),
+            "has_replay": bool(replay),
         })
 
     # Per-player summary
@@ -481,6 +602,7 @@ def compute(players_doc, games, number_of, name_mode="usernames"):
             "vp_sources_games": vs["_games"],
             "dev_cards_bought": (
                 {**{k: dv[k] for k in DEV_CARDS}, "games": dv["_games"]} if dv["_games"] else None),
+            "replay": replay_summary(rp[pid], rp_tot[pid]),
         })
 
     out_players.sort(key=lambda x: (x["games"] == 0, -(x["rating"]["ordinal"]), -x["wins"], x["name"].lower()))
@@ -489,7 +611,8 @@ def compute(players_doc, games, number_of, name_mode="usernames"):
 
     out_h2h = [
         {"player": a, "opponent": b, **v,
-         "ahead_rate": r3((v["ahead"] + 0.5 * v["tied"]) / v["games"])}
+         "ahead_rate": r3((v["ahead"] + 0.5 * v["tied"]) / v["games"]),
+         "stolen_by": h2h[(b, a)]["steals"] if (b, a) in h2h else 0}
         for (a, b), v in sorted(h2h.items())
     ]
 
@@ -505,6 +628,7 @@ def compute(players_doc, games, number_of, name_mode="usernames"):
                               for k in sorted({g["type"] for g in out_games})},
             "games_with_dice": sum(1 for g in out_games if g["dice"]),
             "games_with_events": sum(1 for g in out_games if g["has_events"]),
+            "games_with_replays": sum(1 for g in out_games if g["has_replay"]),
             "games_with_guests": sum(1 for g in out_games if g["n_guests"]),
         },
         "dice_overall": dice_summary(all_dice),
@@ -514,7 +638,39 @@ def compute(players_doc, games, number_of, name_mode="usernames"):
     }
 
 
-def compute_views(players_doc, games_doc, name_mode="usernames"):
+def replay_summary(lists, totals):
+    """A player's per-game averages over the games that have a decoded replay."""
+    n = totals["games"]
+    if not n:
+        return None
+    out = {"games": n}
+    for k, v in lists.items():
+        out["avg_" + k] = r3(mean(v))
+    exp = totals["expected_from_dice"]
+    out["dice_ratio"] = r3(totals["resources_from_dice"] / exp) if exp else None
+    out["rolls"] = totals["rolls"]
+    out["sevens_rolled"] = totals["sevens_rolled"]
+    out["seven_rate"] = r3(totals["sevens_rolled"] / totals["rolls"]) if totals["rolls"] else None
+    out["max_hand"] = totals["max_hand"]
+    return out
+
+
+def dense_timeline(tl, turns):
+    """Fill a replay timeline forward so it has a value for every turn from 0 to the last."""
+    out = {"vp": {}, "cards_from_dice": {}}
+    for key in out:
+        for pid, vals in tl[key].items():
+            series, j, cur = [], 0, 0
+            for t in range(turns + 1):
+                while j < len(tl["turn"]) and tl["turn"][j] <= t:
+                    cur = vals[j]
+                    j += 1
+                series.append(cur)
+            out[key][pid] = series
+    return out
+
+
+def compute_views(players_doc, games_doc, name_mode="usernames", replays_doc=None, fast=False, events_doc=None):
     """One full stats view per filter: all games, each expansion, each scenario.
 
     Each view is computed from scratch on its own slice, so a Seafarers rating
@@ -522,6 +678,7 @@ def compute_views(players_doc, games_doc, name_mode="usernames"):
     """
     games = sorted(games_doc["games"], key=lambda g: (g["date"], g["id"]))
     number_of = {g["id"]: i for i, g in enumerate(games, start=1)}
+    replays = (replays_doc or {}).get("games") or {}
     slices = {"all": games}
     for exp in sorted({expansion_of(g) for g in games}, key=lambda e: (e not in EXPANSIONS, e)):
         slices[exp] = [g for g in games if expansion_of(g) == exp]
@@ -540,8 +697,23 @@ def compute_views(players_doc, games_doc, name_mode="usernames"):
             "unlabeled_scenarios": (sum(1 for g in sub if not (g.get("settings") or {}).get("scenario"))
                                     if key in SCENARIOS else None),
         })
+    views = {key: compute(players_doc, sub, number_of, name_mode, replays) for key, sub in slices.items()}
+    pids = [p["id"] for p in players_doc["players"]]
+    all_ins = insights.view_insights(games, replays, pids, is_anon, finishing_ranks, fast=fast)
+    for key, sub in slices.items():
+        views[key]["insights"] = all_ins if key == "all" else insights.view_insights(
+            sub, replays, pids, is_anon, finishing_ranks, all_view=all_ins, fast=fast)
+    events = (events_doc or {}).get("games") or {}
+    ctx = {"pids": pids, "is_anon": is_anon, "is_bot": is_bot, "is_guest": is_guest, "finishing_ranks": finishing_ranks,
+           "fast": fast, "players": {p["id"]: p for p in players_doc["players"]}}
+    module_out = {}
+    for mod in MODULES:
+        module_out[mod.KEY] = mod.compute_all(games, replays, events, ctx)
+        if hasattr(mod, "compute_view"):
+            for key, sub in slices.items():
+                views[key][mod.KEY] = mod.compute_view(sub, replays, events, ctx, module_out[mod.KEY])
     return {
-        "schema_version": 2,
+        "schema_version": 3,
         "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "rating_model": {
             "name": "Plackett-Luce (Weng-Lin Bayesian approximation, openskill)",
@@ -551,7 +723,15 @@ def compute_views(players_doc, games_doc, name_mode="usernames"):
         },
         "view_list": view_list,
         "player_names": name_mode,
-        "views": {key: compute(players_doc, sub, number_of, name_mode) for key, sub in slices.items()},
+        "views": views,
+        # Closeness percentiles always use every decoded game, so a game's tile never changes with the filter.
+        "closeness": insights.closeness(games, replays, lambda g: len(g["players"]),
+                                        (events_doc or {}).get("games")),
+        **module_out,
+        # Shared by every view, so stored once: per-game replay numbers and turn-by-turn timelines.
+        "game_replays": {gid: {pid: replay_row(st) for pid, st in r["players"].items()} for gid, r in replays.items()},
+        "timelines": {gid: dense_timeline(r["timeline"], max(r["timeline"]["turn"]))
+                      for gid, r in replays.items()},
     }
 
 
@@ -559,10 +739,14 @@ def build(check_only=False, data_dir=DATA, out_dir=DIST):
     try:
         players_doc = load_json(data_dir / "players.json")
         games_doc = load_json(data_dir / "games.json")
+        replays_path = data_dir / "replays.json"
+        replays_doc = load_json(replays_path) if replays_path.exists() else None
+        events_path = data_dir / "replay_events.json"
+        events_doc = load_json(events_path) if events_path.exists() else None
     except DataError as e:
         print(f"error: {e}", file=sys.stderr)
         return 1
-    errors, warnings = validate(players_doc, games_doc)
+    errors, warnings = validate(players_doc, games_doc, replays_doc)
     for w in warnings:
         print(f"warning: {w}", file=sys.stderr)
     if errors:
@@ -581,7 +765,7 @@ def build(check_only=False, data_dir=DATA, out_dir=DIST):
     if name_mode not in NAME_MODES:
         print(f"error: site.json: player_names must be one of {', '.join(NAME_MODES)}", file=sys.stderr)
         return 1
-    stats = compute_views(players_doc, games_doc, name_mode)
+    stats = compute_views(players_doc, games_doc, name_mode, replays_doc, events_doc=events_doc)
     stats["site"] = site
     if out_dir.exists():
         shutil.rmtree(out_dir)
