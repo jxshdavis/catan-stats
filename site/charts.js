@@ -81,7 +81,7 @@
 
   // ---- Line chart -----------------------------------------------------------
   // opts: { series: [{id, name, color, points: [{x, y, tip}]}], xLabel(x), yTitle,
-  //         height, highlight (series id), directLabels (bool), xTickLabel(x) }
+  //         height, highlight (series id), directLabels (bool), xTickLabel(x), yRef (dashed reference line) }
   function lineChart(container, opts) {
     responsive(container, (W) => {
       const all = opts.series.flatMap((s) => s.points);
@@ -95,6 +95,7 @@
       const xmin = xs[0], xmax = xs[xs.length - 1];
       let ymin = Math.min(...all.map((p) => (p.lo !== undefined ? p.lo : p.y)));
       let ymax = Math.max(...all.map((p) => (p.hi !== undefined ? p.hi : p.y)));
+      if (fin(opts.yRef)) { ymin = Math.min(ymin, opts.yRef); ymax = Math.max(ymax, opts.yRef); }
       const yt = niceTicks(ymin, ymax, 4);
       ymin = yt[0]; ymax = yt[yt.length - 1];
       const X = (x) => m.l + (xmax === xmin ? iw / 2 : ((x - xmin) / (xmax - xmin)) * iw);
@@ -107,6 +108,7 @@
         svgEl("text", { x: m.l - 8, y: Y(t) + 4, "text-anchor": "end" }, svg).textContent = t;
       }
       svgEl("line", { x1: m.l, x2: m.l + iw, y1: m.t + ih, y2: m.t + ih, stroke: "var(--axis)", "stroke-width": 1 }, svg);
+      if (fin(opts.yRef)) svgEl("line", { x1: m.l, x2: m.l + iw, y1: Y(opts.yRef), y2: Y(opts.yRef), stroke: "var(--ink-2)", "stroke-width": 1, "stroke-dasharray": "4 3" }, svg);
       const xticks = xs.length <= 12 ? xs : niceTicks(xmin, xmax, narrow ? 4 : 8).filter((v) => v >= xmin && v <= xmax);
       for (const t of xticks) {
         svgEl("text", { x: X(t), y: m.t + ih + 18, "text-anchor": "middle" }, svg).textContent =

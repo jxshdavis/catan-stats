@@ -21,8 +21,6 @@ from collections import defaultdict
 from datetime import date, datetime, timezone
 from pathlib import Path
 
-from openskill.models import PlackettLuce
-
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import insights  # noqa: E402  (model-based and group stats)
 
@@ -62,9 +60,13 @@ REPLAY_AVERAGES = ["resources_from_dice", "expected_from_dice", "blocked_by_robb
                    "steals", "stolen_from", "cards_discarded", "monopoly_cards", "trades", "trade_cards_given",
                    "bank_trades", "bank_cards_given", "longest_road_length", "max_hand"]
 BUILT = ["settlement", "city", "road", "ship"]
-PROVISIONAL_GAMES = 5  # ratings with fewer games than this are flagged
-GUEST_PREFIX = "guest-"  # players outside players.json: rated fresh each game, never listed
-BOT_PREFIX = "bot-"  # TwoSheep bot seats: count in n and as opponents, never rated or listed
+# TwoSheep piece colors. Each player is drawn in the site's version of the color they use most (site/styles.css --tc-*).
+RECENT_GAMES = 4  # "Last 4 games" on the leaderboard: each player's own most recent games
+FIRE_ABOVE = 1.0  # on fire: at least a full win above expected over those games...
+ACTIVE_WINDOW = 10  # ...with their latest game among the view's last 10
+GAME_COLORS = ["black", "white", "green", "blue", "teal", "orange", "yellow", "red", "pink", "purple"]
+GUEST_PREFIX = "guest-"  # players outside players.json: count as seats and opponents, never listed
+BOT_PREFIX = "bot-"  # TwoSheep bot seats: count in n and as opponents, never listed
 
 
 # ---------------------------------------------------------------------------
@@ -132,6 +134,10 @@ def validate(players_doc, games_doc, replays_doc=None):
         warnings.append("players.json: two players share a color_slot, so charts will be hard to read")
     if any(is_anon(i) for i in ids):
         errors.append(f"players.json: ids starting with '{GUEST_PREFIX}' or '{BOT_PREFIX}' are reserved")
+    unknown = sorted({r["game_color"] for g in games_doc.get("games", []) for r in g.get("players", [])
+                      if r.get("game_color") and r["game_color"] not in GAME_COLORS})
+    if unknown:
+        warnings.append(f"games.json: unknown game_color {', '.join(unknown)}; add it to GAME_COLORS and styles.css")
     owner = {}
     for p in players:
         for acct in p.get("twosheep_accounts", []):
@@ -168,6 +174,8 @@ def validate(players_doc, games_doc, replays_doc=None):
                 errors.append(f"{where}: unknown player '{pid}' (add them to players.json)")
         if all(is_anon(pid) for pid in pids):
             errors.append(f"{where}: every player is a guest or bot")
+        elif sum(1 for pid in pids if not is_anon(pid)) < 2:
+            errors.append(f"{where}: only one group member played (the rest are guests or bots), so leave it out")
         if g.get("winner") not in pids or is_bot(g.get("winner")):
             errors.append(f"{where}: winner '{g.get('winner')}' is not one of the players")
         for r in rows:
@@ -358,6 +366,29 @@ def r3(x):
     return None if x is None else round(x, 3)
 
 
+def poisson_binomial_step(pmf, p):
+    """Add one Bernoulli(p) trial to the pmf of a sum of independent trials."""
+    out = [0.0] * (len(pmf) + 1)
+    for k, q in enumerate(pmf):
+        out[k] += q * (1 - p)
+        out[k + 1] += q * p
+    return out
+
+
+def luck_band(st, level=0.95):
+    """Central range of wins above expected under chance alone: the exact (level) quantiles of the
+    Poisson binomial number of wins, minus expected wins. Discrete, so each tail holds at most (1 - level) / 2."""
+    a, cdf, lo, hi = (1 - level) / 2, 0.0, None, None
+    for k, q in enumerate(st["dist"]):
+        cdf += q
+        if lo is None and cdf > a:
+            lo = k
+        if hi is None and cdf >= 1 - a - 1e-12:
+            hi = k
+            break
+    return [r3(lo - st["expected"]), r3(hi - st["expected"])]
+
+
 def mean(xs):
     xs = [x for x in xs if x is not None]
     return sum(xs) / len(xs) if xs else None
@@ -375,20 +406,41 @@ def replay_row(st):
     return {k: st[k] for k in keys}
 
 
-def compute(players_doc, games, number_of, name_mode="usernames", replays=None):
+def player_colors(players_doc, games):
+    """Each player's site color: the TwoSheep color they used most over all games, ties going to the one used
+    most recently. Players with more games choose first; anyone whose favorite is taken gets their next most
+    used color, then the first free one in GAME_COLORS. The same in every filter, so a player never changes color."""
+    uses = {p["id"]: {} for p in players_doc["players"]}
+    for i, g in enumerate(games):  # games are in date order, so i is recency
+        for r in g["players"]:
+            c = r.get("game_color")
+            if r["player"] in uses and c in GAME_COLORS:
+                n, _ = uses[r["player"]].get(c, (0, 0))
+                uses[r["player"]][c] = (n + 1, i)
+    out, taken = {}, set()
+    for pid in sorted(uses, key=lambda k: (-sum(n for n, _ in uses[k].values()), k)):
+        ranked = sorted(uses[pid], key=lambda c: uses[pid][c], reverse=True)
+        out[pid] = next((c for c in ranked + GAME_COLORS if c not in taken), None)
+        taken.add(out[pid])
+    return out
+
+
+def compute(players_doc, games, number_of, name_mode="usernames", replays=None, colors=None):
     """Every stat for one slice of games. number_of maps game id to its number among all games.
-    replays maps game id to its data/replays.json entry, for the games that have one."""
+    replays maps game id to its data/replays.json entry, for the games that have one.
+    colors maps player id to their site color (player_colors over all games)."""
     replays = replays or {}
+    colors = colors or {}
     players = {p["id"]: p for p in players_doc["players"]}
 
-    model = PlackettLuce()
-    ratings = {pid: model.rating(name=pid) for pid in players}
     history = {pid: [] for pid in players}
+    standing = {pid: {"wins": 0, "expected": 0.0, "dist": [1.0]} for pid in players}  # running totals for the ranking
 
     acc = {pid: defaultdict(list) for pid in players}
     by_count = {pid: defaultdict(lambda: {"games": 0, "wins": 0, "vp": []}) for pid in players}
     by_exp = {pid: defaultdict(lambda: {"games": 0, "wins": 0, "vp": [], "beat": []}) for pid in players}
     by_seat = {pid: defaultdict(lambda: {"games": 0, "wins": 0, "finish": []}) for pid in players}
+    by_color = {pid: defaultdict(int) for pid in players}
     h2h = defaultdict(lambda: {"games": 0, "ahead": 0, "behind": 0, "tied": 0, "wins": 0, "losses_to": 0,
                                "replay_games": 0, "steals": 0, "trades": 0})
     rp = {pid: defaultdict(list) for pid in players}  # per-game replay numbers
@@ -397,6 +449,12 @@ def compute(players_doc, games, number_of, name_mode="usernames", replays=None):
     dev = {pid: defaultdict(int) for pid in players}
     all_dice = {s: 0 for s in DICE_FACES}
     out_games = []
+    ranks_after = []  # leaderboard rank of every player with a game, after each game of the slice
+
+    def rank_key(pid):
+        st = standing[pid]
+        return (-r3(st["wins"] - st["expected"]), -(r3(mean(acc[pid]["table_share"])) or 0), -st["wins"],
+                display_name(players[pid], name_mode).lower())
 
     for idx, g in enumerate(games, start=1):
         rows = g["players"]
@@ -407,17 +465,8 @@ def compute(players_doc, games, number_of, name_mode="usernames", replays=None):
         target = (g.get("settings") or {}).get("vp_to_win") or win_vp
         prod_vals = [r.get("resources_from_dice") for r in rows if r.get("resources_from_dice") is not None]
         prod_mean = mean(prod_vals) if len(prod_vals) == n else None
-
-        # Rating update: Plackett-Luce over the full finishing order. Guests enter at
-        # the prior every game, so they inform everyone else's update but carry nothing over.
-        # Bots are left out of the rating update.
-        order = [r["player"] for r in rows if not is_bot(r["player"])]
-        current = {pid: model.rating(name=pid) if is_guest(pid) else ratings[pid] for pid in order}
-        before = {pid: (current[pid].mu, current[pid].sigma) for pid in order}
-        new = model.rate([[current[pid]] for pid in order], ranks=[ranks[pid] for pid in order])
-        for pid, team in zip(order, new):
-            if not is_guest(pid):
-                ratings[pid] = team[0]
+        known_vp = [r["vp"] for r in rows if r.get("vp") is not None]
+        table_vp = sum(known_vp) if len(known_vp) == n else None
 
         game_rows = []
         for r in rows:
@@ -429,7 +478,7 @@ def compute(players_doc, games, number_of, name_mode="usernames", replays=None):
                 game_rows.append({"player": pid, "guest": True, "rank": rank, "vp": r["vp"], "seat": r.get("seat"),
                                   "game_color": r.get("game_color"), "vp_breakdown": r.get("vp_breakdown"),
                                   "dev_cards_bought": r.get("dev_cards_bought"),
-                                  "resources_from_dice": r.get("resources_from_dice"), "rating_change": None})
+                                  "resources_from_dice": r.get("resources_from_dice"), "above_expected": None})
                 continue
             won = pid == g["winner"]
             opp = [o for o in rows if o["player"] != pid and o["player"] in ranks]
@@ -440,6 +489,8 @@ def compute(players_doc, games, number_of, name_mode="usernames", replays=None):
             a["expected_win"].append(1 / n)
             a["vp"].append(r["vp"])
             a["vp_share"].append(r["vp"] / target)
+            if table_vp:
+                a["table_share"].append(r["vp"] / table_vp)
             a["rank"].append(rank)
             a["beat_rate"].append(beaten / len(opp))
             if prod_mean:
@@ -450,6 +501,8 @@ def compute(players_doc, games, number_of, name_mode="usernames", replays=None):
             e["wins"] += won
             e["vp"].append(r["vp"])
             e["beat"].append(beaten / len(opp))
+            if r.get("game_color"):
+                by_color[pid][r["game_color"]] += 1
             c = by_count[pid][n]
             c["games"] += 1
             c["wins"] += won
@@ -498,10 +551,16 @@ def compute(players_doc, games, number_of, name_mode="usernames", replays=None):
                 h["wins"] += won
                 h["losses_to"] += o["player"] == g["winner"]
 
-            rt = ratings[pid]
+            # Ranking: a win is worth 1, and every game costs 1/n, the share of wins chance alone would give.
+            # Under chance each game is a 1-in-n draw, so wins follow a Poisson binomial; dist is its pmf.
+            st = standing[pid]
+            st["wins"] += won
+            st["expected"] += 1 / n
+            st["dist"] = poisson_binomial_step(st["dist"], 1 / n)
             history[pid].append({
-                "game": g["id"], "index": idx, "number": number_of[g["id"]], "date": g["date"],
-                "mu": r3(rt.mu), "sigma": r3(rt.sigma), "ordinal": r3(rt.ordinal()),
+                "game": g["id"], "index": idx, "number": number_of[g["id"]], "date": g["date"], "won": won,
+                "delta": r3((1 if won else 0) - 1 / n),
+                "above_expected": r3(st["wins"] - st["expected"]), "luck_band": luck_band(st),
             })
             game_rows.append({
                 "player": pid,
@@ -512,10 +571,12 @@ def compute(players_doc, games, number_of, name_mode="usernames", replays=None):
                 "vp_breakdown": r.get("vp_breakdown"),
                 "dev_cards_bought": r.get("dev_cards_bought"),
                 "resources_from_dice": r.get("resources_from_dice"),
-                "rating_change": r3(ratings[pid].mu - before[pid][0]),
+                "above_expected": r3((1 if won else 0) - 1 / n),
             })
 
         game_rows.sort(key=lambda x: (x["rank"], x["player"]))
+        active = sorted((pid for pid in players if acc[pid]["won"]), key=rank_key)
+        ranks_after.append({pid: i for i, pid in enumerate(active, start=1)})
         dice = (g.get("dice") or {}).get("counts")
         dsum = None
         if dice:
@@ -553,8 +614,16 @@ def compute(players_doc, games, number_of, name_mode="usernames", replays=None):
         a = acc[pid]
         gp = len(a["won"])
         wins = sum(a["won"])
-        rt = ratings[pid]
+        st = standing[pid]
         vs = vp_src[pid]
+        last = history[pid][-RECENT_GAMES:]
+        streak = 0
+        for h in reversed(history[pid]):
+            if not h["won"]:
+                break
+            streak += 1
+        recent_above = r3(sum(h["delta"] for h in last))
+        is_active = bool(last) and last[-1]["index"] > len(games) - ACTIVE_WINDOW
         dv = dev[pid]
         out_players.append({
             "id": pid,
@@ -562,21 +631,30 @@ def compute(players_doc, games, number_of, name_mode="usernames", replays=None):
             "initials": p.get("initials"),
             "aliases": p.get("aliases", []),
             "color_slot": p["color_slot"],
+            "color": colors.get(pid),
+            "by_color": dict(sorted(by_color[pid].items(), key=lambda kv: (-kv[1], kv[0]))),
             "games": gp,
             "wins": wins,
             "win_rate": r3(wins / gp) if gp else None,
             "win_rate_ci": [r3(x) for x in wilson(wins, gp)] if gp else None,
             "expected_wins": r3(sum(a["expected_win"])),
+            "above_expected": r3(wins - sum(a["expected_win"])) if gp else None,
+            "luck_band": luck_band(st) if gp else None,
+            "avg_table_share": r3(mean(a["table_share"])),
             "avg_vp": r3(mean(a["vp"])),
             "avg_vp_share": r3(mean(a["vp_share"])),
             "avg_rank": r3(mean(a["rank"])),
             "beat_rate": r3(mean(a["beat_rate"])),
             "finish_counts": {str(k): a["rank"].count(k) for k in range(1, 9) if a["rank"].count(k)},
-            "rating": {
-                "mu": r3(rt.mu), "sigma": r3(rt.sigma), "ordinal": r3(rt.ordinal()),
-                "provisional": gp < PROVISIONAL_GAMES,
-            },
-            "rating_history": history[pid],
+            "standing_history": history[pid],
+            # Movement: rank before the slice's latest game, and before its last RECENT_GAMES games (None: no games yet).
+            "rank_prev": ranks_after[-2].get(pid) if len(ranks_after) > 1 else None,
+            "rank_recent_ago": ranks_after[-RECENT_GAMES - 1].get(pid) if len(ranks_after) > RECENT_GAMES else None,
+            "recent": {
+                "games": [{"game": h["game"], "date": h["date"], "won": h["won"], "delta": h["delta"]} for h in last],
+                "above": recent_above, "wins": sum(1 for h in last if h["won"]), "streak": streak,
+                "active": is_active, "on_fire": is_active and len(last) == RECENT_GAMES and recent_above >= FIRE_ABOVE,
+            } if last else None,
             "by_player_count": {
                 str(k): {"games": v["games"], "wins": v["wins"],
                          "win_rate": r3(v["wins"] / v["games"]), "avg_vp": r3(mean(v["vp"]))}
@@ -605,7 +683,9 @@ def compute(players_doc, games, number_of, name_mode="usernames", replays=None):
             "replay": replay_summary(rp[pid], rp_tot[pid]),
         })
 
-    out_players.sort(key=lambda x: (x["games"] == 0, -(x["rating"]["ordinal"]), -x["wins"], x["name"].lower()))
+    # Wins above expected, then share of the table's VP (the World Championship tiebreaker), then wins.
+    out_players.sort(key=lambda x: (x["games"] == 0, -(x["above_expected"] or 0), -(x["avg_table_share"] or 0),
+                                    -x["wins"], x["name"].lower()))
     for i, p in enumerate(out_players, start=1):
         p["leaderboard_rank"] = i if p["games"] else None
 
@@ -673,8 +753,8 @@ def dense_timeline(tl, turns):
 def compute_views(players_doc, games_doc, name_mode="usernames", replays_doc=None, fast=False, events_doc=None):
     """One full stats view per filter: all games, each expansion, each scenario.
 
-    Each view is computed from scratch on its own slice, so a Seafarers rating
-    only learns from Seafarers games.
+    Each view is computed from scratch on its own slice, so the Seafarers ranking
+    only counts Seafarers games.
     """
     games = sorted(games_doc["games"], key=lambda g: (g["date"], g["id"]))
     number_of = {g["id"]: i for i, g in enumerate(games, start=1)}
@@ -697,7 +777,8 @@ def compute_views(players_doc, games_doc, name_mode="usernames", replays_doc=Non
             "unlabeled_scenarios": (sum(1 for g in sub if not (g.get("settings") or {}).get("scenario"))
                                     if key in SCENARIOS else None),
         })
-    views = {key: compute(players_doc, sub, number_of, name_mode, replays) for key, sub in slices.items()}
+    colors = player_colors(players_doc, games)
+    views = {key: compute(players_doc, sub, number_of, name_mode, replays, colors) for key, sub in slices.items()}
     pids = [p["id"] for p in players_doc["players"]]
     all_ins = insights.view_insights(games, replays, pids, is_anon, finishing_ranks, fast=fast)
     for key, sub in slices.items():
@@ -715,11 +796,12 @@ def compute_views(players_doc, games_doc, name_mode="usernames", replays_doc=Non
     return {
         "schema_version": 3,
         "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
-        "rating_model": {
-            "name": "Plackett-Luce (Weng-Lin Bayesian approximation, openskill)",
-            "mu0": 25.0, "sigma0": round(25 / 3, 3),
-            "ordinal": "mu - 3 sigma",
-            "provisional_below_games": PROVISIONAL_GAMES,
+        "ranking": {
+            "name": "Wins above expected",
+            "expected": "sum of 1/n over games played, n counting every seat",
+            "luck_band": "central 95% of wins minus expected under chance (exact Poisson binomial, each game a 1-in-n draw)",
+            "tiebreak": "average share of the table's VP",
+            "recent_games": RECENT_GAMES, "fire_above": FIRE_ABOVE, "active_window": ACTIVE_WINDOW,
         },
         "view_list": view_list,
         "player_names": name_mode,

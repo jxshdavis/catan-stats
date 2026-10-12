@@ -16,6 +16,8 @@ Rules:
   Its VP comes from the decoded replay, since summaries only score humans.
 - A game with two accounts of the same person is left out (and removed if it
   was imported before the accounts were grouped).
+- A game with fewer than 2 group members (one of us with guests or bots) is
+  left out, and removed if it was imported before.
 - Each game is imported once, keyed on its TwoSheep replay id ("twosheep_id").
 - Each player's "aliases" in players.json are kept as every TwoSheep name
   their accounts have used, most used on the site first; the site lists them on
@@ -147,6 +149,9 @@ def to_game(rec, owner, tz):
             "game_color": color_of.get(uid),
             "vp": pdata[uid]["v"],
         })
+
+    if sum(1 for r in rows if not build.is_anon(r["player"])) < 2:
+        return None, "fewer than 2 group members"
 
     code = opts.get("gM")
     expansion, scenario = TWOSHEEP_MAPS.get(code, ("seafarers" if opts.get("sf") else None, None))

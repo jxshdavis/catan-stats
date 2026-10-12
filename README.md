@@ -1,6 +1,6 @@
 # Catan Night
 
-A static stats site for our Catan group: leaderboard, Plackett-Luce ratings, player pages, head-to-head records, and per-game dice and production. The data lives in this repo as JSON. A Python script computes every stat, and GitHub Pages serves the result.
+A static stats site for our Catan group: a leaderboard ranked by wins above expected, player pages, head-to-head records, and per-game dice and production. The data lives in this repo as JSON. A Python script computes every stat, and GitHub Pages serves the result.
 
 ## Quick start
 
@@ -30,7 +30,7 @@ A summary has the date, start time, seats, colors, final VP, winner, VP target a
 
 The importer:
 
-- only takes finished games with 3 or more players;
+- only takes finished games with 3 or more players, at least 2 of them from the group (a game of one of us with guests is left out, and removed if it was imported before);
 - matches people by TwoSheep account, not username, since names change all the time. Each player's accounts are listed in `players.json` as hashes (see below). Anyone else becomes a guest;
 - keeps a TwoSheep bot's seat as `bot-1` and records the seat count as `n_seats`. When a summary's seat numbers skip the bot's seat, the seats come from the game's color order;
 - imports each game once, keyed on `twosheep_id`, so re-running is safe;
@@ -89,7 +89,7 @@ Only `id`, `date`, `winner`, and each player's `player` and `vp` are required. T
 | `name` | Optional. Leave it out and the site shows the person's most used TwoSheep name (the first alias), so the name keeps up as people rename. Set it to pin a fixed name instead. |
 | `initials` | Optional, 1 to 4 characters. With `"player_names": "initials"` in `site.json` the site shows only these; with `"usernames"` it shows the name followed by them, as in `SheepLord (AB)`. Usernames always stay listed, collapsed, at the bottom of each player page. |
 | `aliases` | Every TwoSheep username this person has played under, most used in the site's games first (then most used overall). The importer keeps this up to date from their accounts, and the site lists it, collapsed, at the bottom of their page. Names you add by hand are kept. Matching uses accounts, not these names, because two accounts can share a name. |
-| `color_slot` | 1 to 8. Picks the player's color from a colorblind-checked palette. Give everyone a different slot. |
+| `color_slot` | 1 to 8. A fallback color from a colorblind-checked palette, used only for a player with no recorded piece colors. Give everyone a different slot. The site normally draws each player in the TwoSheep color they use most (ties go to the most recent; players with more games choose first), from the `--tc-*` colors in `site/styles.css`. |
 | `twosheep_accounts` | The person's TwoSheep accounts, each as the first 16 hex digits of the SHA-256 of the account id. Raw ids stay out of the repo because anyone holding one can pull that person's whole game history. `import_twosheep.py --accounts` prints the hashes. |
 
 ### `data/games.json`
@@ -97,7 +97,7 @@ Only `id`, `date`, `winner`, and each player's `player` and `vp` are required. T
 | Field | Meaning |
 |---|---|
 | `id` | Unique game id. Date plus a letter works well. |
-| `date` | `YYYY-MM-DD`. Games are ordered by date, then id, for ratings, so letter same-day games in the order they were played. |
+| `date` | `YYYY-MM-DD`. Games are ordered by date, then id, for the running totals, so letter same-day games in the order they were played. |
 | `twosheep_id` | The replay id from `twosheep.io/replay/<id>`. Set by the importer; the game page links to the replay. |
 | `settings.expansion` | `"seafarers"` or `"base"`. Drives the game type filter. Add new types to `EXPANSIONS` in `scripts/build.py`. |
 | `settings.scenario` | For Seafarers: `"new_shores"`, `"four_islands"`, `"through_the_desert"`, `"fog_islands"`, `"six_islands"` or `"new_world"`. Leave `null` if you don't remember; the game still counts under Seafarers. Add scenarios to `SCENARIOS` in `scripts/build.py`. |
@@ -138,12 +138,12 @@ The site explains every model where it is shown: each statistic with a modeling 
 
 Each topic module's front end is a script in `site/` that adds a page or page sections through `window.Pages` and `window.Hooks` (see the top of `site/app.js`); method notes are in `site/methods.js` and each module's script.
 
-- **Game type filter.** The build computes a complete set of stats for all games, for each expansion, and for each Seafarers scenario with at least one game. Each set is computed from scratch on its own games, ratings included. The site keeps the choice in the URL (`#/?view=seafarers/four_islands`), so a filtered page can be shared as a link.
+- **Game type filter.** The build computes a complete set of stats for all games, for each expansion, and for each Seafarers scenario with at least one game. Each set is computed from scratch on its own games, the ranking included. The site keeps the choice in the URL (`#/?view=seafarers/four_islands`), so a filtered page can be shared as a link.
 
-- **Rating.** A Plackett-Luce model over each game's full finishing order, updated game by game with the Weng-Lin Bayesian approximation ([openskill](https://github.com/vivekjoshy/openskill.py)). Everyone starts at μ = 25, σ = 8.33. The leaderboard ranks by μ − 3σ, and ratings are marked provisional below 5 games.
+- **Ranking.** Wins above expected: wins minus the sum of 1/n over games played, with n counting every seat, so only wins count and a win at a bigger table is worth more. Ties go to the higher average share of the table's VP. The luck band is the central 95% of wins minus expected if every player were equally good: exact quantiles of the Poisson binomial number of wins, each game a 1-in-n draw. (The momentum and robber models still use a chronological openskill Plackett-Luce μ as a skill covariate.)
 - **Finishing order.** The winner is first. Others are ordered by VP, with equal VP sharing a place.
-- **Guests** are in the finishing order, so they move everyone else's ratings, but each guest enters every game at the prior (μ = 25, σ = 8.33) and nothing carries over. They get no stats and no head-to-head entries; they do count as opponents for beat rate.
-- **Bots** (TwoSheep's computer players) keep their seat. They count in n (expected wins use 1/n with n the number of seats) and as opponents for beat rate, but they are left out of the rating update and never listed.
+- **Guests** count as seats (in n) and as opponents for beat rate, but get no stats, no ranking and no head-to-head entries.
+- **Bots** (TwoSheep's computer players) keep their seat. They count in n (expected wins use 1/n with n the number of seats) and as opponents for beat rate, but they are never listed.
 - **Win rate** has a 95% Wilson interval. **Expected wins** sums 1/n over games played. **Beat rate** is the share of opponents finished ahead of, so 3, 4 and 5 player games compare fairly.
 - **Dice** are compared to the 2d6 distribution with a chi-square test (10 degrees of freedom).
 - **Production index** is a player's resources from dice divided by the table average for that game.
@@ -156,7 +156,7 @@ All of it is computed in `scripts/build.py` and written to `dist/data/stats.json
 
 ```
 data/            players.json, games.json, replays.json, site.json (title, subtitle, and player_names: "initials" or "usernames")
-scripts/build.py validation, stats, ratings; builds dist/
+scripts/build.py validation, stats, ranking; builds dist/
 scripts/fetch_twosheep.py   (local only, not in the repo) pulls game summaries and replay files into raw/
 scripts/twosheep_replay.py  (local only, not in the repo) replays each game into raw/twosheep/replay_stats/
 scripts/import_twosheep.py  turns them into games.json and replays.json entries

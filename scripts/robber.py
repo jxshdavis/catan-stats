@@ -771,8 +771,9 @@ def trade_E(G, is_anon, model):
 # ---------------------------------------------------------------------------
 
 def pre_game_mu(games, is_anon, is_bot, ranks_of):
-    """Pre-game mu for every seat from one chronological openskill pass over all games, the same model as the
-    ratings (Plackett-Luce; guests at the prior every game; bots left out of the update and given the prior)."""
+    """Pre-game mu for every seat from one chronological openskill pass over all games (Plackett-Luce over the
+    finishing order; guests at the prior every game; bots left out of the update and given the prior). Only a
+    skill covariate here; the leaderboard ranks by wins above expected."""
     model = PlackettLuce()
     ratings, out = {}, {}
     for g in games:

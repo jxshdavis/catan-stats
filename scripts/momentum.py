@@ -237,8 +237,9 @@ def luck_rows(games, events):
 
 
 def pre_game_mu(games, is_anon, is_bot):
-    """Pre-game mu for every member seat from one chronological openskill pass over all games (the same
-    model as the ratings: Plackett-Luce, guests at the prior every game, bots left out)."""
+    """Pre-game mu for every member seat from one chronological openskill pass over all games (Plackett-Luce
+    over the finishing order, guests at the prior every game, bots left out). Only a skill covariate here;
+    the leaderboard ranks by wins above expected."""
     model = PlackettLuce()
     ratings, out = {}, {}
     for g in games:

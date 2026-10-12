@@ -255,7 +255,7 @@ class GuestStatsTest(unittest.TestCase):
         self.assertEqual(g["n_guests"], 2)
         guest = next(r for r in g["players"] if r["player"] == "guest-1")
         self.assertTrue(guest["guest"])
-        self.assertIsNone(guest["rating_change"])
+        self.assertIsNone(guest["above_expected"])
         self.assertEqual(self.stats["summary"]["games_with_guests"], 1)
 
     def test_guests_count_as_opponents(self):
@@ -266,19 +266,66 @@ class GuestStatsTest(unittest.TestCase):
         self.assertEqual(ben["games"], 5)
         self.assertEqual(ben["wins"], 0)
 
-    def test_guest_starts_from_prior_each_game(self):
-        # A guest's update must not leak: the same id "guest-1" in two games is two different people.
-        players = {"schema_version": 1, "players": [{"id": "ana", "name": "Ana", "color_slot": 1}]}
-        game = lambda gid, d: {"id": gid, "date": d, "winner": "guest-1", "players": [
+    def test_wins_above_expected(self):
+        # A loss at a 3-seat table with guests costs 1/3; a win at a 6-seat table earns 5/6.
+        players = {"schema_version": 1, "players": [{"id": "ana", "name": "Ana", "color_slot": 1},
+                                                    {"id": "ben", "name": "Ben", "color_slot": 2}]}
+        g1 = {"id": "g1", "date": "2026-01-01", "winner": "guest-1", "players": [
             {"player": "guest-1", "vp": 10}, {"player": "ana", "vp": 5}, {"player": "guest-2", "vp": 4}]}
-        from openskill.models import PlackettLuce
-        m = PlackettLuce()
-        ana = m.rate([[m.rating()], [m.rating()], [m.rating()]], ranks=[1, 2, 3])[1][0]
-        expected = m.rate([[m.rating()], [ana], [m.rating()]], ranks=[1, 2, 3])[1][0]
-        two = build.compute_views(players, {"games": [game("g1", "2026-01-01"), game("g2", "2026-01-02")]})["views"]["all"]
-        got = two["players"][0]["rating"]
-        self.assertAlmostEqual(got["mu"], expected.mu, places=3)
-        self.assertAlmostEqual(got["sigma"], expected.sigma, places=3)
+        g2 = {"id": "g2", "date": "2026-01-02", "winner": "ana", "players": [{"player": "ana", "vp": 10}]
+              + [{"player": f"guest-{i}", "vp": 3} for i in range(1, 5)] + [{"player": "ben", "vp": 9}]}
+        view = build.compute_views(players, {"games": [g1, g2]})["views"]["all"]
+        ana, ben = (next(p for p in view["players"] if p["id"] == k) for k in ("ana", "ben"))
+        self.assertAlmostEqual(ana["expected_wins"], 1 / 3 + 1 / 6, places=3)
+        self.assertAlmostEqual(ana["above_expected"], 1 - 1 / 3 - 1 / 6, places=3)
+        # Wins under chance: P(0) = 2/3 * 5/6 = 0.556, P(1) = 0.389, P(2) = 0.056, so the 95% band is 0 to 2 wins.
+        self.assertEqual(ana["luck_band"], [-0.5, 1.5])
+        self.assertEqual([h["above_expected"] for h in ana["standing_history"]], [-0.333, 0.5])
+        self.assertAlmostEqual(ben["above_expected"], -1 / 6, places=3)
+        self.assertEqual((ana["leaderboard_rank"], ben["leaderboard_rank"]), (1, 2))
+        row = next(r for r in view["games"][0]["players"] if r["player"] == "ana")
+        self.assertAlmostEqual(row["above_expected"], 5 / 6, places=3)
+
+    def test_player_colors(self):
+        # Most used color wins; a tie goes to the more recent one; a taken favorite falls to the next most used.
+        players = {"players": [{"id": k, "name": k, "color_slot": i} for i, k in enumerate(("ana", "ben", "cat"), start=1)]}
+        seat = lambda pid, c: {"player": pid, "game_color": c, "vp": 5}
+        games = [{"id": "g1", "date": "2026-01-01", "players": [seat("ana", "red"), seat("ben", "red"), seat("cat", "blue")]},
+                 {"id": "g2", "date": "2026-01-02", "players": [seat("ana", "red"), seat("ben", "green"), seat("cat", "white")]},
+                 {"id": "g3", "date": "2026-01-03", "players": [seat("ana", "pink"), seat("ben", "red"), seat("cat", "teal")]}]
+        colors = build.player_colors(players, games)
+        self.assertEqual(colors["ana"], "red")    # 2 red, chooses first (ties on games played go by id)
+        self.assertEqual(colors["ben"], "green")  # red is taken, green is next
+        self.assertEqual(colors["cat"], "teal")   # blue, white, teal once each: most recent
+
+    def test_recent_form_and_movement(self):
+        # Ben wins the last two 4-seat games: +1.0 over his last 4, on fire, and he passes Ana in the last game.
+        players = {"players": [{"id": k, "name": k, "color_slot": i} for i, k in enumerate(("ana", "ben"), start=1)]}
+        def game(i, winner):
+            return {"id": f"g{i}", "date": f"2026-01-0{i}", "winner": winner,
+                    "players": [{"player": "ana", "vp": 10 if winner == "ana" else 5},
+                                {"player": "ben", "vp": 10 if winner == "ben" else 5},
+                                {"player": "guest-1", "vp": 10 if winner == "guest-1" else 4},
+                                {"player": "guest-2", "vp": 10 if winner == "guest-2" else 3}]}
+        view = build.compute_views(players, {"games": [game(1, "ana"), game(2, "guest-1"), game(3, "guest-2"),
+                                                       game(4, "ben"), game(5, "ben")]})["views"]["all"]
+        ana, ben = (next(p for p in view["players"] if p["id"] == k) for k in ("ana", "ben"))
+        self.assertEqual((ben["leaderboard_rank"], ben["rank_prev"], ben["rank_recent_ago"]), (1, 2, 2))
+        self.assertEqual((ana["leaderboard_rank"], ana["rank_prev"]), (2, 1))
+        self.assertEqual([g["won"] for g in ben["recent"]["games"]], [False, False, True, True])
+        self.assertAlmostEqual(ben["recent"]["above"], 1.0, places=3)
+        self.assertEqual(ben["recent"]["streak"], 2)
+        self.assertTrue(ben["recent"]["on_fire"])
+        self.assertFalse(ana["recent"]["on_fire"])
+
+    def test_ties_go_to_table_vp_share(self):
+        # Equal wins above expected: the higher average share of the table's VP ranks first.
+        players = {"schema_version": 1, "players": [{"id": k, "name": k, "color_slot": i}
+                                                    for i, k in enumerate(("ana", "ben", "cat"), start=1)]}
+        g = {"id": "g1", "date": "2026-01-01", "winner": "cat", "players": [
+            {"player": "cat", "vp": 10}, {"player": "ana", "vp": 4}, {"player": "ben", "vp": 8}]}
+        view = build.compute_views(players, {"games": [g]})["views"]["all"]
+        self.assertEqual([p["id"] for p in view["players"]], ["cat", "ben", "ana"])
 
     def test_rejects_reserved_ids_and_all_guest_games(self):
         players = {"players": [{"id": "guest-9", "name": "X", "color_slot": 1}]}
@@ -287,6 +334,11 @@ class GuestStatsTest(unittest.TestCase):
                                                                     {"player": "guest-2", "vp": 3}]}]})
         self.assertTrue(any("reserved" in e for e in errors))
         self.assertTrue(any("every player is a guest" in e for e in errors))
+        errors, _ = build.validate({"players": [{"id": "ana", "name": "Ana", "color_slot": 1}]},
+                                   {"games": [{"id": "g", "date": "2026-01-01", "winner": "ana",
+                                               "players": [{"player": "ana", "vp": 10}, {"player": "guest-1", "vp": 4},
+                                                           {"player": "guest-2", "vp": 3}]}]})
+        self.assertTrue(any("only one group member" in e for e in errors))
 
     def test_duplicate_twosheep_id_rejected(self):
         players = {"players": [{"id": "ana", "name": "A", "color_slot": 1}, {"id": "ben", "name": "B", "color_slot": 2}]}
@@ -358,7 +410,8 @@ class BotSeatTest(ImportCase):
         self.assertFalse(any(build.is_bot(h["player"]) or build.is_bot(h["opponent"]) for h in stats["head_to_head"]))
         no_bot = build.compute_views(players, {"games": [
             {**games["games"][0], "players": games["games"][0]["players"][1:], "n_seats": 3}]})["views"]["all"]
-        self.assertEqual(ana["rating"], next(p for p in no_bot["players"] if p["id"] == "ana")["rating"])
+        # The bot's seat makes the fair share 1/4 rather than 1/3.
+        self.assertAlmostEqual(next(p for p in no_bot["players"] if p["id"] == "ana")["expected_wins"], 1 / 3, places=3)
 
 
 def decoded_replay(rid, seats, turns=50):

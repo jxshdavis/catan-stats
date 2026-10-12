@@ -22,7 +22,8 @@
   // ---- Formatting helpers ---------------------------------------------------
   const pct = (x, d = 0) => (x === null || x === undefined ? "n/a" : (x * 100).toFixed(d) + "%");
   const num = (x, d = 1) => (x === null || x === undefined ? "n/a" : Number(x).toFixed(d));
-  const color = (pid) => `var(--p${(P[pid] && P[pid].color_slot) || 1})`;
+  // Each player is drawn in the site's version of the TwoSheep color they use most (build.py player_colors).
+  const color = (pid) => (P[pid] && P[pid].color ? `var(--tc-${P[pid].color})` : `var(--p${(P[pid] && P[pid].color_slot) || 1})`);
   const ord = (n) => {
     const s = ["th", "st", "nd", "rd"], v = n % 100;
     return n + (s[(v - 20) % 10] || s[v] || s[0]);
@@ -31,11 +32,16 @@
     opts || { month: "short", day: "numeric", year: "numeric" });
   const signed = (x, d = 1) => (x > 0 ? "+" : x < 0 ? "−" : "") + Math.abs(x).toFixed(d);
   const isGuest = (pid) => String(pid).startsWith("guest-");
+  // Small inline graphics: a gold trophy on the leader's icon, and a flame for anyone on fire.
+  const TROPHY = `<svg class="trophy" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 3.5H1.8v1.2a3 3 0 0 0 3 3M12.5 3.5h1.7v1.2a3 3 0 0 1-3 3" fill="none" stroke="#c99a2e" stroke-width="1.4"/><path d="M4 1.5h8v4a4 4 0 0 1-8 0z" fill="#e3b23c"/><path d="M6.6 9.2h2.8l.4 2.6H6.2z" fill="#c99a2e"/><rect x="4.5" y="12" width="7" height="2.5" rx=".8" fill="#e3b23c"/><path d="M5.6 2.6h1.2v3.2a2 2 0 0 0 .6 1.4" fill="none" stroke="#fff3c9" stroke-width=".9" stroke-linecap="round"/></svg>`;
+  const FLAME = `<svg class="flame" viewBox="0 0 16 20" aria-hidden="true"><path class="flame-out" d="M8 .5c1 4 6 6 6 11.5 0 4.4-2.7 7.5-6 7.5S2 16.4 2 12c0-3 1.9-5 3-7 .5 2.4 1.5 3.4 2.5 3.4C7 5.5 7.4 2.6 8 .5z"/><path class="flame-in" d="M8 8.8c1 2 3 3.4 3 6 0 2.4-1.3 3.9-3 3.9S5 17.4 5 15.3c0-2 1.5-3 2-4.5.3 1.2.8 1.7 1.3 1.7-.3-1.2-.5-2.4-.3-3.7z"/></svg>`;
+  const onFire = (pid) => !!(P[pid] && P[pid].recent && P[pid].recent.on_fire);
   const who = (pid, link = true) => {
     if (isGuest(pid)) return `<span class="who guest"><span class="hex" aria-hidden="true"></span><span>Guest</span></span>`;
     const p = P[pid];
     const name = p ? esc(p.name) : esc(pid);
-    const inner = `<span class="hex" style="--c:${color(pid)}" aria-hidden="true"></span><span>${name}</span>`;
+    const lead = p && p.leaderboard_rank === 1;
+    const inner = `<span class="pmark${lead ? " lead" : ""}"${lead ? ' title="First on the leaderboard"' : ""}><span class="hex" style="--c:${color(pid)}" aria-hidden="true"></span>${lead ? TROPHY : ""}</span><span>${name}</span>`;
     return link ? `<a class="who" href="#/player/${encodeURIComponent(pid)}">${inner}</a>` : `<span class="who">${inner}</span>`;
   };
   const aliasList = (p) => p.aliases.map(esc).join(", ");
@@ -150,51 +156,81 @@
       main.innerHTML = `<h1>Leaderboard</h1>${filterBar()}<p class="empty">No games recorded yet. Add one to <code>data/games.json</code> and rebuild.</p>`;
       return;
     }
-    const lo = Math.min(...ranked.map((p) => p.rating.mu - 2 * p.rating.sigma));
-    const hi = Math.max(...ranked.map((p) => p.rating.mu + 2 * p.rating.sigma));
+    // Each strip shares one scale: a gray band for what luck alone covers 95% of the time, and the player's dot.
+    const R = Math.max(...ranked.map((p) => Math.max(Math.abs(p.above_expected), ...p.luck_band.map(Math.abs)))) * 1.05;
     const strip = (p) => {
-      const W = 160, X = (v) => 6 + ((v - lo) / (hi - lo)) * (W - 12);
-      const a = X(p.rating.mu - 2 * p.rating.sigma), b = X(p.rating.mu + 2 * p.rating.sigma), m = X(p.rating.mu);
-      const base = X(S.rating_model.mu0);
+      const W = 160, X = (v) => W / 2 + (v / R) * (W / 2 - 6);
       return `<svg viewBox="0 0 ${W} 18" preserveAspectRatio="none" aria-hidden="true">
-        <line x1="${base}" x2="${base}" y1="1" y2="17" style="stroke:var(--axis)" stroke-width="1"/>
-        <line x1="${a}" x2="${b}" y1="9" y2="9" style="stroke:${color(p.id)}" stroke-width="2" stroke-linecap="round"/>
-        <circle cx="${m}" cy="9" r="4" style="fill:${color(p.id)};stroke:var(--surface)" stroke-width="2"/></svg>`;
+        <rect x="${X(p.luck_band[0])}" y="3" width="${X(p.luck_band[1]) - X(p.luck_band[0])}" height="12" rx="3" style="fill:var(--band)"/>
+        <line x1="${X(0)}" x2="${X(0)}" y1="1" y2="17" style="stroke:var(--axis)" stroke-width="1"/>
+        <circle cx="${X(p.above_expected)}" cy="9" r="4" style="fill:${color(p.id)};stroke:var(--surface)" stroke-width="2"/></svg>`;
     };
-    const rows = ranked.map((p) => `<tr>
-        <td class="rank">${p.leaderboard_rank}</td>
-        <td>${who(p.id)}</td>
-        <td class="num rating">${num(p.rating.ordinal)}${p.rating.provisional ? '<span class="provisional hide-sm">provisional</span>' : ""}</td>
-        <td class="range hide-sm" title="Skill ${num(p.rating.mu)}, 95% range ${num(p.rating.mu - 2 * p.rating.sigma)} to ${num(p.rating.mu + 2 * p.rating.sigma)}">${strip(p)}</td>
-        <td class="num hide-sm">${p.games}</td>
+    const outside = ranked.filter((p) => p.above_expected < p.luck_band[0] || p.above_expected > p.luck_band[1]);
+    const latestGame = S.games[0];
+    const move = (now, before, since) => {
+      if (before === null || before === undefined) return `<span class="mv new" title="First game ${since}">new</span>`;
+      const d = before - now;
+      if (!d) return `<span class="mv same" title="No change ${since}"><span class="sr">no change</span></span>`;
+      return `<span class="mv ${d > 0 ? "up" : "down"}" title="${d > 0 ? "Up" : "Down"} ${Math.abs(d)} ${Math.abs(d) === 1 ? "place" : "places"} ${since}">${d > 0 ? "▲" : "▼"}${Math.abs(d)}</span>`;
+    };
+    const sinceLast = `since the last game (${fmtDate(latestGame.date)})`;
+    const fireTag = (p) => (onFire(p.id) ? `<span class="fire-tag" title="On fire: ${fmtSigned(p.recent.above, 1)} wins above expected over their last ${S.ranking.recent_games} games">${FLAME}</span>` : "");
+    const rows = ranked.map((p) => `<tr${onFire(p.id) ? ' class="hot"' : ""}>
+        <td class="rank">${p.leaderboard_rank}${S.games.length > 1 ? move(p.leaderboard_rank, p.rank_prev, sinceLast) : ""}</td>
+        <td><span class="name-cell">${who(p.id)}${fireTag(p)}</span></td>
+        <td class="num score">${fmtSigned(p.above_expected, 1)}</td>
+        <td class="range hide-sm" title="${fmtSigned(p.above_expected, 2)} wins above expected. Luck alone covers ${fmtSigned(p.luck_band[0], 1)} to ${fmtSigned(p.luck_band[1], 1)} 95% of the time.">${strip(p)}</td>
         <td class="num">${p.wins}</td>
+        <td class="num hide-sm">${num(p.expected_wins)}</td>
+        <td class="num hide-sm">${p.games}</td>
         <td class="num">${pct(p.win_rate)}<div class="sub hide-sm">${pct(p.win_rate_ci[0])} to ${pct(p.win_rate_ci[1])}</div></td>
         <td class="num hide-sm">${num(p.avg_vp)}</td>
         <td class="num hide-sm">${pct(p.beat_rate)}</td>
       </tr>`).join("");
 
     const latest = S.games[0];
+    const RG = S.ranking.recent_games;
+    const cards = ranked.filter((p) => p.recent).slice().sort((a, b) =>
+      (b.recent.active - a.recent.active) || (b.recent.above - a.recent.above) || (a.leaderboard_rank - b.leaderboard_rank));
+    const formDots = (p) => p.recent.games.map((h) => `<span class="fdot${h.won ? " w" : ""}" style="--c:${color(p.id)}" title="${fmtDate(h.date)}: ${h.won ? "won" : "lost"} (${signed(h.delta, 2)})"></span>`).join("");
+    const card = (p) => {
+      const r = p.recent, fire = r.on_fire;
+      const d = p.rank_recent_ago === null || p.rank_recent_ago === undefined ? null : p.rank_recent_ago - p.leaderboard_rank;
+      const rankLine = S.games.length <= RG ? "" : d === null ? `New on the board` : d ? `<span class="${d > 0 ? "up" : "down"}">${d > 0 ? "▲" : "▼"} ${Math.abs(d)} ${Math.abs(d) === 1 ? "place" : "places"}</span> in the last ${RG} games` : `Holding ${ord(p.leaderboard_rank)}`;
+      return `<a class="hot-card${fire ? " fire" : ""}${r.active ? "" : " idle"}" href="#/player/${encodeURIComponent(p.id)}">
+        <div class="hot-top">${who(p.id, false)}${fire ? `<span class="fire-badge">${FLAME}On fire</span>` : r.streak >= 2 ? `<span class="streak">${r.streak} wins in a row</span>` : ""}</div>
+        <div class="form" role="img" aria-label="Last ${r.games.length} games: ${r.games.map((h) => (h.won ? "won" : "lost")).join(", ")}">${formDots(p)}</div>
+        <div class="hot-num"><b>${fmtSigned(r.above, 1)}</b> vs expected</div>
+        <div class="hot-rank">${r.active ? rankLine : `Last played ${fmtDate(r.games[r.games.length - 1].date)}`}</div>
+      </a>`;
+    };
     main.innerHTML = `
       <h1>Leaderboard</h1>
       <p class="lede">${s.games} ${s.games === 1 ? "game" : "games"} played ${s.first_date === s.last_date ? "on " + fmtDate(s.first_date) : "from " + fmtDate(s.first_date) + " to " + fmtDate(s.last_date)}.
-        Ranked by a conservative rating <span class="nowrap">(μ − 3σ)</span> from a Plackett-Luce model of every finishing order. <a href="#/about">How ratings work</a></p>
+        Ranked by wins above expected: a win counts 1, and every game counts your fair share of wins against you, 1 divided by the number of players. <a href="#/about">How the ranking works</a></p>
       ${filterBar()}
       <section class="block panel">
         <div class="table-wrap"><table class="board">
           <thead><tr>
-            <th>#</th><th>Player</th><th class="num">Rating</th>
-            <th class="hide-sm">Skill μ ± 2σ</th>
-            <th class="num hide-sm">Games</th><th class="num">Wins</th><th class="num">Win rate</th>
+            <th>#</th><th>Player</th><th class="num">Above expected</th>
+            <th class="hide-sm">Against luck</th>
+            <th class="num">Wins</th><th class="num hide-sm">Expected</th><th class="num hide-sm">Games</th><th class="num">Win rate</th>
             <th class="num hide-sm">Avg VP</th><th class="num hide-sm">Beat rate</th>
           </tr></thead>
           <tbody>${rows}</tbody>
         </table></div>
       </section>
-      <p class="note">Win rate shows a 95% interval underneath. Beat rate is the share of opponents a player finished ahead of. The skill strip marks the starting rating of ${S.rating_model.mu0} with a vertical line.</p>
+      <p class="note">Arrows show how each place changed since the last game (${fmtDate(latest.date)}). Expected is the number of wins chance alone would give. The gray band in each strip is the range luck alone covers 95% of the time. ${outside.length ? `${outside.map((p) => `${esc(p.name)} (${p.above_expected > 0 ? "above" : "below"})`).join(", ")} ${outside.length === 1 ? "is" : "are"} outside it so far.` : "Nobody is outside it yet, so the order could still be luck."} Ties go to the higher share of the table's VP. Win rate shows a 95% interval underneath. Beat rate is the share of opponents a player finished ahead of.</p>
+
+      ${cards.length ? `<section class="block">
+        <h2>Last ${RG} games</h2>
+        <p class="note">Each player's own last ${RG} games, newest on the right, with wins above expected over just those games. On fire means at least ${num(S.ranking.fire_above, 0)} full win above expected across them. Places moved count the group's last ${RG} games.</p>
+        <div class="hot-grid">${cards.map(card).join("")}</div>
+      </section>` : ""}
 
       <section class="block">
-        <h2>Skill over time</h2>
-        <p class="note">Each player's skill estimate (μ) after every game, starting from ${S.rating_model.mu0}.</p>
+        <h2>Wins above expected over time</h2>
+        <p class="note">Each player's running total after every game they played. A win moves the line up by 1 minus their fair share, a loss moves it down by their fair share.</p>
         <div class="panel"><div class="chart" id="trend-legend"></div><div class="chart" id="trend"></div><div id="trend-table"></div></div>
       </section>
 
@@ -205,15 +241,15 @@
 
     const series = ranked.map((p) => ({
       id: p.id, name: p.name, color: color(p.id),
-      points: [{ x: 0, y: S.rating_model.mu0, tip: num(S.rating_model.mu0) }]
-        .concat(p.rating_history.map((h) => ({ x: h.index, y: h.mu, tip: num(h.mu) }))),
+      points: [{ x: 0, y: 0, tip: num(0, 2) }]
+        .concat(p.standing_history.map((h) => ({ x: h.index, y: h.above_expected, tip: fmtSigned(h.above_expected, 2) }))),
     }));
     const legend = document.getElementById("trend-legend");
     legend.innerHTML = `<ul class="legend">${ranked.map((p) => `<li><span class="sw" style="--c:${color(p.id)}"></span>${esc(p.name)}</li>`).join("")}</ul>`;
     legend.style.paddingBottom = "0";
     const gi = gamesByIndex();
     lineChart(document.getElementById("trend"), {
-      series, ariaLabel: "Skill estimate for each player after every game",
+      series, yRef: 0, ariaLabel: "Wins above expected for each player after every game",
       xLabel: (x) => (x === 0 ? "<b>Start</b>" : `<b>${esc(gameLabel(gi[x]))}</b>`),
       xTickLabel: (x) => (x === 0 ? "start" : x),
     });
@@ -252,6 +288,15 @@
           <td class="num">${num(p.vp_sources_avg[k])}</td><td class="num">${mk(pid, "vp_" + k)}</td></tr>`).join("")}</tbody></table></div>`;
     })() : `<p class="empty">No VP breakdowns recorded yet.</p>`;
 
+    const colorRows = Object.entries(p.by_color || {});
+    const colorMax = Math.max(1, ...colorRows.map(([, n]) => n));
+    const colorHtml = colorRows.length ? `<div class="panel table-wrap"><table>
+        <thead><tr><th>Color</th><th style="width:50%"></th><th class="num">Games</th><th class="num">Share</th></tr></thead>
+        <tbody>${colorRows.map(([c, n]) => `<tr><td><span class="hex" style="--c:var(--tc-${esc(c)}, var(--muted))" aria-hidden="true"></span> ${esc(c[0].toUpperCase() + c.slice(1))}</td>
+          <td><svg width="100%" height="10" aria-hidden="true"><rect x="0" y="1" height="8" rx="2" width="${(n / colorMax) * 100}%" style="fill:var(--tc-${esc(c)}, var(--muted))"/></svg></td>
+          <td class="num">${n}</td><td class="num">${pct(n / p.games)}</td></tr>`).join("")}</tbody></table></div>`
+      : `<p class="empty">No piece colors recorded for ${esc(p.name)}'s games yet.</p>`;
+
     const seats = Object.keys(p.by_seat);
     const seatHtml = seats.length ? `<div class="panel table-wrap"><table>
         <thead><tr><th>Seat</th><th class="num">Games</th><th class="num">Wins</th><th class="num">Win rate</th><th class="num">Avg finish</th></tr></thead>
@@ -281,11 +326,12 @@
 
     main.innerHTML = `
       <a class="back" href="#/">Back to leaderboard</a>
-      <div class="player-head"><span class="hex" style="--c:${color(pid)}" aria-hidden="true"></span><h1>${esc(p.name)}</h1></div>
-      <p class="lede">Ranked ${ord(p.leaderboard_rank)} of ${active}. ${p.games} ${p.games === 1 ? "game" : "games"} recorded.${p.rating.provisional ? ` The rating is provisional until ${S.rating_model.provisional_below_games} games.` : ""}</p>      ${filterBar()}
+      <div class="player-head${p.leaderboard_rank === 1 ? " lead" : ""}"><span class="pmark"${p.leaderboard_rank === 1 ? ' title="First on the leaderboard"' : ""}><span class="hex" style="--c:${color(pid)}" aria-hidden="true"></span>${p.leaderboard_rank === 1 ? TROPHY : ""}</span><h1>${esc(p.name)}</h1></div>
+      <p class="lede">Ranked ${ord(p.leaderboard_rank)} of ${active}. ${p.games} ${p.games === 1 ? "game" : "games"} recorded.</p>
+      ${onFire(pid) ? `<p class="fire-line">${FLAME}<span><b>On fire.</b> ${fmtSigned(p.recent.above, 1)} wins above expected over ${esc(p.name)}'s last ${S.ranking.recent_games} games.</span></p>` : ""}      ${filterBar()}
 
       <div class="tiles">
-        <div class="tile"><div class="v">${num(p.rating.ordinal)}</div><div class="k">Rating</div><div class="s">μ ${num(p.rating.mu)}, σ ${num(p.rating.sigma)}</div></div>
+        <div class="tile"><div class="v">${fmtSigned(p.above_expected, 1)}</div><div class="k">Wins above expected</div><div class="s">Luck alone lands between ${fmtSigned(p.luck_band[0], 1)} and ${fmtSigned(p.luck_band[1], 1)} 95% of the time</div></div>
         <div class="tile"><div class="v">${pct(p.win_rate)}</div><div class="k">Win rate</div><div class="s">95% interval ${pct(p.win_rate_ci[0])} to ${pct(p.win_rate_ci[1])}</div></div>
         <div class="tile"><div class="v">${p.wins}<span class="tile-mk">${mk(pid, "wins")}</span></div><div class="k">Wins</div><div class="s">${num(p.expected_wins)} expected by chance</div></div>
         <div class="tile"><div class="v">${pct(p.beat_rate)}<span class="tile-mk">${mk(pid, "beat_rate")}</span></div><div class="k">Beat rate</div><div class="s">Opponents finished ahead of</div></div>
@@ -294,8 +340,8 @@
       ${hasMarkers(pid) ? `<div class="mk-key">${markerLegend()}<span class="note">Markers compare ${esc(p.name)} with the rest of the same tables. ${info("markers", "vs the table markers")}</span></div>` : ""}
 
       <section class="block">
-        <h2>Skill over time</h2>
-        <p class="note">Skill estimate (μ) after each game ${esc(p.name)} played, with the shaded band at ±2σ.</p>
+        <h2>Wins above expected over time</h2>
+        <p class="note">${esc(p.name)}'s running total after each game. The shaded band is the range luck alone covers 95% of the time.</p>
         <div class="panel"><div class="chart" id="p-trend"></div><div id="p-trend-table"></div></div>
       </section>
 
@@ -343,6 +389,12 @@
         </section>
       </div>
 
+      <section class="block">
+        <h2>Piece colors</h2>
+        <p class="note">The TwoSheep color ${esc(p.name)} played in each game. ${p.color ? `Across the site ${esc(p.name)} is drawn in ${esc(p.color)}, their most used color over all games.` : ""}</p>
+        ${colorHtml}
+      </section>
+
       ${rpHtml}
       ${playerInsights(pid, p)}
       ${hooksHtml("player", pid)}
@@ -366,26 +418,27 @@
       <section class="block">
         <h2>Games</h2>
         <div class="panel table-wrap"><table>
-          <thead><tr><th>Game</th><th class="num">Finish</th><th class="num">VP</th><th class="num">Skill change</th></tr></thead>
+          <thead><tr><th>Game</th><th class="num">Finish</th><th class="num">VP</th><th class="num">Above expected</th></tr></thead>
           <tbody>${myGames.map((g) => { const r = g.players.find((x) => x.player === pid); return `<tr>
             <td><a href="#/game/${encodeURIComponent(g.id)}">${esc(gameLabel(g))}</a></td>
             <td class="num">${ord(r.rank)} of ${g.n_players}</td><td class="num">${r.vp}</td>
-            <td class="num ${r.rating_change > 0 ? "delta-up" : r.rating_change < 0 ? "delta-down" : ""}">${signed(r.rating_change)}</td></tr>`; }).join("")}</tbody>
+            <td class="num ${r.above_expected > 0 ? "delta-up" : "delta-down"}">${signed(r.above_expected, 2)}</td></tr>`; }).join("")}</tbody>
         </table></div>
       </section>
       ${p.aliases && p.aliases.length ? `<details class="tv"><summary>TwoSheep usernames</summary><p class="note">${aliasList(p)}</p></details>` : ""}`;
 
-    const pts = [{ x: 0, y: S.rating_model.mu0, lo: S.rating_model.mu0 - 2 * S.rating_model.sigma0, hi: S.rating_model.mu0 + 2 * S.rating_model.sigma0, tip: num(S.rating_model.mu0) }]
-      .concat(p.rating_history.map((h) => ({ x: h.index, y: h.mu, lo: h.mu - 2 * h.sigma, hi: h.mu + 2 * h.sigma, tip: `${num(h.mu)} ± ${num(2 * h.sigma)}` })));
+    const pts = [{ x: 0, y: 0, lo: 0, hi: 0, tip: num(0, 2) }]
+      .concat(p.standing_history.map((h) => ({ x: h.index, y: h.above_expected, lo: h.luck_band[0], hi: h.luck_band[1],
+        tip: `${fmtSigned(h.above_expected, 2)}, luck range ${fmtSigned(h.luck_band[0], 1)} to ${fmtSigned(h.luck_band[1], 1)}` })));
     lineChart(document.getElementById("p-trend"), {
       series: [{ id: pid, name: p.name, color: color(pid), points: pts, band: true }],
-      directLabels: false, height: 240, ariaLabel: `Skill estimate for ${p.name} after each game`,
+      directLabels: false, height: 240, yRef: 0, ariaLabel: `Wins above expected for ${p.name} after each game`,
       xLabel: (x) => (x === 0 ? "<b>Start</b>" : `<b>${esc(gameLabel(gi[x]))}</b>`),
       xTickLabel: (x) => (x === 0 ? "start" : x),
     });
     document.getElementById("p-trend-table").innerHTML = tableView(
-      [{ label: "Game" }, { label: "Skill μ", num: true }, { label: "σ", num: true }, { label: "Rating", num: true }],
-      p.rating_history.map((h) => [esc(gameLabel(gi[h.index])), num(h.mu), num(h.sigma), num(h.ordinal)]));
+      [{ label: "Game" }, { label: "Wins above expected", num: true }, { label: "Luck range (95%)", num: true }],
+      p.standing_history.map((h) => [esc(gameLabel(gi[h.index])), fmtSigned(h.above_expected, 2), `${fmtSigned(h.luck_band[0], 2)} to ${fmtSigned(h.luck_band[1], 2)}`]));
 
     hooksDraw("player", pid);
     const places = Array.from({ length: maxRank }, (_, i) => i + 1);
@@ -486,7 +539,7 @@
   }
 
   function gamePage(gid) {
-    // Skill changes come from the current view's ratings; a game outside the filter uses all games.
+    // A game outside the current filter falls back to the all-games view.
     const g = S.games.find((x) => x.id === gid) || ROOT.views.all.games.find((x) => x.id === gid);
     if (!g) return notFound(`There's no game with the id "${esc(gid)}".`);
     const winner = g.players[0];
@@ -533,16 +586,16 @@
         <div class="panel table-wrap"><table>
           <thead><tr><th class="num">Finish</th><th>Player</th><th class="num">VP</th>
             ${hasVB ? vbKeys.map((k) => `<th class="num">${VP_SHORT[k]}</th>`).join("") : ""}
-            <th class="num">Seat</th><th class="num">Skill change</th></tr></thead>
+            <th class="num">Seat</th><th class="num">Above expected</th></tr></thead>
           <tbody>${g.players.map((r) => `<tr>
             <td class="num">${ord(r.rank)}</td><td>${who(r.player)}</td><td class="num"><b>${r.vp}</b></td>
             ${hasVB ? vbKeys.map((k) => `<td class="num">${vb(r, k)}</td>`).join("") : ""}
             <td class="num">${r.seat ?? '<span class="sub">n/a</span>'}</td>
-            <td class="num ${r.rating_change > 0 ? "delta-up" : r.rating_change < 0 ? "delta-down" : ""}">${r.guest ? "" : signed(r.rating_change)}</td></tr>`).join("")}</tbody>
+            <td class="num ${r.above_expected > 0 ? "delta-up" : "delta-down"}">${r.guest ? "" : signed(r.above_expected, 2)}</td></tr>`).join("")}</tbody>
         </table></div>
         ${hasVB ? `<p class="note">Columns are victory points from each source, so cities count 2 each and the row adds up to the total.</p>` : ""}
-        ${g.n_bots ? `<p class="note">The bot isn't listed, but it counts as a seat: it is in the number of players behind expected wins and as an opponent in beat rate. It doesn't change anyone's rating.</p>` : ""}
-        ${g.n_guests ? `<p class="note">Guests are players outside the group. They count as opponents but aren't rated or listed.</p>` : ""}
+        ${g.n_bots ? `<p class="note">The bot isn't listed, but it counts as a seat: it is in the number of players behind expected wins and as an opponent in beat rate.</p>` : ""}
+        ${g.n_guests ? `<p class="note">Guests are players outside the group. They count as seats and opponents but aren't ranked or listed.</p>` : ""}
         ${g.twosheep_id ? `<p class="note"><a href="https://twosheep.io/replay/${encodeURIComponent(g.twosheep_id)}">Watch the replay on TwoSheep.io</a></p>` : ""}
       </section>
 
@@ -915,17 +968,20 @@
   }
 
   function aboutPage() {
-    const s = ROOT.views.all.summary, m = S.rating_model;
+    const s = ROOT.views.all.summary;
     main.innerHTML = `<div class="prose">
       <h1>How it works</h1>
-      <h2>Ratings</h2>
-      <p>Every game is treated as a full finishing order, not just a winner. A Plackett-Luce model reads that order as a sequence of choices: the winner beat everyone, second place beat everyone left, and so on. Each player has a skill estimate μ and an uncertainty σ. Everyone starts at μ = ${m.mu0} and σ = ${num(m.sigma0, 2)}, and both are updated after each game using the Weng-Lin Bayesian approximation (the openskill library).</p>
-      <p>The leaderboard ranks by μ − 3σ, a conservative rating that only rises once the model is fairly sure. New players start near zero and climb as they play, so a lucky first win doesn't put someone on top. Ratings are marked provisional below ${m.provisional_below_games} games.</p>
-      <p>The game type filter recomputes everything from only the games you pick, ratings included, so the Seafarers leaderboard only learns from Seafarers games and a scenario's leaderboard only from that scenario. "All games" pools every game into one rating. VP comparisons always use each game's own target.</p>
+      <h2>Ranking</h2>
+      <p>In Catan you win or you don't, so the leaderboard only counts wins. Each win is worth 1. Each game also counts your fair share of wins against you: 1 divided by the number of players, since that is how often anyone would win if it were pure chance. The total is <b>wins above expected</b>: wins minus expected wins. Winning a 6-player game earns +0.83 and losing one costs 0.17, while a 3-player game earns +0.67 or costs 0.33, so a win counts for more at a bigger table and a loss there hurts less. Second place counts the same as last.</p>
+      <p>This follows the CATAN World Championship, which ranks its preliminary round by number of wins. They can count raw wins because everyone plays the same number of 4-player games; we don't, so each game's expected share is taken off. Ties go to the higher average share of the table's VP, one of the championship's tiebreakers.</p>
+      <p>Luck is large in Catan. If everyone were equally good, every game would be a 1-in-n draw, and a player's wins would follow a Poisson binomial distribution over their games, averaging their expected wins. The gray band on the leaderboard and player pages is the middle 95% of that distribution (at most 2.5% cut from each end, computed exactly, since a normal approximation is poor over a handful of games), shown as wins above expected. A player inside their band could be where they are by chance. The total grows with games played, so a regular who keeps winning a little more than their share climbs higher than someone with a hot start over a few games.</p>
+      <p>We tried skill models first. Over our games, a Plackett-Luce skill model fit to winners only finds no clear differences between players, and neither the old full-finishing-order rating (openskill) nor the winner-only model predicted the next winner better than giving everyone an equal chance. Wins above expected says plainly what happened without claiming more than the data shows.</p>
+      <p>The arrows beside each place show how it changed with the latest game. <b>Last ${ROOT.ranking.recent_games} games</b> adds up wins above expected over each player's own most recent games, and counts places moved over the group's last ${ROOT.ranking.recent_games} games. A player is <b>on fire</b> when those games come to at least ${ROOT.ranking.fire_above} full win above expected and they played in one of the group's last ${ROOT.ranking.active_window} games. Over just ${ROOT.ranking.recent_games} games that is mostly luck, which is part of the fun. The trophy marks whoever is first.</p>
+      <p>The game type filter recomputes everything from only the games you pick, so the Seafarers leaderboard only counts Seafarers games and a scenario's leaderboard only that scenario. VP comparisons always use each game's own target.</p>
       <h2>Finishing order</h2>
       <p>The winner always finishes first. Everyone else is ordered by final VP, and players with equal VP share a place.</p>
       <h2>Guests</h2>
-      <p>Anyone who isn't part of the group shows up as a guest. Guests count in the finishing order, so beating a guest helps your rating and losing to one hurts it, but each guest starts every game at the starting rating and never appears on the leaderboard. Only finished games with 3 or more players are recorded.</p>
+      <p>Anyone who isn't part of the group shows up as a guest. Guests count as seats, so a game with a guest has the same fair share as any other game of that size, and they count as opponents in beat rate and head to head, but they never appear on the leaderboard. TwoSheep bots count the same way. Only finished games with 3 or more players, at least 2 of them from the group, are recorded.</p>
       <h2>Other numbers</h2>
       <ul>
         <li><b>Win rate</b> comes with a 95% Wilson interval, which stays honest with small samples.</li>
@@ -999,7 +1055,7 @@
 
   function setView(key) {
     VIEW = key;
-    S = Object.assign({}, ROOT.views[key], { rating_model: ROOT.rating_model, site: ROOT.site, generated_at: ROOT.generated_at });
+    S = Object.assign({}, ROOT.views[key], { ranking: ROOT.ranking, site: ROOT.site, generated_at: ROOT.generated_at });
     P = Object.fromEntries(ROOT.views.all.players.map((p) => [p.id, p])); // every known player
     for (const p of S.players) P[p.id] = p;                              // stats from this view
   }
