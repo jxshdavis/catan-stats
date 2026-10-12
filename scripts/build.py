@@ -750,8 +750,12 @@ def dense_timeline(tl, turns):
     return out
 
 
+SIZES = {"3p": lambda n: n == 3, "4p": lambda n: n >= 4}  # table-size filters, by seat count
+
+
 def compute_views(players_doc, games_doc, name_mode="usernames", replays_doc=None, fast=False, events_doc=None):
-    """One full stats view per filter: all games, each expansion, each scenario.
+    """One full stats view per filter: all games, each expansion, each scenario, and each of those at 3 seats
+    and at 4 or more.
 
     Each view is computed from scratch on its own slice, so the Seafarers ranking
     only counts Seafarers games.
@@ -766,16 +770,25 @@ def compute_views(players_doc, games_doc, name_mode="usernames", replays_doc=Non
             sub = [g for g in slices[exp] if (g.get("settings") or {}).get("scenario") == scen]
             if sub:
                 slices[f"{exp}/{scen}"] = sub
+    # Every game-type view also splits by table size (seats, bots included): key "<type>+3p" or "<type>+4p".
+    for key, sub in list(slices.items()):
+        for size, keep in SIZES.items():
+            part = [g for g in sub if keep(len(g["players"]))]
+            if part:
+                slices[f"{key}+{size}"] = part
     view_list = []
     for key, sub in slices.items():
-        exp, _, scen = key.partition("/")
+        base, _, size = key.partition("+")
+        exp, _, scen = base.partition("/")
         view_list.append({
             "key": key,
-            "label": "All games" if key == "all" else (SCENARIOS[exp][scen] if scen else type_label(key)),
-            "parent": exp if scen else ("all" if key != "all" else None),
+            "label": "All games" if base == "all" else (SCENARIOS[exp][scen] if scen else type_label(base)),
+            "parent": exp if scen else ("all" if base != "all" else None),
+            "type": base,
+            "size": size or None,
             "games": len(sub),
             "unlabeled_scenarios": (sum(1 for g in sub if not (g.get("settings") or {}).get("scenario"))
-                                    if key in SCENARIOS else None),
+                                    if base in SCENARIOS else None),
         })
     colors = player_colors(players_doc, games)
     views = {key: compute(players_doc, sub, number_of, name_mode, replays, colors) for key, sub in slices.items()}

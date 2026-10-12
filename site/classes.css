@@ -11,7 +11,7 @@
 @media (min-width: 720px) { .cls-head { grid-template-columns: 3fr 2fr; } }
 .cls-badges { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px; }
 .cls-badge { border: 1px solid var(--hair); border-left: 3px solid var(--ink); border-radius: var(--radius); padding: 8px 12px; background: var(--page); max-width: 360px; }
-.cls-badge-name { font-size: 18px; font-weight: 780; font-variation-settings: "wdth" 110; color: var(--ink); }
+.cls-badge-name { font-family: var(--serif); font-size: 22px; font-weight: 500; color: var(--ink); }
 .cls-lean { margin: 8px 0 0; font-size: 17px; font-weight: 650; color: var(--ink-2); }
 .cls-recipe .chipline { margin: 6px 0 4px; }
 .cls-recipe .mini b { color: var(--ink); font-weight: 700; }

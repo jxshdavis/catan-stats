@@ -9,21 +9,21 @@
   --vt-good: #006300;
   --vt-bad: #d9534f;
   --vt-flat: #6f808d;
-  --band: #d6e0e4;          /* chance band behind bars */
+  --band: #e9e6de;          /* chance band behind bars */
 }
 @media (prefers-color-scheme: dark) {
   :root:where(:not([data-theme="light"])) {
     --vt-good: #3cc13c;
     --vt-bad: #d64545;
     --vt-flat: #82939d;
-    --band: #263d4c;
+    --band: #2a2926;
   }
 }
 :root[data-theme="dark"] {
   --vt-good: #3cc13c;
   --vt-bad: #d64545;
   --vt-flat: #82939d;
-  --band: #263d4c;
+  --band: #2a2926;
 }
 
 /* Legend swatches the new marks need (the base .legend lives in styles.css). */
@@ -68,10 +68,10 @@
 .matrix td .cell[data-mx]:hover { box-shadow: inset 0 0 0 2px var(--ink-2); }
 
 /* ---- Level | Rate switch ------------------------------------------------ */
-.seg { display: inline-flex; padding: 2px; gap: 2px; border: 1px solid var(--hair); border-radius: 999px; background: var(--surface); }
+.seg { display: inline-flex; padding: 2px; gap: 2px; border: 1px solid var(--hair); border-radius: var(--radius); background: var(--surface); }
 .seg button {
   font: inherit; font-size: 13px; font-weight: 560; line-height: 1.2; color: var(--ink-2);
-  background: transparent; border: 0; border-radius: 999px; padding: 4px 12px; cursor: pointer; min-height: 28px;
+  background: transparent; border: 0; border-radius: var(--radius); padding: 4px 12px; cursor: pointer; min-height: 28px;
 }
 .seg button:hover { color: var(--ink); background: var(--wash); }
 .seg button[aria-pressed="true"] { background: var(--ink); color: var(--page); }
@@ -107,7 +107,7 @@
   width: max-content; max-width: min(46ch, calc(100vw - 16px)); max-height: min(60vh, 420px); overflow: auto;
   padding: 10px 12px; border: 1px solid var(--axis); border-radius: var(--radius);
   background: var(--surface); color: var(--ink-2); box-shadow: 0 6px 20px rgba(0, 0, 0, .16);
-  font-family: var(--font); font-size: 14px; font-weight: 400; line-height: 1.45; font-variation-settings: "wdth" 100;
+  font-family: var(--font); font-size: 14px; font-weight: 400; line-height: 1.45;
   letter-spacing: normal; text-align: left; text-transform: none; white-space: normal;
 }
 .info-pop[hidden] { display: none; }

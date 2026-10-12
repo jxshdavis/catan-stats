@@ -32,8 +32,7 @@
     opts || { month: "short", day: "numeric", year: "numeric" });
   const signed = (x, d = 1) => (x > 0 ? "+" : x < 0 ? "−" : "") + Math.abs(x).toFixed(d);
   const isGuest = (pid) => String(pid).startsWith("guest-");
-  // Small inline graphics: a gold trophy on the leader's icon, and a flame for anyone on fire.
-  const TROPHY = `<svg class="trophy" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 3.5H1.8v1.2a3 3 0 0 0 3 3M12.5 3.5h1.7v1.2a3 3 0 0 1-3 3" fill="none" stroke="#c99a2e" stroke-width="1.4"/><path d="M4 1.5h8v4a4 4 0 0 1-8 0z" fill="#e3b23c"/><path d="M6.6 9.2h2.8l.4 2.6H6.2z" fill="#c99a2e"/><rect x="4.5" y="12" width="7" height="2.5" rx=".8" fill="#e3b23c"/><path d="M5.6 2.6h1.2v3.2a2 2 0 0 0 .6 1.4" fill="none" stroke="#fff3c9" stroke-width=".9" stroke-linecap="round"/></svg>`;
+  // A flame for anyone on fire.
   const FLAME = `<svg class="flame" viewBox="0 0 16 20" aria-hidden="true"><path class="flame-out" d="M8 .5c1 4 6 6 6 11.5 0 4.4-2.7 7.5-6 7.5S2 16.4 2 12c0-3 1.9-5 3-7 .5 2.4 1.5 3.4 2.5 3.4C7 5.5 7.4 2.6 8 .5z"/><path class="flame-in" d="M8 8.8c1 2 3 3.4 3 6 0 2.4-1.3 3.9-3 3.9S5 17.4 5 15.3c0-2 1.5-3 2-4.5.3 1.2.8 1.7 1.3 1.7-.3-1.2-.5-2.4-.3-3.7z"/></svg>`;
   const onFire = (pid) => !!(P[pid] && P[pid].recent && P[pid].recent.on_fire);
   const who = (pid, link = true) => {
@@ -41,13 +40,28 @@
     const p = P[pid];
     const name = p ? esc(p.name) : esc(pid);
     const lead = p && p.leaderboard_rank === 1;
-    const inner = `<span class="pmark${lead ? " lead" : ""}"${lead ? ' title="First on the leaderboard"' : ""}><span class="hex" style="--c:${color(pid)}" aria-hidden="true"></span>${lead ? TROPHY : ""}</span><span>${name}</span>`;
+    const inner = `<span class="pmark${lead ? " lead" : ""}"${lead ? ' title="First on the leaderboard"' : ""}><span class="hex" style="--c:${color(pid)}" aria-hidden="true"></span></span><span>${name}</span>`;
     return link ? `<a class="who" href="#/player/${encodeURIComponent(pid)}">${inner}</a>` : `<span class="who">${inner}</span>`;
   };
   const aliasList = (p) => p.aliases.map(esc).join(", ");
   const gameLabel = (g) => `Game ${g.number}, ${fmtDate(g.date)}`;
   const viewInfo = (key) => ROOT.view_list.find((v) => v.key === key);
-  const viewLabel = (key) => { const v = viewInfo(key); return v ? (v.parent && v.parent !== "all" ? `${viewInfo(v.parent).label}: ${v.label}` : v.label) : key; };
+  // A view is a game type ("all", "seafarers", "seafarers/new_shores", ...) and optionally a table size, keyed
+  // "<type>+<size>" ("3p" = 3 seats, "4p" = 4 or more). The URL carries them as ?view=<type>&players=<size>.
+  const SIZE_LABELS = { "3p": "3 players", "4p": "4+ players" };
+  const viewKey = (type, size) => (size ? `${type}+${size}` : type);
+  const viewQuery = (key) => {
+    const v = viewInfo(key), q = [];
+    if (v && v.type !== "all") q.push("view=" + encodeURIComponent(v.type));
+    if (v && v.size) q.push("players=" + v.size);
+    return q.length ? "?" + q.join("&") : "";
+  };
+  const viewLabel = (key) => {
+    const v = viewInfo(key);
+    if (!v) return key;
+    const type = v.parent && v.parent !== "all" ? `${viewInfo(v.parent).label}: ${v.label}` : v.label;
+    return v.size ? `${v.type === "all" ? "" : type + ", "}${SIZE_LABELS[v.size]}` : type;
+  };
   const VP_LABELS = { settlements: "Settlements", cities: "Cities", vp_cards: "VP cards", largest_army: "Largest army",
     longest_road: "Longest road", islands: "New islands", other: "Other VP" };
   const gamesByIndex = () => Object.fromEntries(S.games.map((g) => [g.index, g]));
@@ -93,33 +107,54 @@
   // Replay numbers for one player in one game, from the shared copy in stats.json.
   const replayOf = (g, pid) => ((ROOT.game_replays || {})[g.id] || {})[pid];
 
-  // ---- Coastline: one honeycomb strip in the standard tile mix --------------
-  function drawCoast() {
-    const svg = document.getElementById("coast");
-    const tiles = { lumber: "#2f6b3a", grain: "#e3b23c", wool: "#93c15a", brick: "#b3532e", ore: "#7d858c", desert: "#d9c48f" };
-    const bag = [].concat(Array(4).fill("lumber"), Array(4).fill("grain"), Array(4).fill("wool"),
-      Array(3).fill("brick"), Array(3).fill("ore"), ["desert"]);
-    let seed = 7;
-    const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
-    const r = 11, w = Math.sqrt(3) * r;
-    let html = "", k = 0, deck = [];
-    const next = () => {
-      if (!deck.length) deck = bag.slice().sort(() => rnd() - 0.5);
-      return deck.pop();
-    };
-    for (let row = 0; row < 2; row++) {
-      const cy = 10 + row * 1.5 * r, off = row ? w / 2 : 0;
-      for (let i = -1; i * w < 2800; i++) {
-        const cx = i * w + off;
-        const pts = [0, 1, 2, 3, 4, 5].map((j) => {
-          const a = Math.PI / 180 * (60 * j - 90);
-          return (cx + (r - 1) * Math.cos(a)).toFixed(1) + "," + (cy + (r - 1) * Math.sin(a)).toFixed(1);
-        }).join(" ");
-        html += `<polygon points="${pts}" fill="${tiles[next()]}"/>`;
-        k++;
+  // ---- Masthead: dateline, and on the home page a line about the latest game --------
+  // The game gets a label from its final score and the VP-by-turn timeline. Thresholds scale with the VP target
+  // so 10 and 14 point games read the same:
+  //   comeback: the winner trailed the best opponent by at least 35% of the target (3 VP or more) after the first
+  //             quarter of the game (timelines show visible VP, so hidden VP cards can make a deficit look bigger)
+  //   close:    won by 1 VP or less
+  //   blowout:  won by at least 40% of the target
+  function gameStory(g) {
+    const target = g.vp_to_win || 10;
+    const ps = g.players.slice().sort((a, b) => a.rank - b.rank);
+    const win = ps[0], top2 = ps[1].vp, margin = win.vp - top2;
+    const name = (pid) => (isGuest(pid) ? "a guest" : P[pid] ? esc(P[pid].name) : esc(pid));
+    const runners = ps.filter((r) => r.player !== g.winner && r.vp === top2).map((r) => name(r.player)).join(" and ");
+    const delta = typeof win.above_expected === "number"
+      ? `<span class="lead-delta" title="Wins above expected from this game">▲ +${num(win.above_expected, 1)}</span>` : "";
+    const winner = `${who(g.winner)}${delta}`;
+    const when = `game ${g.number} on ${fmtDate(g.date, { month: "long", day: "numeric" })}`;
+    const score = `${win.vp} to ${top2}`;
+    const tl = ((ROOT.timelines || {})[g.id] || {}).vp || {};
+    let deficit = 0;
+    if (tl[g.winner]) {
+      const mine = tl[g.winner], others = Object.keys(tl).filter((k) => k !== g.winner);
+      for (let i = Math.floor(mine.length / 4); i < mine.length; i++) {
+        deficit = Math.max(deficit, Math.max(...others.map((k) => tl[k][i])) - mine[i]);
       }
     }
-    svg.innerHTML = html;
+    if (deficit >= Math.max(3, Math.round(0.35 * target))) {
+      return { tag: "Comeback", text: `${winner} came back from ${deficit} points down to take ${when}, ${score} over ${runners}${margin <= 1 ? ", holding on by a single point" : ""}.` };
+    }
+    if (margin <= 1) return { tag: "Close game", text: `${winner} edged out ${runners} in ${when}, ${score}: a one point finish.` };
+    if (margin >= 0.4 * target) return { tag: "Blowout", text: `${winner} ran away with ${when}, beating ${runners} ${score}.` };
+    return { tag: "Solid win", text: `${winner} took ${when}, ${score} over ${runners}.` };
+  }
+
+  function drawMasthead() {
+    const s = S.summary, games = S.games;
+    const set = (id, html) => { document.getElementById(id).innerHTML = html; };
+    set("mast-date", new Date(S.generated_at).toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric" }));
+    if (!games.length) { set("mast-lead", esc(S.site.subtitle || "")); return; }
+    const last = games.reduce((a, g) => (g.index > a.index ? g : a));
+    const leader = S.players.find((p) => p.leaderboard_rank === 1);
+    set("mast-issue", `No. ${last.number}`);
+    set("mast-meta", `${s.players_active} players · since ${fmtDate(s.first_date, { month: "long", year: "numeric" })}`);
+    const story = gameStory(last);
+    const lv = `+${num(leader.above_expected, 1)} wins above expected`;
+    const lead = leader.rank_prev === 1 ? `${esc(leader.name)} still leads the table at ${lv}.` : `${esc(leader.name)} takes over first place at ${lv}.`;
+    set("mast-kicker", story.tag);
+    set("mast-lead", `${story.text} ${lead}`);
   }
 
   // ---- Game type filter ---------------------------------------------------------
@@ -128,19 +163,25 @@
     const list = ROOT.view_list;
     if (list.length < 2) return "";
     const cur = viewInfo(VIEW) || list[0];
-    const family = cur.parent && cur.parent !== "all" ? cur.parent : cur.key;
-    const link = (v, text) => {
-      const sel = v.key === VIEW;
-      const within = !sel && v.key === family && VIEW !== family; // parent of the chosen scenario
-      return `<a class="chip${sel ? " on" : within ? " within" : ""}" data-keep href="#/${PAGE_PATH}${v.key === "all" ? "" : "?view=" + encodeURIComponent(v.key)}"${sel ? ' aria-current="true"' : ""}>${esc(text)} <span class="n">${v.games}</span></a>`;
+    const type = cur.type || cur.key, size = cur.size || null;
+    const tinfo = viewInfo(type);
+    const family = tinfo.parent && tinfo.parent !== "all" ? tinfo.parent : type;
+    // A type chip keeps the chosen table size; a size chip keeps the chosen type. No games there: a dead chip.
+    const link = (t, s, text, within = false) => {
+      const key = viewKey(t, s), v = viewInfo(key), sel = key === VIEW;
+      if (!v) return `<span class="chip off" aria-disabled="true">${esc(text)} <span class="n">0</span></span>`;
+      return `<a class="chip${sel ? " on" : within ? " within" : ""}" data-keep href="#/${PAGE_PATH}${viewQuery(key)}"${sel ? ' aria-current="true"' : ""}>${esc(text)} <span class="n">${v.games}</span></a>`;
     };
-    const top = list.filter((v) => v.key === "all" || v.parent === "all");
-    const kids = family === "all" ? [] : list.filter((v) => v.parent === family);
+    const types = list.filter((v) => !v.size);
+    const top = types.filter((v) => v.key === "all" || v.parent === "all");
+    const kids = family === "all" ? [] : types.filter((v) => v.parent === family);
     const fam = viewInfo(family);
-    let html = `<nav class="filter" aria-label="Filter by game type"><div class="chips">${top.map((v) => link(v, v.label)).join("")}</div>`;
+    let html = `<nav class="filter" aria-label="Filter by game type and table size"><div class="chips">${top.map((v) =>
+      link(v.key, size, v.label, v.key === family && type !== family)).join("")}</div>`;
     if (kids.length) {
-      html += `<div class="chips sub">${link(fam, "Any scenario")}${kids.map((v) => link(v, v.label)).join("")}</div>`;
+      html += `<div class="chips sub">${link(family, size, "Any scenario")}${kids.map((v) => link(v.key, size, v.label)).join("")}</div>`;
     }
+    html += `<div class="chips size"><span class="chips-k">Table size</span>${link(type, null, "Any")}${Object.keys(SIZE_LABELS).map((s) => link(type, s, SIZE_LABELS[s])).join("")}</div>`;
     if (fam && fam.unlabeled_scenarios) {
       html += `<p class="note">${fam.unlabeled_scenarios} ${fam.label} ${fam.unlabeled_scenarios === 1 ? "game has" : "games have"} no scenario recorded, so ${fam.unlabeled_scenarios === 1 ? "it only counts" : "they only count"} under ${esc(fam.label)}.</p>`;
     }
@@ -149,6 +190,103 @@
   let PAGE_PATH = "";
 
   // ---- Pages ------------------------------------------------------------------
+  // ---- Game-night calendar ------------------------------------------------------
+  // One grid per year, newest first: a column per week (Sunday on top), a square per day. A day with games is
+  // filled in the winner's color; with several winners it is split into stripes, wider for more wins.
+  const winColor = (pid) => (isGuest(pid) ? "var(--muted)" : color(pid));
+  const gamesOnDays = (games) => {
+    const by = {};
+    for (const g of games) (by[g.date] = by[g.date] || []).push(g);
+    for (const d in by) by[d].sort((a, b) => a.number - b.number);
+    return by;
+  };
+  function calendarHtml(games) {
+    const byDay = gamesOnDays(games);
+    const days = Object.keys(byDay);
+    if (!days.length) return "";
+    const CELL = 11, STEP = 14, LEFT = 30, TOP = 16, DAY = 864e5;
+    const iso = (t) => new Date(t).toISOString().slice(0, 10);
+    const now = new Date(), today = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
+    const years = [...new Set(days.map((d) => +d.slice(0, 4)))].sort((a, b) => b - a);
+    const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const grid = (y) => {
+      const jan1 = Date.UTC(y, 0, 1), off = new Date(jan1).getUTCDay();
+      const col = (t) => Math.floor((Math.round((t - jan1) / DAY) + off) / 7);
+      const weeks = col(Date.UTC(y, 11, 31)) + 1;
+      const W = LEFT + weeks * STEP, H = TOP + 7 * STEP;
+      let cells = "", nGames = 0, nDays = 0;
+      for (let t = jan1; t <= Date.UTC(y, 11, 31); t += DAY) {
+        const d = iso(t), x = LEFT + col(t) * STEP, yy = TOP + new Date(t).getUTCDay() * STEP;
+        const gs = byDay[d];
+        if (!gs) { cells += `<rect x="${x}" y="${yy}" width="${CELL}" height="${CELL}" rx="2" class="cal-off${t > today ? " cal-future" : ""}"/>`; continue; }
+        nGames += gs.length; nDays++;
+        const wins = {};
+        for (const g of gs) wins[g.winner] = (wins[g.winner] || 0) + 1;
+        let sx = x;
+        const stripes = Object.entries(wins).map(([pid, n]) => {
+          const w = (CELL * n) / gs.length, r = `<rect x="${sx}" y="${yy}" width="${w}" height="${CELL}" style="fill:${winColor(pid)}"/>`;
+          sx += w;
+          return r;
+        }).join("");
+        const tip = `<b>${fmtDate(d, { weekday: "short", month: "short", day: "numeric", year: "numeric" })}</b>`
+          + gs.map((g) => `<div class="row">Game ${g.number}: ${who(g.winner, false)} won</div>`).join("");
+        const label = `${fmtDate(d)}: ${gs.map((g) => `game ${g.number}, ${isGuest(g.winner) ? "a guest" : (P[g.winner] ? P[g.winner].name : g.winner)} won`).join("; ")}`;
+        cells += `<a href="#/day/${d}" class="cal-day" data-tip="${esc(tip)}" aria-label="${esc(label)}">`
+          + `<g clip-path="url(#cal-clip)">${stripes}</g><rect x="${x - 0.5}" y="${yy - 0.5}" width="${CELL + 1}" height="${CELL + 1}" rx="2.5" class="cal-ring"/></a>`;
+      }
+      let months = "";
+      for (let m = 0; m < 12; m++) {
+        const t = Date.UTC(y, m, 1);
+        const c = col(t) + (new Date(t).getUTCDay() ? 1 : 0); // label the first full week of the month
+        if (c < weeks - 1) months += `<text x="${LEFT + c * STEP}" y="${TOP - 5}">${MONTHS[m]}</text>`;
+      }
+      const wd = [[1, "Mon"], [3, "Wed"], [5, "Fri"]].map(([r, s]) => `<text x="${LEFT - 6}" y="${TOP + r * STEP + CELL - 2}" text-anchor="end">${s}</text>`).join("");
+      return `<div class="cal-year"><h3>${y} <span class="sub">${nGames} ${nGames === 1 ? "game" : "games"} on ${nDays} ${nDays === 1 ? "day" : "days"}</span></h3>
+        <div class="table-wrap cal-scroll" data-end="${((LEFT + (col(Math.min(today, Date.UTC(y, 11, 31))) + 1) * STEP + 4) / W).toFixed(4)}"><svg class="cal" viewBox="0 0 ${W} ${H}" style="min-width:${Math.round(W * 0.85)}px" role="group" aria-label="Game days in ${y}">${months}${wd}${cells}</svg></div></div>`;
+    };
+    const winners = Object.entries(games.reduce((a, g) => ((a[g.winner] = (a[g.winner] || 0) + 1), a), {}))
+      .sort((a, b) => b[1] - a[1]);
+    const legend = `<ul class="legend">${winners.map(([pid, n]) => `<li><span class="sw box" style="--c:${winColor(pid)}"></span>${isGuest(pid) ? "Guest" : esc(P[pid] ? P[pid].name : pid)} <span class="sub">${n}</span></li>`).join("")}</ul>`;
+    return `<svg width="0" height="0" style="position:absolute" aria-hidden="true"><clipPath id="cal-clip" clipPathUnits="objectBoundingBox"><rect width="1" height="1" rx="0.18"/></clipPath></svg>
+      <div class="chart">${legend}${years.map(grid).join("")}</div>`;
+  }
+  // On narrow screens, start each calendar scrolled so today (or the end of a past year) is at the right edge.
+  const scrollCalendars = () => main.querySelectorAll(".cal-scroll").forEach((el) => {
+    el.scrollLeft = Math.max(0, el.dataset.end * el.scrollWidth - el.clientWidth);
+  });
+
+  function dayPage(date) {
+    const pick = (games) => games.filter((g) => g.date === date).sort((a, b) => a.number - b.number);
+    let gs = pick(S.games);
+    const inView = gs.length > 0;
+    if (!inView) gs = pick(ROOT.views.all.games); // a day outside the current filter falls back to all games
+    if (!gs.length) return notFound(`No games were recorded on ${esc(date)}.`);
+    const dates = Object.keys(gamesOnDays(inView ? S.games : ROOT.views.all.games)).sort();
+    const i = dates.indexOf(date), prev = dates[i - 1], next = dates[i + 1];
+    const wins = {};
+    for (const g of gs) wins[g.winner] = (wins[g.winner] || 0) + 1;
+    const winLine = Object.entries(wins).sort((a, b) => b[1] - a[1])
+      .map(([pid, n]) => `${who(pid)} won ${n === 1 ? (gs.length === 1 ? "it" : "1") : n}`).join(", ");
+    main.innerHTML = `
+      <a class="back" href="#/">Back to leaderboard</a>
+      <h1>${fmtDate(date, { weekday: "long", month: "long", day: "numeric", year: "numeric" })}</h1>
+      <p class="lede">${gs.length === 1 ? "One game" : `${gs.length} games`}. ${winLine}.</p>
+      ${!inView ? `<p class="note">None of these are ${esc(viewLabel(VIEW))} games, so this shows all games that day.</p>` : ""}
+      <section class="block">
+        <div class="panel table-wrap"><table class="games-table">
+          <thead><tr><th>Game</th><th>Finishing order</th><th class="num hide-sm">Turns</th></tr></thead>
+          <tbody>${gs.map((g) => `<tr>
+            <td class="date"><a href="#/game/${encodeURIComponent(g.id)}">Game ${g.number}</a><div class="sub">${esc(g.type_label)}</div></td>
+            <td><div class="order">${g.players.map((r) => `<span>${who(r.player).replace('class="who', `class="who${r.rank === 1 ? " win" : ""}`)} <span class="vp">${r.vp}</span></span>`).join("")}</div></td>
+            <td class="num hide-sm">${g.turns ?? ""}</td></tr>`).join("")}</tbody>
+        </table></div>
+      </section>
+      <nav class="day-nav">
+        ${prev ? `<a href="#/day/${prev}">Previous game day: ${fmtDate(prev)}</a>` : "<span></span>"}
+        ${next ? `<a href="#/day/${next}">Next game day: ${fmtDate(next)}</a>` : "<span></span>"}
+      </nav>`;
+  }
+
   function leaderboard() {
     const ranked = S.players.filter((p) => p.games > 0);
     const s = S.summary;
@@ -228,6 +366,7 @@
         <div class="hot-grid">${cards.map(card).join("")}</div>
       </section>` : ""}
 
+
       <section class="block">
         <h2>Wins above expected over time</h2>
         <p class="note">Each player's running total after every game they played. A win moves the line up by 1 minus their fair share, a loss moves it down by their fair share.</p>
@@ -237,6 +376,12 @@
       <section class="block">
         <h2>Latest game</h2>
         <p class="note">${fmtDate(latest.date)}: ${who(latest.winner)} won with ${latest.players[0].vp} VP${latest.turns ? ` in ${latest.turns} turns` : ""}. <a href="#/game/${encodeURIComponent(latest.id)}">See the full game</a></p>
+      </section>
+
+      <section class="block">
+        <h2>Game days</h2>
+        <p class="note">Each square is a day, colored by who won. A day with more than one game is split by winner, wider for more wins. Click a day to see its games.</p>
+        <div class="panel">${calendarHtml(S.games)}</div>
       </section>`;
 
     const series = ranked.map((p) => ({
@@ -244,6 +389,7 @@
       points: [{ x: 0, y: 0, tip: num(0, 2) }]
         .concat(p.standing_history.map((h) => ({ x: h.index, y: h.above_expected, tip: fmtSigned(h.above_expected, 2) }))),
     }));
+    scrollCalendars();
     const legend = document.getElementById("trend-legend");
     legend.innerHTML = `<ul class="legend">${ranked.map((p) => `<li><span class="sw" style="--c:${color(p.id)}"></span>${esc(p.name)}</li>`).join("")}</ul>`;
     legend.style.paddingBottom = "0";
@@ -326,7 +472,7 @@
 
     main.innerHTML = `
       <a class="back" href="#/">Back to leaderboard</a>
-      <div class="player-head${p.leaderboard_rank === 1 ? " lead" : ""}"><span class="pmark"${p.leaderboard_rank === 1 ? ' title="First on the leaderboard"' : ""}><span class="hex" style="--c:${color(pid)}" aria-hidden="true"></span>${p.leaderboard_rank === 1 ? TROPHY : ""}</span><h1>${esc(p.name)}</h1></div>
+      <div class="player-head"><span class="pmark${p.leaderboard_rank === 1 ? " lead" : ""}"${p.leaderboard_rank === 1 ? ' title="First on the leaderboard"' : ""}><span class="hex" style="--c:${color(pid)}" aria-hidden="true"></span></span><h1>${esc(p.name)}</h1></div>
       <p class="lede">Ranked ${ord(p.leaderboard_rank)} of ${active}. ${p.games} ${p.games === 1 ? "game" : "games"} recorded.</p>
       ${hooksHtml("player-head", pid)}
       ${onFire(pid) ? `<p class="fire-line">${FLAME}<span><b>On fire.</b> ${fmtSigned(p.recent.above, 1)} wins above expected over ${esc(p.name)}'s last ${S.ranking.recent_games} games.</span></p>` : ""}      ${filterBar()}
@@ -1044,17 +1190,20 @@
   function route() {
     Tip.hide();
     const [path, query] = location.hash.replace(/^#\/?/, "").split("?");
-    const want = new URLSearchParams(query || "").get("view") || "all";
-    setView(ROOT.views[want] ? want : "all");
+    const qs = new URLSearchParams(query || "");
+    const want = viewKey(qs.get("view") || "all", qs.get("players"));
+    setView(ROOT.views[want] ? want : ROOT.views[qs.get("view")] ? qs.get("view") : "all");
     PAGE_PATH = path || "";
     const parts = PAGE_PATH.split("/").map(decodeURIComponent);
     const page = parts[0] || "";
-    const navKey = { "": "leaderboard", player: "leaderboard", h2h: "h2h", style: "style", findings: "findings", games: "games", game: "games", about: "about" }[page] || (Pages[page] && page);
+    const navKey = { "": "leaderboard", player: "leaderboard", day: "leaderboard", h2h: "h2h", style: "style", findings: "findings", games: "games", game: "games", about: "about" }[page] || (Pages[page] && page);
     document.querySelectorAll("[data-nav]").forEach((a) => {
       if (a.dataset.nav === navKey) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current");
     });
+    document.body.classList.toggle("is-home", page === "");
     if (page === "") leaderboard();
     else if (page === "player") playerPage(parts[1]);
+    else if (page === "day") dayPage(parts[1]);
     else if (page === "h2h") h2hPage();
     else if (page === "style") stylePage();
     else if (page === "findings") findingsPage();
@@ -1077,12 +1226,12 @@
     for (const p of S.players) P[p.id] = p;                              // stats from this view
   }
 
-  // Keep the chosen filter as people click around: add ?view= to every internal link.
+  // Keep the chosen filter as people click around: add ?view= and ?players= to every internal link.
   function scopeLinks(root) {
+    const q = viewQuery(VIEW);
     root.querySelectorAll('a[href^="#/"]').forEach((a) => {
       if (a.hasAttribute("data-keep")) return;
-      const base = a.getAttribute("href").split("?")[0];
-      a.setAttribute("href", VIEW === "all" ? base : `${base}?view=${encodeURIComponent(VIEW)}`);
+      a.setAttribute("href", a.getAttribute("href").split("?")[0] + q);
     });
   }
 
@@ -1098,7 +1247,6 @@
   }
 
   async function init() {
-    drawCoast();
     setupTheme();
     try {
       if (window.CATAN_STATS) {
@@ -1117,7 +1265,7 @@
     }
     setView("all");
     document.getElementById("site-title").textContent = S.site.title || "Catan Stats";
-    document.getElementById("site-sub").textContent = S.site.subtitle || "";
+    drawMasthead();
     document.getElementById("built-at").textContent = `Updated ${new Date(S.generated_at).toLocaleString("en-US", { dateStyle: "medium", timeStyle: "short" })}.`;
     window.addEventListener("hashchange", route);
     route();
