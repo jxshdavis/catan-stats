@@ -10133,6 +10133,107 @@
         }
       },
       "events": null
+    },
+    {
+      "id": "2026-10-13-a",
+      "date": "2026-10-13",
+      "platform": "twosheep",
+      "source": "twosheep import: game summary",
+      "twosheep_id": "-P3r7Wp6KsazbjQ4KT07",
+      "settings": {
+        "vp_to_win": 14,
+        "expansion": "seafarers",
+        "scenario": "through_the_desert",
+        "notes": ""
+      },
+      "n_seats": 3,
+      "turns": 70,
+      "duration_seconds": null,
+      "winner": "jd",
+      "players": [
+        {
+          "player": "jd",
+          "seat": 1,
+          "game_color": "white",
+          "vp": 14,
+          "resources_from_dice": 78,
+          "dev_cards_bought": {
+            "knight": 1,
+            "victory_point": 1,
+            "road_building": 0,
+            "year_of_plenty": 0,
+            "monopoly": 0
+          },
+          "vp_breakdown": {
+            "settlements": 5,
+            "cities": 4,
+            "vp_cards": 1,
+            "largest_army": 0,
+            "longest_road": 2,
+            "islands": 2
+          }
+        },
+        {
+          "player": "dh",
+          "seat": 2,
+          "game_color": "pink",
+          "vp": 11,
+          "resources_from_dice": 49,
+          "dev_cards_bought": {
+            "knight": 1,
+            "victory_point": 0,
+            "road_building": 0,
+            "year_of_plenty": 0,
+            "monopoly": 0
+          },
+          "vp_breakdown": {
+            "settlements": 5,
+            "cities": 2,
+            "vp_cards": 0,
+            "largest_army": 0,
+            "longest_road": 0,
+            "islands": 4
+          }
+        },
+        {
+          "player": "ld",
+          "seat": 3,
+          "game_color": "blue",
+          "vp": 10,
+          "resources_from_dice": 51,
+          "dev_cards_bought": {
+            "knight": 0,
+            "victory_point": 0,
+            "road_building": 0,
+            "year_of_plenty": 1,
+            "monopoly": 0
+          },
+          "vp_breakdown": {
+            "settlements": 4,
+            "cities": 2,
+            "vp_cards": 0,
+            "largest_army": 0,
+            "longest_road": 0,
+            "islands": 4
+          }
+        }
+      ],
+      "dice": {
+        "counts": {
+          "2": 1,
+          "3": 4,
+          "4": 7,
+          "5": 9,
+          "6": 9,
+          "7": 12,
+          "8": 11,
+          "9": 7,
+          "10": 2,
+          "11": 6,
+          "12": 2
+        }
+      },
+      "events": null
     }
   ]
 }

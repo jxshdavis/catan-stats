@@ -17,6 +17,7 @@ Then open `dist/index.html` in a browser. Opening `site/index.html` shows a "No 
 ## After game night: importing from TwoSheep
 
 ```bash
+source .venv/bin/activate                     # every step needs the project's Python (openskill and friends)
 python scripts/fetch_twosheep.py --files      # local only: saves new group game summaries and replay files to raw/twosheep/,
                                               # including games other members played without the maintainer
 python scripts/twosheep_replay.py             # local only: replays each new game, saves its stats to raw/twosheep/
