@@ -17,14 +17,18 @@ Then open `dist/index.html` in a browser. Opening `site/index.html` shows a "No 
 ## After game night: importing from TwoSheep
 
 ```bash
+cd "/Users/joshdavis/Desktop/catan dashboard/catan-stats"   # run everything from this folder (the repo), not its parent
 source .venv/bin/activate                     # every step needs the project's Python (openskill and friends)
 python scripts/fetch_twosheep.py --files      # local only: saves new group game summaries and replay files to raw/twosheep/,
                                               # including games other members played without the maintainer
 python scripts/twosheep_replay.py             # local only: replays each new game, saves its stats to raw/twosheep/
 python scripts/import_twosheep.py             # dry run: shows new games, links and conflicts
 python scripts/import_twosheep.py --write     # adds them to data/games.json
-python scripts/build.py
+python scripts/build.py                       # checks the data and builds dist/ locally (about 2 minutes)
+git add data/ && git commit -m "Add games from YYYY-MM-DD" && git push   # the live site only updates on push
 ```
+
+Run the commands one at a time and read each one's output: if a step fails, the later ones still run and can hide the error. The fetch prints `1 saved` (or more) for each new game; `0 saved` means TwoSheep doesn't list the game yet or it isn't finished. The build takes a couple of minutes and prints `built dist/ from N games` when it's done. After the push, GitHub Actions takes about 4 minutes to deploy (`gh run list` shows its progress).
 
 The fetch and replay scripts are kept out of this repo on purpose and live only on the maintainer's computer. They pull our own games from TwoSheep with the developer's permission (given 2026-10-11), one request a second at most, and save everything to `raw/twosheep/`, which is also not committed.
 
