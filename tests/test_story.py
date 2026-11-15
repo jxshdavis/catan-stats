@@ -148,12 +148,14 @@ class RecapsTest(unittest.TestCase):
         self.assertIn("g1", skipped)
         self.assertEqual(doc["games"], {})
 
-    def test_changed_facts_make_a_recap_stale(self):
+    def test_a_stored_recap_is_kept_when_facts_change(self):
         doc = {"schema_version": 1, "games": {"g1": {"hash": recaps.facts_hash(self.facts["g1"]), "headline": "h", "recap": "r"}}}
         self.assertEqual(recaps.missing(doc, self.facts), [])
         changed = {"g1": dict(self.facts["g1"], turns=13)}
-        self.assertEqual(recaps.missing(doc, changed), ["g1"])
-        self.assertEqual(recaps.current(doc, changed), {})
+        self.assertEqual(recaps.missing(doc, changed), [])
+        self.assertEqual(recaps.current(doc, changed), {"g1": {"headline": "h", "recap": "r"}})
+        # Nothing is rewritten without force: no client needed, no call made.
+        self.assertEqual(recaps.ensure(doc, changed, client=FakeClient([]), log=lambda *_: None), (0, {}))
 
 
 if __name__ == "__main__":

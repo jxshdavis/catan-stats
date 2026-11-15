@@ -852,7 +852,7 @@ def load_stats(data_dir=DATA):
 
 
 def add_recaps(stats, data_dir, write):
-    """Attach the stored recaps that still match their games. With write, first ask Claude for the missing ones."""
+    """Attach the stored recaps (never rewritten when facts change). With write, first ask Claude for the missing ones."""
     facts = recap_facts(stats)
     path = data_dir / "recaps.json"
     doc = recaps.load(path)

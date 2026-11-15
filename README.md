@@ -17,7 +17,7 @@ Then open `dist/index.html` in a browser. Opening `site/index.html` shows a "No 
 ## After game night: importing from TwoSheep
 
 ```bash
-cd "/Users/joshdavis/Desktop/catan dashboard/catan-stats"   # run everything from this folder (the repo), not its parent
+cd '/Users/joshdavis/Desktop/Projects/catan dashboard/catan-stats'   # run everything from this folder (the repo), not its parent
 source .venv/bin/activate                     # every step needs the project's Python (openskill and friends)
 python scripts/fetch_twosheep.py --files      # local only: saves new group game summaries and replay files to raw/twosheep/,
                                               # including games other members played without the maintainer
@@ -25,7 +25,7 @@ python scripts/twosheep_replay.py             # local only: replays each new gam
 python scripts/import_twosheep.py             # dry run: shows new games, links and conflicts
 python scripts/import_twosheep.py --write     # adds them to data/games.json
 python scripts/build.py                       # checks the data and builds dist/ locally (about 2 minutes)
-git add data/ && git commit -m "Add games from YYYY-MM-DD" && git push   # the live site only updates on push
+claude   # the live site only updates on push
 ```
 
 Run the commands one at a time and read each one's output: if a step fails, the later ones still run and can hide the error. The fetch prints `1 saved` (or more) for each new game; `0 saved` means TwoSheep doesn't list the game yet or it isn't finished. The build takes a couple of minutes and prints `built dist/ from N games` when it's done. After the push, GitHub Actions takes about 4 minutes to deploy (`gh run list` shows its progress).
@@ -164,11 +164,12 @@ Each topic module's front end is a script in `site/` that adds a page or page se
 
 Each game page opens with a headline and a few sentences about how the game went. They are written by Claude (`claude-opus-5-5`) from `story.facts()`: the same numbers the page shows, with players named as the site names them (initials). Nothing else about the game or the group is sent.
 
-- `python scripts/build.py` writes a recap for every game that has none, or whose facts changed since its recap was written, then saves them all to `data/recaps.json`. Commit that file: the deployed build has no API key and only reads it.
+- `python scripts/build.py` writes a recap for every game that has none, then saves them all to `data/recaps.json`. Commit that file: the deployed build has no API key and only reads it.
+- A recap is written once, from the data available when it was written, and is never rewritten when games are added or models change, even though some of the numbers it was based on (the threat index, closeness ranks) shift a little. Only `--force` rewrites one.
 - It reaches Claude through the Claude Code command line (`claude -p`) when that is installed, using whatever Claude Code is logged in with, so a Claude subscription covers it and no API key is needed. Otherwise it uses the Anthropic API (`pip install anthropic`, `ANTHROPIC_API_KEY` in `.env`). Force one with `--via cli` or `--via api` on `scripts/recaps.py`, or `RECAPS_VIA` in the environment. With neither, the build still works and says how many games have no recap; those pages show a plain one-line summary instead.
 - `python scripts/build.py --no-recaps` never calls the API. `python scripts/recaps.py --game <id> --force` rewrites one, and `--dry-run` prints the facts the model would see.
 - Every recap is checked before it is kept: each number in it must appear in the facts, and it must follow the site's style (no dashes, no exclamation marks, a headline of at most 9 words). A draft that fails gets one retry with the problems listed, and is dropped if it fails again.
-- To change the voice, edit `SYSTEM` in `scripts/recaps.py` and raise `PROMPT_VERSION`; the next build rewrites every recap.
+- To change the voice, edit `SYSTEM` in `scripts/recaps.py`. New recaps use it; existing ones stay as written unless you rewrite them with `python scripts/recaps.py --force` (all) or `--game <id> --force` (one).
 
 All of it is computed in `scripts/build.py` and written to `dist/data/stats.json`. The front end in `site/` only renders that file.
 

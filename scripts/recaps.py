@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 """Short written recaps of each game, by Claude, stored in data/recaps.json.
 
-The build writes a recap for every decoded game that does not have one yet, or whose facts changed since
-its recap was written, and saves them to data/recaps.json. That file is committed, so the deployed build
-(which has no API key) only reads it. A game whose recap is missing or out of date simply shows the page
-without the written paragraph.
+The build writes a recap for every decoded game that does not have one yet and saves them to
+data/recaps.json. A recap is written once, from the facts as they were when it was written, and is never
+rewritten on its own: adding games or changing a model shifts some facts (the threat index, closeness
+ranks), but the stored recap stays. Only --force rewrites one. That file is committed, so the deployed build
+(which has no API key) only reads it. A game with no recap simply shows the page without the written
+paragraph.
 
     python scripts/build.py                 # writes any missing recaps when credentials are set
     python scripts/build.py --no-recaps     # never calls the API
@@ -43,7 +45,7 @@ ROOT = Path(__file__).resolve().parent.parent
 PATH = ROOT / "data" / "recaps.json"
 
 MODEL = "claude-opus-5-5"
-PROMPT_VERSION = 1      # bump to rewrite every recap after changing SYSTEM
+PROMPT_VERSION = 1      # recorded in each recap's hash; changing it rewrites nothing (use --force)
 WORKERS = 4
 
 SYSTEM = """You write the short recap that opens a game page on a private stats site for a group of friends who play Catan online, usually with the Seafarers expansion. The readers were at the table, or know everyone who was, and they open the page to remember what happened in that game. Every number is already shown in tables and charts below your recap, so your job is the story: how the game was won, and what made it different from an ordinary game.
@@ -111,6 +113,7 @@ def has_credentials():
 
 
 def facts_hash(facts):
+    """A record of the prompt version and facts a recap was written from. Never used to decide a rewrite."""
     blob = json.dumps([PROMPT_VERSION, facts], sort_keys=True, ensure_ascii=False)
     return hashlib.sha256(blob.encode("utf-8")).hexdigest()[:16]
 
@@ -216,11 +219,11 @@ def write_one(client, facts):
 
 
 def current(doc, facts_by_gid):
-    """The stored recaps that still match their game's facts: what the site shows."""
+    """The stored recap of every game on the site, whatever its facts are now: what the site shows."""
     out = {}
-    for gid, f in facts_by_gid.items():
+    for gid in facts_by_gid:
         r = doc["games"].get(gid)
-        if r and r.get("hash") == facts_hash(f):
+        if r:
             out[gid] = {"headline": r["headline"], "recap": r["recap"]}
     return out
 
@@ -249,7 +252,7 @@ def pick_backend(via=None):
 
 
 def ensure(doc, facts_by_gid, client=None, only=None, force=False, limit=None, log=print, via=None, on_write=None):
-    """Write the recaps that are missing or out of date into doc. Returns (written, skipped).
+    """Write the missing recaps (with force, the ones asked for) into doc. Returns (written, skipped).
     on_write(doc) is called after each one, so a long run can save as it goes."""
     todo = [g for g in (only or facts_by_gid) if g in facts_by_gid and (force or g in missing(doc, facts_by_gid))]
     if limit:
@@ -316,7 +319,7 @@ def ensure(doc, facts_by_gid, client=None, only=None, force=False, limit=None, l
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--game", action="append", help="only this game id (repeatable)")
-    ap.add_argument("--force", action="store_true", help="rewrite even when a current recap is stored")
+    ap.add_argument("--force", action="store_true", help="rewrite even when a recap is stored (the only way one is ever rewritten)")
     ap.add_argument("--limit", type=int, help="write at most this many, newest games first")
     ap.add_argument("--dry-run", action="store_true", help="print the facts the model would see and stop")
     ap.add_argument("--via", choices=["auto", "cli", "api"], default=None,
