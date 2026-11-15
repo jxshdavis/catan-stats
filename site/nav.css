@@ -164,3 +164,11 @@ details.part > h3.part-h { margin-top: 6px; }
 .tp-x .who { gap: 5px; margin: 0 2px; }
 .recap-text .who { margin: 0 2px; }
 @media (max-width: 560px) { .tp li { grid-template-columns: 58px minmax(0, 1fr); } .tp-k { display: none; } }
+
+/* ---- Threat model, written out ---- */
+.model-desc { margin-top: 18px; }
+.model-desc > p { max-width: 72ch; margin: 12px 0 0; }
+.model-desc > p.note { margin-top: 6px; }
+.model-desc .panel { margin-top: 10px; max-width: 860px; }
+.model-desc td .sub { max-width: 64ch; font-weight: 400; }
+details.tv > .model-desc { margin: 0 0 12px; }

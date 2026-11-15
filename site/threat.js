@@ -5,7 +5,7 @@
   "use strict";
 
   Object.assign(window.METHODS, {
-    threat_model: `<p><b>Features.</b> At every turn end, for every seat, only what the whole table can see: board VP (VP cards still hidden are left out), dice income (expected cards per roll, the robber's hex excluded), reach (dots on the open settlement spots within 2 new roads or ships), dev cards in hand, resource cards in hand, and how close the seat is to Longest Road and to Largest Army (segments or knights short of taking it, capped).</p>
+    threat_model: `<p><b>Features.</b> At every turn end, for every seat, only what the whole table can see: board VP (VP cards still hidden are left out); dice income on the five resources (expected cards per roll, the robber's hex excluded) and, separately, income from gold hexes; reach (dots on the open settlement spots within 2 new roads or ships), with the gold among those spots, a new island bonus within reach and new port types within reach each counted as their own sign; ports held (a 3:1 port, and 2:1 ports weighted by how much of that resource the seat produces); dev cards in hand, resource cards in hand, and how close the seat is to Longest Road and to Largest Army (segments or knights short of taking it, capped).</p>
       <p><b>Model.</b> A conditional logit with one choice per turn end: P(i goes on to win) = e<sup>x<sub>i</sub>b</sup> / Σ<sub>j</sub> e<sup>x<sub>j</sub>b</sup>, every seat in the choice set (guests and bots too). Each feature is divided by its spread within a turn, so the weights are per standard deviation and comparable. The top threat is the seat with the highest probability.</p>
       <p><b>Intervals.</b> One game gives dozens of turn ends that share a winner, so they are not independent. The 95% intervals use a sandwich estimator clustered by game, which counts each game as one piece of evidence.</p>
       <p><b>No peeking.</b> Games are split into 5 groups, and each group is scored by a model fit on the other 4. Every threat number on the site, including the badges, comes from a model that never saw that game's winner.</p>`,
@@ -40,6 +40,45 @@
     if (r.groveler && r.groveler.clear && r.groveler.est > 0) out.push("Groveler");
     return out;
   };
+
+  // ---- The model, written out (under the weights chart, and folded under each game's threat chart) ------
+  const SIGNS = {
+    board_vp: "Victory points on the board. VP cards still hidden in a hand are left out.",
+    income: "Expected cards per roll from wood, brick, sheep, wheat and ore: the number dots under the player's settlements and cities (a city counts twice) divided by 36, skipping the hex the robber is on.",
+    income_gold: "The same, from gold hexes only. Each gold card is a free pick, so it is kept apart from ordinary income.",
+    reach: "How good the open settlement spots are within 2 new roads or ships of the player's network: the number dots on those spots, gold hexes left out.",
+    reach_gold: "The dots on gold hexes among those spots.",
+    reach_island: "The island bonus (in VP) the player would earn for their next new island, when one of those spots is on an island that would count. Zero otherwise.",
+    reach_port: "How many port types the player does not hold yet have a port corner among those spots.",
+    port_31: "Whether the player has a settlement or city on a 3:1 port.",
+    port_21: "For each 2:1 port the player holds, their income per roll in that port's resource. A wheat port with no wheat production counts as zero.",
+    dev_held: "Development cards in hand, bought and not yet played. The count is public even though the cards are not.",
+    hand: "Resource cards in hand.",
+    road_close: "How few road or ship segments the player is short of taking Longest Road: 5 are needed, or one more than the current holder. The holder scores the maximum.",
+    army_close: "How few knights the player is short of taking Largest Army: 3 are needed, or one more than the current holder. The holder scores the maximum.",
+  };
+  function describeModel(ctx) {
+    const m = T(ctx).model;
+    if (!m) return "";
+    const c = m.check, last = c.thirds[2], first = c.thirds[0], gap = c.equal_minus_fitted, h = V(ctx).hidden;
+    const pct = (x) => ctx.pct(x), x2 = (b) => "×" + ctx.num(Math.exp(b), 2);
+    const clear = (i) => m.ci[i] && (m.ci[i][0] > 0 || m.ci[i][1] < 0);
+    const nClear = m.feats.filter((_, i) => clear(i)).length;
+    const rows = m.feats.map((f, i) => `<tr><td style="white-space:normal"><b>${ctx.esc(m.labels[f].replace(" (per SD)", ""))}</b><div class="sub" style="white-space:normal">${SIGNS[f] || ""}</div></td>
+      <td class="num">${clear(i) ? `<b>${x2(m.beta[i])}</b>` : x2(m.beta[i])}<div class="sub">${m.ci[i] ? `${ctx.num(Math.exp(m.ci[i][0]), 2)} to ${ctx.num(Math.exp(m.ci[i][1]), 2)}` : ""}</div></td></tr>`).join("");
+    return `<div class="model-desc">
+      <p><b>What it is.</b> At the end of every turn the model gives each player a chance of going on to win, using only what the whole table can see. The top threat is whoever has the highest chance at that moment. It is fit on ${m.games} games and ${m.states.toLocaleString("en-US")} turn ends.</p>
+      <p><b>What it looks at.</b> ${m.feats.length} signs per player. Each is compared with the other players at the same moment, so what counts is being ahead of the table, not the raw number.</p>
+      <div class="panel table-wrap"><table><thead><tr><th>Sign</th><th class="num">Weight</th></tr></thead><tbody>${rows}</tbody></table></div>
+      <p class="note">Weight: how much one standard deviation more of that sign multiplies a player's odds of winning, with the others held fixed, and its 95% interval. ×1 is no effect. Bold weights are clear of no effect (${nClear} of ${m.feats.length}); the rest cannot be told apart from zero with this many games, which is not the same as not mattering.</p>
+      <p><b>How the weights are set.</b> Nobody chose them. Each turn end is treated as a choice among the seats in which the eventual winner is the one chosen, and the weights are the ones that make the real winners most likely (a conditional logit: a player's chance is e<sup>score</sup> divided by the sum of e<sup>score</sup> over the table, where the score is the weighted sum of their signs). Guests and bots are seats like anyone else.</p>
+      <p><b>How it is kept honest.</b> The games are split into 5 groups, and each group is scored by a model fit only on the other 4, so no game is ever judged by a model that saw how it ended. Every threat number on the site, the badges included, uses those out-of-sample scores. The dozens of turn ends in one game share a winner, so the intervals count each game as one piece of evidence, not each turn.</p>
+      <p><b>How well it works.</b> On games it was not fit on, the top threat goes on to win ${pct(c.acc)} of the time, against ${pct(c.acc_chance)} by chance: ${pct(first.acc)} in the first third of a game, rising to ${pct(last.acc)} in the last third. A simpler version that weighs every sign equally gets ${pct(c.acc_equal)}${gap.lo > 0 ? ", and the fitted weights beat it clearly" : ", which the fitted weights do not clearly beat"} (log loss ${ctx.num(c.logloss, 3)} against ${ctx.num(c.logloss_equal, 3)}; chance is ${ctx.num(c.logloss_chance, 3)}).${h ? ` Going into the final turn, the top threat won ${h.top_won} of ${h.games} games in this view; the rest were hidden threats.` : ""}</p>
+      <p><b>What it cannot see.</b> Hidden VP cards, which is how a hidden threat gets through. Which dev cards a player holds, only how many. Trades being negotiated, and anything said at the table. Spots more than 2 roads or ships away.</p>
+      <p><b>What was tried and left out.</b> Weights that change as the game goes on. They moved the way you would expect (board VP counting for more late, income for less), but they predicted games they had not seen worse than fixed weights, so the model keeps one set of weights for the whole game. A separate count of 2:1 ports, and a penalty for a 2:1 port with no matching production, also made no detectable difference.</p>
+      <p><b>How ports are known.</b> Port positions are read from each game's board, and the reading was checked against every 2:1 and 3:1 bank trade in the games: each was made by a player sitting on the matching port. On base-game boards, 2 of the 9 port positions never had a trade to confirm them and follow from the regular spacing of ports around the coast.</p>
+    </div>`;
+  }
 
   // ---- Findings ----------------------------------------------------------------------------------
   (window.Hooks.findings = window.Hooks.findings || []).push({
@@ -76,6 +115,7 @@
         <h3 style="margin-top:20px">What makes a threat</h3>
         <p class="note"><b>How to read:</b> how much one standard deviation more of each visible sign raises a player's odds of going on to win, holding the others fixed. 1× is no effect. Lines are 95% intervals that count each game once.</p>
         <div class="panel" style="margin-top:6px"><div class="chart" id="th-coef"></div></div>
+        ${describeModel(ctx)}
         <h3 style="margin-top:24px">How well it calls the winner</h3>
         <p class="note">Share of turn ends where the top threat went on to win, scored only on games each model wasn't fit on.</p>
         <div class="panel table-wrap"><table><thead><tr><th>Part of the game</th><th class="num">Turn ends</th><th class="num">Fitted</th><th class="num">Equal weights</th><th class="num">Chance</th><th class="num">Agree on the top threat</th></tr></thead><tbody>
@@ -133,8 +173,9 @@
       if (!tl) return null;
       return `<section class="block">
         <h2>Threat through the game ${ctx.info("threat_model", "Threat index")}</h2>
-        <p class="note"><b>How to read:</b> after every turn, each player's chance of winning judged only from what the table could see (board VP, income, reach, cards and dev cards in hand, closeness to the titles). Hidden VP cards don't count, which is how a hidden threat sneaks through. The model never saw this game's result.</p>
+        <p class="note"><b>How to read:</b> after every turn, each player's chance of winning judged only from what the table could see (board VP, income, ports, reach, cards and dev cards in hand, closeness to the titles). Hidden VP cards don't count, which is how a hidden threat sneaks through. The model never saw this game's result.</p>
         <div class="panel"><div class="chart" id="th-game"></div></div>
+        <details class="tv"><summary>How the threat model works</summary>${describeModel(ctx)}</details>
       </section>`;
     },
     draw(ctx, g) {

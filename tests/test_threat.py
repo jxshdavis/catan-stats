@@ -54,7 +54,12 @@ def state(ai, ri, kind, actor, n, **f):
 def base_fields(n):
     return {"vp": [2] * n, "vp_cards_held": [0] * n, "hand": [0] * n,
             "pips_gross": [[0] * 11 for _ in range(n)], "pips_blocked": [[0] * 11 for _ in range(n)],
-            "road_length": [1] * n, "longest_road": None, "largest_army": None, "reach": [0] * n}
+            "road_length": [1] * n, "longest_road": None, "largest_army": None, "reach": [0] * n,
+            "res_pips": [[0] * 6 for _ in range(n)], "ports": [[] for _ in range(n)], "reach_gold": [0] * n,
+            "reach_island": [0] * n, "reach_port": [0] * n}
+
+
+F = {name: k for k, name in enumerate(threat.FEATS)}
 
 
 class Features(unittest.TestCase):
@@ -67,10 +72,12 @@ class Features(unittest.TestCase):
 
     def test_state_rows_carry_forward_and_dev_counts(self):
         n = 3
-        g = [[0] * 11 for _ in range(n)]
-        g[0][4] = 2  # seat 1: two cards on a 6 (5 dots): 10/36 per roll
-        first = state(10, 0, "roll", 1, n, **{**base_fields(n), "pips_gross": g, "vp": [3, 2, 4],
-                                               "vp_cards_held": [0, 0, 1], "hand": [1, 2, 3], "reach": [7, 0, 2]})
+        # Seat 1: 10 dots of wheat, 5 of ore and 4 of gold; a 3:1 port and the wheat port (type 4).
+        res = [[0, 0, 0, 10, 5, 4], [0] * 6, [3, 0, 0, 0, 0, 0]]
+        first = state(10, 0, "roll", 1, n, **{**base_fields(n), "res_pips": res, "ports": [[0, 4], [], [2]],
+                                               "vp": [3, 2, 4], "vp_cards_held": [0, 0, 1], "hand": [1, 2, 3],
+                                               "reach": [7, 0, 2], "reach_gold": [3, 0, 0], "reach_island": [0, 2, 0],
+                                               "reach_port": [1, 0, 2]})
         ev = {"seats": ["a", "b", "c"], "states": [first, state(20, 0, "end_turn", 1, n, hand=[0, 2, 3]),
                                                    state(30, 1, "roll", 2, n, largest_army=2)],
               "dev_events": [{"action_index": 12, "seat": 2, "action": "buy", "card": "knight"},
@@ -78,16 +85,23 @@ class Features(unittest.TestCase):
                              {"action_index": 25, "seat": 2, "action": "play", "card": "knight"}]}
         rows = threat.state_rows(ev)
         self.assertEqual(len(rows), 3)
-        x0 = rows[0]["X"]
-        self.assertEqual([x[0] for x in x0], [3, 2, 3])  # board VP drops the held VP card
-        self.assertAlmostEqual(x0[0][1], 10 / 36)
-        self.assertEqual([x[2] for x in x0], [7, 0, 2])
-        self.assertEqual([x[3] for x in rows[1]["X"]], [0, 2, 0])  # two bought by action 20
-        self.assertEqual([x[4] for x in rows[1]["X"]], [0, 2, 3])  # hand carried from the end_turn row
-        x2 = rows[2]["X"]
-        self.assertEqual([x[3] for x in x2], [0, 1, 0])  # one played
+        col = lambda r, name: [x[F[name]] for x in rows[r]["X"]]
+        self.assertEqual(col(0, "board_vp"), [3, 2, 3])  # board VP drops the held VP card
+        self.assertAlmostEqual(col(0, "income")[0], 15 / 36)      # the five resources, gold left out
+        self.assertAlmostEqual(col(0, "income_gold")[0], 4 / 36)
+        self.assertEqual(col(0, "reach"), [4, 0, 2])              # reach without its gold part
+        self.assertEqual(col(0, "reach_gold"), [3, 0, 0])
+        self.assertEqual(col(0, "reach_island"), [0, 2, 0])
+        self.assertEqual(col(0, "reach_port"), [1, 0, 2])
+        self.assertEqual(col(0, "port_31"), [1, 0, 0])
+        # A 2:1 port counts for the income in its resource: seat 1 wheat 10/36; seat 3 holds brick, makes none.
+        self.assertAlmostEqual(col(0, "port_21")[0], 10 / 36)
+        self.assertEqual(col(0, "port_21")[1:], [0, 0])
+        self.assertEqual(col(1, "dev_held"), [0, 2, 0])  # two bought by action 20
+        self.assertEqual(col(1, "hand"), [0, 2, 3])      # hand carried from the end_turn row
+        self.assertEqual(col(2, "dev_held"), [0, 1, 0])  # one played
         # Seat 2 holds Largest Army with 1 knight: the others need 2, so 0 knights is 2 short (3 - 2 = 1).
-        self.assertEqual([x[6] for x in x2], [1, 3, 1])
+        self.assertEqual(col(2, "army_close"), [1, 3, 1])
 
 
 class Model(unittest.TestCase):

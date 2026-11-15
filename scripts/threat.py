@@ -1,17 +1,31 @@
 """Threat index: who looks most dangerous from what the table can see, and three badges built on it.
 
-Reads data/replay_events.json (decoder v3: per-seat reach in the state rows). Seats in the logs are 1-based;
+Reads data/replay_events.json (decoder v4: per-seat reach, ports and income by resource in the state rows). Seats in the logs are 1-based;
 ev["seats"][s - 1] is the player id in seat s. Guests and bots are seats like anyone else (they can be the
 threat, and they count as alternatives), but never get a row.
 
 Public features per seat, at every state row (after each roll and at each turn end):
-    board_vp     VP minus VP cards still held
-    income       expected cards per roll from the dice, robber hex excluded (sum_k dots(k) (gross - blocked)_k / 36)
-    reach        pips over the legal settlement corners within 2 new roads or ships (decoder field)
-    dev_held     dev cards in hand (bought minus played; VP cards stay in hand), a public count
-    hand         resource cards in hand
-    road_close   4 - min(4, segments short of Longest Road): need 5, or one more than the holder; holder 4
-    army_close   3 - min(3, knights short of Largest Army): need 3, or one more than the holder; holder 3
+    board_vp      VP minus VP cards still held
+    income        expected cards per roll from the dice on the five resources, robber hex excluded
+                  (dots under the seat's buildings / 36; a city counts twice)
+    income_gold   the same, from gold hexes only (each card is a free pick, so it is its own sign)
+    reach         pips over the legal settlement corners within 2 new roads or ships, gold hexes left out
+    reach_gold    the gold pips on those corners
+    reach_island  the island bonus (VP) the seat would get for its next new island, when one of those
+                  corners is on an island that would earn it; else 0
+    reach_port    port types the seat does not have yet with a port corner among those corners
+    port_31       1 with a building on a 3:1 port
+    port_21       income per roll in the resources the seat holds a 2:1 port for (a 2:1 port is worth
+                  as much as the seat produces of that resource)
+    dev_held      dev cards in hand (bought minus played; VP cards stay in hand), a public count
+    hand          resource cards in hand
+    road_close    4 - min(4, segments short of Longest Road): need 5, or one more than the holder; holder 4
+    army_close    3 - min(3, knights short of Largest Army): need 3, or one more than the holder; holder 3
+
+Weights that change through the game were tried and left out (2026-11-15, 101 games): letting every weight
+move linearly with the leader's progress to the target, or fitting the early and late halves separately,
+gave worse out-of-fold log loss than constant weights (1.047 and 1.048 against 1.038). The slopes pointed
+the way you would expect (board VP counts for more late, income for less), so retry with more games.
 
 Fitted index (compute_all, all games once). One stratum per turn end (end_turn rows; the winning turn has
 none), the alternatives are the seats and the chosen one is the eventual winner: a conditional logit,
@@ -58,11 +72,18 @@ import series
 import statlib
 
 KEY = "threat"
-FEATS = ["board_vp", "income", "reach", "dev_held", "hand", "road_close", "army_close"]
+FEATS = ["board_vp", "income", "income_gold", "reach", "reach_gold", "reach_island", "reach_port", "port_31", "port_21",
+         "dev_held", "hand", "road_close", "army_close"]
 LABELS = {
     "board_vp": "Board VP (per SD)",
-    "income": "Dice income (per SD)",
-    "reach": "Reach: open spots within 2 roads (per SD)",
+    "income": "Dice income, five resources (per SD)",
+    "income_gold": "Dice income from gold hexes (per SD)",
+    "reach": "Reach: open spots within 2 roads or ships (per SD)",
+    "reach_gold": "Gold in reach (per SD)",
+    "reach_island": "New island bonus in reach (per SD)",
+    "reach_port": "New ports in reach (per SD)",
+    "port_31": "Holds a 3:1 port (per SD)",
+    "port_21": "2:1 ports, weighted by matching income (per SD)",
     "dev_held": "Dev cards in hand (per SD)",
     "hand": "Resource cards in hand (per SD)",
     "road_close": "Closeness to Longest Road (per SD)",
@@ -118,19 +139,23 @@ def state_rows(ev):
         vp = series.board_vp(row)
         road = closeness(row["road_length"], row["longest_road"], 5, ROAD_CAP)
         army = closeness(knights, row["largest_army"], 3, ARMY_CAP)
-        X = [[vp[i], series.expected_cards(row, i), row.get("reach", [0] * n)[i], held[i],
-              row["hand"][i], road[i], army[i]] for i in range(n)]
+        X = []
+        for i in range(n):
+            rp, ports = row["res_pips"][i], row["ports"][i]
+            X.append([vp[i], sum(rp[:5]) / 36, rp[5] / 36, row["reach"][i] - row["reach_gold"][i], row["reach_gold"][i],
+                      row["reach_island"][i], row["reach_port"][i], 1 if 0 in ports else 0,
+                      sum(rp[t - 1] for t in ports if t) / 36, held[i], row["hand"][i], road[i], army[i]])
         out.append({"action_index": row["action_index"], "roll_index": row["roll_index"], "kind": row["kind"],
                     "actor": row["actor"], "X": X})
     return out
 
 
 def game_data(games, events):
-    """Per game with v3 state rows: seats, winner seat index, rows, and the turn-end rows the model uses."""
+    """Per game with v4 state rows: seats, winner seat index, rows, and the turn-end rows the model uses."""
     out = []
     for g in games:
         ev = events.get(g["id"])
-        if not ev or not ev.get("states") or "reach" not in ev["states"][0] or g["winner"] not in ev["seats"]:
+        if not ev or not ev.get("states") or "res_pips" not in ev["states"][0] or g["winner"] not in ev["seats"]:
             continue
         rows = state_rows(ev)
         out.append({"game": g["id"], "seats": ev["seats"], "n": len(ev["seats"]), "win": ev["seats"].index(g["winner"]),
