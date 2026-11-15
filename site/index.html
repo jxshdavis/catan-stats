@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Catan Night</title>
-  <meta name="description" content="Leaderboard, player stats and head-to-head records for our Catan group.">
+  <meta name="description" content="Leaderboard, player stats and answers from the games of our Catan group.">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpolygon points='16,1 29,8.5 29,23.5 16,31 3,23.5 3,8.5' fill='%23e3b23c'/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,6 +14,7 @@
   <link rel="stylesheet" href="classes.css">
   <link rel="stylesheet" href="network.css">
   <link rel="stylesheet" href="resources.css">
+  <link rel="stylesheet" href="nav.css">
   <script>
     // Apply a saved theme before first paint so the page never flashes the wrong one.
     try { var t = localStorage.getItem("theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
@@ -27,19 +28,41 @@
     <p class="mast-kicker" id="mast-kicker"></p>
     <p class="mast-lead" id="mast-lead"></p>
     <div class="res-rule" aria-hidden="true"><i style="--c:var(--res-wood)"></i><i style="--c:var(--res-brick)"></i><i style="--c:var(--res-sheep)"></i><i style="--c:var(--res-wheat)"></i><i style="--c:var(--res-ore)"></i></div>
-    <nav class="nav" aria-label="Main">
-      <a href="#/" data-nav="leaderboard">Leaderboard</a>
-      <a href="#/h2h" data-nav="h2h">Head to head</a>
-      <a href="#/style" data-nav="style">Play style</a>
-      <a href="#/network" data-nav="network">Network</a>
-      <a href="#/findings" data-nav="findings">Findings</a>
-      <a href="#/games" data-nav="games">Games</a>
-      <a href="#/about" data-nav="about">How it works</a>
-      <button class="theme-btn" id="theme-btn" type="button" aria-label="Switch color theme">
-        <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><circle cx="10" cy="10" r="7" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10 3a7 7 0 0 1 0 14z" fill="currentColor"/></svg>
-      </button>
-    </nav>
   </header>
+  <div class="topbar" id="topbar">
+    <div class="wrap"><div class="topbar-in">
+      <nav class="nav" aria-label="Main">
+        <a href="#/" data-nav="leaderboard">Leaderboard</a>
+        <a href="#/questions" data-nav="questions">Questions</a>
+        <span class="nav-sep" aria-hidden="true"></span>
+        <a href="#/openings" data-nav="openings">Openings</a>
+        <a href="#/luck" data-nav="luck">Luck</a>
+        <a href="#/robber" data-nav="robber">Robber</a>
+        <a href="#/trading" data-nav="trading">Trading</a>
+        <a href="#/winning" data-nav="winning">Winning</a>
+        <span class="nav-sep" aria-hidden="true"></span>
+        <a href="#/players" data-nav="players">Players</a>
+        <a href="#/games" data-nav="games">Games</a>
+        <a href="#/about" data-nav="about">How it works</a>
+      </nav>
+      <div class="tools">
+        <button class="tool-btn" id="search-btn" type="button" aria-label="Search players, questions and games" aria-haspopup="dialog">
+          <svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M12.8 12.8 17 17" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+          <span class="tool-t">Search</span><kbd>/</kbd>
+        </button>
+        <button class="theme-btn" id="theme-btn" type="button" aria-label="Switch color theme">
+          <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><circle cx="10" cy="10" r="7" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10 3a7 7 0 0 1 0 14z" fill="currentColor"/></svg>
+        </button>
+      </div>
+    </div></div>
+    <div class="wrap"><div class="subbar" id="subbar">
+      <button class="view-pill" id="view-pill" type="button" aria-expanded="false" aria-controls="view-pop"><span class="sb-k">Games:</span> <b id="view-label">All games</b></button>
+      <div class="view-pop" id="view-pop" hidden></div>
+      <span class="sb-spacer"></span>
+      <label class="sec-jump"><span class="sr">Jump to a section</span><select id="sec-jump"></select></label>
+      <span class="hl-pick"><label for="hl-select" class="sb-k">Highlight</label><select id="hl-select" aria-label="Highlight a player everywhere"><option value="">No one</option></select><a id="hl-link" href="#/players" hidden>My page</a></span>
+    </div></div>
+  </div>
 
   <main id="main" class="wrap" tabindex="-1">
     <p class="loading">Loading stats…</p>
@@ -51,6 +74,13 @@
   </footer>
 
   <div class="tip" id="tip" role="status" aria-live="polite" hidden></div>
+  <div class="pal" id="pal" hidden>
+    <div class="pal-box" role="dialog" aria-modal="true" aria-label="Search">
+      <input id="pal-in" type="search" placeholder="Search players, questions, games" autocomplete="off" spellcheck="false" role="combobox" aria-expanded="true" aria-controls="pal-list">
+      <ul id="pal-list" role="listbox" aria-label="Results"></ul>
+      <p class="pal-foot">Arrow keys to move, Enter to open, Esc to close.</p>
+    </div>
+  </div>
   <script src="data/stats.js"></script>
   <script src="charts.js"></script>
   <script src="methods.js"></script>
@@ -59,6 +89,7 @@
   <script src="resources.js"></script>
   <script src="classes.js"></script>
   <script src="threat.js"></script>
+  <script src="topics.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

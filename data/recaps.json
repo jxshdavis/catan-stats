@@ -1,0 +1,611 @@
+{
+ "schema_version": 1,
+ "games": {
+  "2025-01-15-a": {
+   "hash": "e8968ed0160cfae6",
+   "headline": "ND Overtakes JD Late, Wins Game 1 by 4",
+   "recap": "ND took Game 1 by 4 points, building a settlement on turn 70 to reach 10 with 3 VP cards that nobody else had seen. For a long stretch it looked like JD's game: JD took the first lead on turn 5, held the sole lead for 46% of the game, and claimed Longest Road on turn 45 to get within 3 of winning. Then LD took Longest Road away on turn 55, and ND went ahead 6 to 5 on turn 62 in the game's only lead change. JD was also the robber's favorite target, losing 8 cards to steals and 9 more to blocked hexes. ND led for just 9% of the game and still left JD and LD tied for second on 6.",
+   "model": "claude-opus-5-5"
+  },
+  "2025-01-15-b": {
+   "hash": "ae3905c07340fdf8",
+   "headline": "LD outlasts ND in Longest Road tug of war",
+   "recap": "LD finished it on turn 76, taking Largest Army and building a settlement to reach 10, with JD and ND tied on 6. The game turned on Longest Road, which ND held from turn 39 until LD built a city and took it on turn 60, a 3 VP swing that also gave LD the lead 7 to 6. ND grabbed the road back on turn 63 and lost it again on turn 64, the last time it changed hands. ND spent 40% of the game in sole lead, more than anyone, while LD led for 21% of it. JD had 9 cards stolen and 19 blocked by the robber, and still finished level with ND.",
+   "model": "claude-opus-5-5"
+  },
+  "2025-01-17-a": {
+   "hash": "7141a896f0a8f18d",
+   "headline": "LD Rallies From 5 Down, Outlasts JD in Seesaw",
+   "recap": "LD reached 14 VP on turn 75 with a settlement and a hidden VP card, already in the lead going into that final turn, and finished 3 clear of JD. It was a comeback from 5 VP down in a game where the lead changed hands 6 times, and JD, who spent 39% of the game in front, kept taking it back. The play of the game came on turn 51, when a settlement and an island bonus put LD ahead 10 to 9. JD answered on turn 52 with Longest Road and an 11 to 10 lead, but ND took the road away on turn 53 and LD was back in front 10 to 9. Largest Army on turn 66 put LD ahead for good at 12 to 11, and ND, who never led at any point, still finished holding Longest Road after taking it off JD twice.",
+   "model": "claude-opus-5-5"
+  },
+  "2025-01-18-a": {
+   "hash": "793cc702b4a776af",
+   "headline": "JD island-hops to 14 as Longest Road bounces around",
+   "recap": "JD finished it with a settlement on turn 67, reaching 14 and ending 4 VP clear of ND after holding the lead since turn 49. That lead was the last of 4 lead changes, and it came from the play of the game: a settlement and an island bonus that put JD up 10 to 8, a 3 VP swing. From turn 33 onward, Longest Road kept bouncing between ND and LD, and it ended up with LD on turn 59. It still did not lift LD out of third on 8, in a game where LD also discarded 13 cards to 7s.",
+   "model": "claude-opus-5-5"
+  },
+  "2025-01-18-b": {
+   "hash": "4d9d2f953b625665",
+   "headline": "ND's 3 hidden VP cards beat JD by 1",
+   "recap": "ND won 16 to 15 on turn 92 by revealing 3 VP cards, taking the lead for the first time on the final move of the game. Until then it had been JD's game: JD spent 70% of it in sole lead and got within 3 of winning on turn 73, despite the coldest dice at the table and 13 cards discarded to 7s. ND took Longest Road on turn 44 and Largest Army on turn 80, the play of the game at a 2 VP swing, all with 14 cards blocked by the robber. JD went into the last move in sole lead and still finished 1 VP short, beaten by 3 cards nobody else could see.",
+   "model": "claude-opus-5-5"
+  },
+  "2025-01-19-a": {
+   "hash": "27354fabf77856ff",
+   "headline": "LD Wins Road Tug of War, Then the Game",
+   "recap": "LD reached 15 on turn 74 with a settlement and an island bonus, winning by 4 over ND. LD took the first lead on turn 18 and nobody else ever held it alone, even though LD lost 6 cards to the robber, the most at the table, and discarded 9 cards to 7s. The real fight was over Longest Road: LD took it from a guest on turn 34 for a 2 VP swing, lost it back on turn 56 and took it again on turn 58. ND claimed Largest Army on turn 67 and looked like the bigger threat going into the final turn, but finished on 11. A guest held Longest Road twice without building a single settlement and finished on 2 VP.",
+   "model": "claude-opus-5-5"
+  },
+  "2025-01-26-a": {
+   "hash": "dd72be1b7d2639b9",
+   "headline": "JD Shrugs Off the Robber, Edges ND by 1",
+   "recap": "JD won 16 to 15 with a settlement on turn 103, the final turn of the game. Going in, JD was ahead on the points everyone could see, but by the full count was level or behind until that settlement went down. The big swing came on turn 76: LD had taken Longest Road and the lead on turn 47, and JD took the road back to go up 11 to 8, a 4 VP swing. JD did all this as the robber's favorite target, losing 8 cards to steals and having 27 more blocked. ND had the best opening at 22 dots and finished 1 VP short without ever holding the lead alone.",
+   "model": "claude-opus-5-5"
+  },
+  "2025-02-02-a": {
+   "hash": "14f8784d760690e3",
+   "headline": "Last-Turn City Lifts LD Past JD and ND",
+   "recap": "LD won it on the final turn with a city, finishing 14 to 13 and leaving JD and ND tied 1 VP short. JD had gone in front 13 to 12 on turn 95, and that lead lasted until LD's last build. LD led for 44% of the game despite the weakest opening at the table at 18 dots and having 9 cards stolen, more than anyone. ND rolled the hottest dice at +7 cards and took Longest Road on turn 41, but also had 10 cards blocked by the robber. The guest discarded 25 cards to 7s, while ND, with all those cards coming in, discarded none.",
+   "model": "claude-opus-5-5"
+  },
+  "2025-02-12-a": {
+   "hash": "3961b961ba989a9e",
+   "headline": "ND's hidden VP card undoes JD's late lead",
+   "recap": "ND won 14 to 13 by revealing a hidden VP card on turn 90, right after JD had gone ahead 13 to 12 on turn 89. That finished a comeback from 5 VP down. The key moment came on turn 60, when a settlement and an island bonus put ND in front 9 to 8 and swung 3 VP. The robber went after ND for 9 cards, more than anyone else lost, but ND still had the hottest dice at +7 cards. JD looked like the most dangerous player going into the last turn and held Longest Road at the end, but finished 1 VP short after discarding 8 cards to 7s.",
+   "model": "claude-opus-5-5"
+  },
+  "2025-02-13-a": {
+   "hash": "54ad5b9ef8d29e83",
+   "headline": "JD Settles It on the Final Turn",
+   "recap": "JD won it on the final turn with a settlement and an island bonus, reaching 14 and finishing 3 clear of LD and ND, who tied on 11. The lead changed hands repeatedly, and Longest Road went from JD to ND to LD and back to ND between turns 55 and 72. ND held onto it at the end despite having the coldest dice at the table. JD had the hottest dice, 89 cards against 82 expected, but was also robbed the most, losing 8 cards. LD looked like the bigger threat going into that last turn, while MS discarded 16 cards to 7s and never held the lead outright.",
+   "model": "claude-opus-5-5"
+  },
+  "2025-02-16-a": {
+   "hash": "4fce24ff4155caf1",
+   "headline": "JD Pries Longest Road From MB on Final Turn",
+   "recap": "JD won it on the final turn, turn 70, by taking Longest Road from MB to reach 14 and finish 2 clear of LD. MB had the best opening at 21 dots, took Longest Road on turn 24, led for 34% of the game and was within 3 of winning on turn 68. JD did it from the weakest opening at 19 dots, helped by the hottest dice at the table: 78 cards against 70 expected. Going into the last turn, LD looked like the likeliest winner on the visible board, and finished second with 3 VP cards despite discarding 8 cards to 7s.",
+   "model": "claude-opus-5-5"
+  },
+  "2025-02-28-a": {
+   "hash": "6ed5922128941aaa",
+   "headline": "AT turns weakest opening into 5-point rout",
+   "recap": "AT finished it on turn 70 with a city and a hidden VP card, winning 10 to 5 over MS after holding the sole lead for 70% of the game. AT went ahead 3 to 2 on turn 22, took Longest Road on turn 30 and added Largest Army on turn 58 for a 2 VP swing. Nobody else held the sole lead at any point. AT did all this from the weakest opening at the table at 20 dots, while MS had the coldest dice, 8 cards short of expected, and JD and a guest discarded 14 and 13 cards to 7s. The game ranked 97 of 101 in the group's closeness rankings, with 0 lead changes to argue about.",
+   "model": "claude-opus-5-5"
+  },
+  "2025-03-04-a": {
+   "hash": "3c2ce8ff1a0c8748",
+   "headline": "JD Reclaims Longest Road on Final Turn to Win",
+   "recap": "JD won it on turn 62 by taking Longest Road from ND, finishing 14 to 11 after ND had gone ahead 13 to 12 on turn 54. The road decided the second half: JD took it on turn 41, ND took it straight back on turn 42, and JD had the last word. It went down as a comeback, which takes some doing with the best opening at the table (22 dots) and the hottest dice (90 cards against 68 expected), but JD was still 5 VP down at the worst of it. ND spent the longest in sole lead and looked like the likelier winner going into the final turn, while MS finished third on 9 after discarding 11 cards to 7s.",
+   "model": "claude-opus-5-5"
+  },
+  "2025-03-04-b": {
+   "hash": "5054d61a64fd0347",
+   "headline": "MB Reclaims Longest Road, Flips 2 VP Cards",
+   "recap": "MB closed it out on turn 92, taking Longest Road back from ND and then revealing 2 VP cards to reach 14, 2 clear of JD and MS. JD had been the closest at turn 75, within 3 of winning with MB 3 VP behind, and got there from the weakest opening at the table despite being robbed of 8 cards and having 16 more blocked by the robber. Longest Road was the running feud: after MS held it for a stretch, MB and ND passed it back and forth from turn 74 until MB took it for good on the final roll. ND, who had the best opening at 23 dots, got the coldest dice, 10 cards under expectation, and finished last on 9 without building a single city.",
+   "model": "claude-opus-5-5"
+  },
+  "2025-03-05-a": {
+   "hash": "54dfb283a9347a26",
+   "headline": "ND Reclaims Largest Army, Wins on Final Turn",
+   "recap": "ND won game 15 on the final turn, taking Largest Army back from JD on turn 117 to finish 14 to 12 over MS. It was a comeback from as many as 5 VP down: MS spent 55% of the game in sole lead and got within 3 of winning on turn 70. ND pulled it off with the coldest dice at the table and 24 cards blocked by the robber. The finish was set up on turn 114, when ND took Longest Road from JD for a 2 VP swing, after the road had bounced between MS and JD since turn 64. JD had the best opening at 22 dots and finished third on 7 VP, 3 of them from VP cards, after discarding 13 cards to 7s.",
+   "model": "claude-opus-5-5"
+  },
+  "2025-03-13-a": {
+   "hash": "094a80019c8132c7",
+   "headline": "Weakest Opening, Hottest Dice: ND Wins by 6",
+   "recap": "ND won 14 to 8, closing it out on turn 47 with a settlement and an island bonus, the same combination that made the play of the game on turn 41. ND started with the weakest opening at the table at 16 dots, then got the hottest dice, 47 cards against 29 expected, while MS ran cold at 20 against 29. ND took the first lead on turn 11 and added Longest Road on turn 29, and neither JD nor MS spent a single turn in sole lead. Islands alone were worth 6 VP to ND, matching the winning margin, and the game ranked 98 of 101 for closeness.",
+   "model": "claude-opus-5-5"
+  },
+  "2025-03-13-b": {
+   "hash": "adb194e943d96cc0",
+   "headline": "JD wrests Largest Army from ND to win",
+   "recap": "JD won it on the final turn, taking Largest Army from ND to turn a 13 to 11 deficit into a 13 to 11 lead, and a hidden VP card supplied the 14th point. ND had gone back in front on turn 99 and, despite the weakest opening at 15 dots, spent 33% of the game in sole lead, more than anyone, which made ND look like the likeliest winner going into the last turn. Earlier the lead had passed from ND to MS to JD, who went ahead 8 to 6 on turn 58 after taking Longest Road on turn 34. JD did it with the coldest dice at the table, 78 cards against 86 expected, and the knight that settled it was JD's 4th.",
+   "model": "claude-opus-5-5"
+  },
+  "2025-03-28-a": {
+   "hash": "8aba922263888c89",
+   "headline": "MS reclaims Longest Road and wins on final turn",
+   "recap": "MS won it on the final turn, taking Longest Road back from JD to go ahead 12 to 11 and then finishing with a settlement and an island bonus for 15 VP. JD had taken both the road and the lead from MS on turn 54, had the hottest dice at the table, and looked like the more dangerous player going into that last turn. The lead changed hands 6 times in what went down as the 2nd closest of the group's 101 games, and ND, who held it longest, still finished tied for third. MS got there from the weakest opening at 15 dots, collecting 62 cards from dice against 40 expected. The guest opened best at 21 dots, then discarded 13 cards to 7s and settled for a share of third.",
+   "model": "claude-opus-5-5"
+  },
+  "2025-03-29-a": {
+   "hash": "4186ecffcd78abfe",
+   "headline": "Hot Dice Carry MS From Weakest Opening to Win",
+   "recap": "MS closed it out on turn 70 with a settlement and an island bonus, finishing on 14 and 4 VP clear of JD. MS started from the weakest opening at the table at 18 dots and trailed by as much as 4, but had the hottest dice, 76 cards against 62 expected. MS went ahead 8 to 7 on turn 55, then took Longest Road from a guest on turn 64. JD had the best opening at 21 dots and still came second, held back by the coldest dice and 17 cards blocked by the robber. The odd part was a guest, who spent 47% of the game alone in front, longer than anyone, and finished third on 5 VP without building a single city.",
+   "model": "claude-opus-5-5"
+  },
+  "2025-03-30-a": {
+   "hash": "c5a2b4c2758490c5",
+   "headline": "From turn 11 onward, nobody passes a guest",
+   "recap": "On turn 95, a guest closed out a 14 to 10 win over ND with a settlement and a hidden VP card. They took the first lead on turn 11, and from then on neither ND nor JD ever led on their own. The only thing that changed hands was Longest Road, which ND took on turn 52, lost to a guest on turn 62 and won back on turn 85. The robber cost a guest 16 blocked cards and 11 stolen ones, and they took exactly 11 back, the most at the table. JD had the best opening at 23 dots, then got the coldest dice, discarded 9 cards to 7s and finished third without building a city.",
+   "model": "claude-opus-5-5"
+  },
+  "2025-03-30-b": {
+   "hash": "48c8ac75dfff4ebb",
+   "headline": "JD's Final-Turn City Edges ND in the Desert",
+   "recap": "JD won it 14 to 13 with a city on turn 82, answering ND's Largest Army on turn 81, in the 6th closest of the group's 101 games. The lead changed hands 7 times, and JD's best move came on turn 43, when a settlement and an island bonus put them ahead 9 to 8 for a 3 VP swing. Longest Road kept moving too: JD took it from ND on turn 61, and ND took it straight back on turn 63. ND finished holding both Longest Road and Largest Army without building a single city, and still came up 1 VP short.",
+   "model": "claude-opus-5-5"
+  },
+  "2025-04-10-a": {
+   "hash": "0762830d490b31ac",
+   "headline": "JD Takes Longest Road From MS to Win It",
+   "recap": "JD won it on turn 89, the final turn, by taking Longest Road from MS and finishing 14 to MS's 10 with 2 VP cards tucked away. ND spent the longest stretch in front despite the weakest opening at 15 dots, and JD's brief lead at turn 57 was gone by turn 58 when MS went ahead. JD had the best opening at 22 dots but the coldest dice at the table, 103 cards against 113 expected, and had 8 cards stolen along the way. AT, meanwhile, discarded 13 cards to sevens and never led at all.",
+   "model": "claude-opus-5-5"
+  },
+  "2025-04-12-a": {
+   "hash": "082695ac90ac9e2c",
+   "headline": "JD Leads for 1% of Game, Which Was Enough",
+   "recap": "JD won it on the final turn, building a settlement and collecting an island bonus to go ahead 13 to 11, then revealing 2 VP cards to finish on 15. That was the first time JD had led all game: 1% of the game in front, against ND's 33%. The key move came on turn 64, when JD took Longest Road back from ND for a 4 VP swing. The road had already gone to JD on turn 36 and to ND on turn 42. ND had the best opening at the table at 23 dots and got within 3 of winning by turn 58, but the coldest dice, 11 cards short, and 19 cards blocked by the robber left ND tied with LD for second on 11.",
+   "model": "claude-opus-5-5"
+  },
+  "2025-04-15-a": {
+   "hash": "9d46080f7a7e4fd0",
+   "headline": "JD Beats Cold Dice and the Robber to 14",
+   "recap": "JD reached 14 on turn 84 with a settlement, taking Longest Road from ND on the same turn to win by 5. The lead went back and forth between JD and ND through the middle of the game until turn 60, when JD's settlement and island bonus made it 9 to 7, a 3 VP swing, and the lead never changed hands again. JD managed it with the coldest dice at the table, 94 cards against 100 expected, and had another 11 cards blocked by the robber. LD finished second on 9 with Largest Army and the best opening at 22 dots, but never led outright at any point.",
+   "model": "claude-opus-5-5"
+  },
+  "2025-05-03-a": {
+   "hash": "78f787418c0f0a52",
+   "headline": "LD Grabs Longest Road on Final Turn for Comeback",
+   "recap": "LD won it on the final turn, taking Longest Road from JD on turn 90 to finish 14 to 11. It was a comeback: JD and ND swapped the lead and Longest Road through the middle of the game, and by turn 73 JD was within 3 of winning with LD 4 VP behind. LD had picked up Largest Army on turn 72, and on turn 84 a settlement plus an island bonus swung 3 VP, the play of the game. All of it came on the coldest dice at the table, 9 cards short, while ND ran hottest at +14 cards and still finished level with JD on 11.",
+   "model": "claude-opus-5-5"
+  },
+  "2025-05-06-a": {
+   "hash": "63b0e526a39de84f",
+   "headline": "ND Leads 3% of the Game, Wins It Anyway",
+   "recap": "ND won it with a city on turn 89, the final turn, to reach 14 and leave AT and JD tied on 13. It was a comeback from 6 VP down: JD spent 73% of the game in sole lead and retook it 12 to 11 on turn 83, while ND led for just 3% of the game. ND's best turn came on turn 57, taking Longest Road back from AT and adding a city for a 3 VP swing, though AT took the road back again on turn 79. AT rolled the hottest dice at +19 cards, finished holding both Longest Road and Largest Army and looked like the biggest threat going into the last turn, but also discarded 21 cards to sevens and ended 1 VP short.",
+   "model": "claude-opus-5-5"
+  },
+  "2025-05-08-a": {
+   "hash": "aba54973ee74ab1f",
+   "headline": "AT Retakes Longest Road, Then Reveals 2 VP Cards",
+   "recap": "AT won on turn 69 by revealing 2 VP cards, taking the lead for the first time all game on the final turn. The setup came on turn 65, when AT took Longest Road back from ND for a 3 VP swing, ending ND's 9 to 8 lead and putting JD back in front, 8 to 7. JD spent 44% of the game in sole lead, longer than anyone, but was robbed of 15 cards, had 19 more blocked by the robber, and finished tied for second with ND on 8. AT, meanwhile, had the hottest dice at the table at +11 cards. For a player who never led, AT was hardly a secret: AT still looked like the most dangerous player at the table going into the last turn.",
+   "model": "claude-opus-5-5"
+  },
+  "2025-05-08-b": {
+   "hash": "b98751471eb1cc58",
+   "headline": "LD's Last-Turn City Ends a Game Everyone Led",
+   "recap": "LD began the final turn level or behind, went ahead 13 to 11 on turn 93, then finished with a city to reach 14. The lead changed hands 6 times and all 4 players held it at some point. JD led for the longest stretch and was within 3 of winning on turn 71, with LD 3 VP behind. MS had the weakest opening but took Longest Road from JD and the lead, 11 to 10, on turn 90, and that lead lasted until turn 93. LD had the best opening at 20 dots, had 12 cards blocked by the robber and led for only 8% of the game, which turned out to include the part that counted.",
+   "model": "claude-opus-5-5"
+  },
+  "2025-05-28-a": {
+   "hash": "4d1a2af3cb7479aa",
+   "headline": "LD Snatches Longest Road From ND to End It",
+   "recap": "LD won on the final turn, taking Longest Road from ND on turn 53 to reach 10 points and finish 3 clear. ND had taken the road and the lead on turn 24 and spent more of the game in front than anyone, enough to look like the bigger threat going into that last turn. ND did it from the weakest opening at the table, on the hottest dice at 11 cards over expectation. LD's dice also ran ahead, 57 cards against 50 expected, even with the robber blocking 20 of them. JD took second with 7 points on the coldest dice in the game and had 4 cards stolen, more than anyone else.",
+   "model": "claude-opus-5-5"
+  },
+  "2025-07-04-a": {
+   "hash": "d2816be0b5c47c52",
+   "headline": "ND Waits Until Turn 139 to Take the Lead",
+   "recap": "ND won on turn 139 by flipping 2 VP cards to reach 14, which was also the first time all game that ND held the lead. MS led for 74% of the game and got within 3 of winning on turn 53, but ND answered on turn 55 with Largest Army and a city, a 3 VP swing that kept ND in the race. ND did it on the coldest dice at the table, 19 cards under expectation with 12 more discarded to 7s, and made up for it with 9 knights. MS had the best opening at 22 dots and finished 2 short, after being robbed of 20 cards and losing 11 more to the robber's blocking.",
+   "model": "claude-opus-5-5"
+  },
+  "2025-07-10-a": {
+   "hash": "e8e5e5804fc441fb",
+   "headline": "MS Wins Without a City, Taking LD's Awards",
+   "recap": "MS closed it out on turn 88, taking Largest Army from LD and turning over a hidden VP card to reach 14, 3 ahead of JD. The lead changed hands 5 times, but the deciding turn was 79, when MS took Longest Road back from LD for a 4 VP swing and an 11 to 9 lead. MS did it without building a single city, with 4 VP from islands and the hottest dice at the table, 12 cards above expectation, while JD ran 18 cards cold. LD had the best opening at 23 dots and still looked like the likeliest winner before the final turn, then finished third after losing both awards and discarding 12 cards to 7s.",
+   "model": "claude-opus-5-5"
+  },
+  "2025-07-14-a": {
+   "hash": "2a5a373f3a6aeb88",
+   "headline": "ND Never Leads Until the Only Turn That Counts",
+   "recap": "ND won on turn 94 by revealing 3 hidden VP cards, reaching 14 and finishing 1 ahead of AT without having led at any point before that turn. JD held the sole lead the longest and went up 12 to 9 on turn 84, 3 points from the win. JD then lost Largest Army to AT on turn 91 but was still on top of the visible scoreboard when the cards came out. It capped a rough game for JD, who discarded 27 cards to 7s and had 13 more blocked by the robber. AT took Longest Road and later Largest Army, then finished 1 VP short on the coldest dice at the table.",
+   "model": "claude-opus-5-5"
+  },
+  "2025-07-17-a": {
+   "hash": "d140f3a780c3fad1",
+   "headline": "AT Sweeps Road and Army to Win New Shores",
+   "recap": "AT won by 5, finishing it on turn 64 with a settlement and an island bonus and holding 2 VP cards that nobody else had seen. AT had the best opening and the hottest dice at the table, took the first lead on turn 16 and Longest Road on turn 28, and led for 55% of the game. ND went ahead 8 to 6 on turn 46, but AT answered on turn 56 with a settlement and Largest Army, a 3 VP swing that put AT back in front 9 to 8. ND discarded 9 cards to 7s over the game, while AT discarded none and stole 7.",
+   "model": "claude-opus-5-5"
+  },
+  "2025-07-17-b": {
+   "hash": "e5f1b526c6dea615",
+   "headline": "ND Edges MS With 2 Hidden VP Cards",
+   "recap": "ND won by a single point on turn 70, turning over 2 hidden VP cards to finish 10 to 9 ahead of MS. ND led for 70% of the game on the hottest dice at the table, collecting 107 cards against 80 expected, while also having 17 cards stolen, the most of anyone. JD briefly went ahead with Largest Army on turn 57, 7 to 6, but ND was back in front by turn 62. MS spent the final stretch collecting both bonus cards, taking Largest Army from JD on turn 64 and winning Longest Road back from AT on turn 68, and still finished 1 VP short.",
+   "model": "claude-opus-5-5"
+  },
+  "2025-07-19-a": {
+   "hash": "3064bca01bc70c32",
+   "headline": "ND wins the Longest Road tug of war",
+   "recap": "ND reached 14 on turn 83 and finished it with Largest Army, after leading for 57% of the game. Most of the game was a fight over Longest Road between ND and JD: ND took it on turns 26, 62 and 74, and JD took it back on 43 and 70. The last swap was the play of the game, a city plus Longest Road on turn 74 that swung 4 VP against the nearest challenger. MS had the weakest opening but the hottest dice, and finished second on 11 with the help of 3 VP cards. JD had the best opening at 23 dots and finished third on 7, with 14 cards blocked by the robber.",
+   "model": "claude-opus-5-5"
+  },
+  "2025-08-05-a": {
+   "hash": "26d34830e40341f0",
+   "headline": "MS reels in ND, then cashes 2 VP cards",
+   "recap": "MS won with 14 VP, closing it out on turn 72 with a city and 2 hidden VP cards to finish 3 clear of ND. For most of the game it looked like ND's: ND took the lead on turn 16, held it alone for 61% of the game and was within 3 of winning by turn 49. MS turned it on turn 54 with a settlement and an island bonus, a 3 VP swing, then went ahead 11 to 10 on turn 66 with Largest Army already in hand. JD had the best opening at 23 dots and the hottest dice at +9 cards, even took Longest Road from ND on turn 56, and still finished third on 8 VP after discarding 8 cards to sevens.",
+   "model": "claude-opus-5-5"
+  },
+  "2025-08-30-a": {
+   "hash": "2830772a1af8a7f3",
+   "headline": "JD Wins Longest Road Scramble on the Final Turn",
+   "recap": "JD won on turn 59 by taking Longest Road from LD, the last owner of a road that would not sit still after turn 46. LD, ND, MS, ND and LD all held it in that stretch. MS rode it into the lead 9 to 8 on turn 52, then lost it to ND on turn 57, the same turn JD went back in front 8 to 7. JD got there as the most robbed player at the table, with 7 cards stolen, 8 more blocked by the robber and 10 discarded to sevens. MS had the hottest dice and sat on 9 VP on turn 52, then finished tied with LD on 7, which is the trouble with a lead built on road.",
+   "model": "claude-opus-5-5"
+  },
+  "2025-09-01-a": {
+   "hash": "e33c01d7b0b44d92",
+   "headline": "LD's island grab edges MS by 1 VP",
+   "recap": "LD won game 38 on turn 99 with a city and 1 hidden VP card, finishing 15 to 14 over MS. ND took the lead on turn 12 and held it for 46% of the game. MS, who had held Largest Army since turn 62, finally went ahead 11 to 10 on turn 74. LD answered on turn 87 with a settlement and an island bonus, a 3 VP swing that made it 13 to 11 and lasted to the finish, helped by the hottest dice of the game at +22 cards even after losing 8 cards to robbers, more than anyone else. Even with the lead going into the final turn, LD did not look like the one to beat: that was MS, who finished 1 VP short.",
+   "model": "claude-opus-5-5"
+  },
+  "2025-09-03-a": {
+   "hash": "f504b7dc96425332",
+   "headline": "MS Reels In LD, Collects Road and Army",
+   "recap": "MS won Four Islands 14 to 10, already in front when a settlement, an island bonus and a hidden VP card closed it out on turn 97. LD led for longer than anyone, taking the first lead on turn 27 and holding it for 37% of the game, despite losing 11 cards to theft, having 12 cards blocked by the robber and discarding 8 to sevens. MS turned the game with Longest Road on turn 55, the play of the game and a 2 VP swing, and the dice helped: 73 cards against 65 expected. MS finally went ahead 8 to 7 on turn 82, the only time the lead changed hands, and added Largest Army on turn 88. JD finished 16 cards short on the dice and never led at all.",
+   "model": "claude-opus-5-5"
+  },
+  "2025-09-06-a": {
+   "hash": "17d9f19cc7602bce",
+   "headline": "MS Wins Longest Road Tug of War With AT",
+   "recap": "MS closed it out with a city on turn 75, reaching 14 and finishing 4 VP clear of LD. The game was settled by a fight over Longest Road. MS took the road and the lead on turn 47, AT took both back on turn 49, and MS took them again on turn 51 for a 3 VP swing. MS got there from the weakest opening at the table, 19 dots, and the hottest dice helped, with 75 cards against 68 expected. JD had the best opening at 23 dots but never held the lead alone and finished tied for third with AT on 5.",
+   "model": "claude-opus-5-5"
+  },
+  "2025-09-19-a": {
+   "hash": "3105326fa50bf9f8",
+   "headline": "MB Rides Longest Road and Hot Dice to Victory",
+   "recap": "MB won by 3 points and finished it with a city on turn 74, having led since turn 38. MB first went ahead 3 to 2 on turn 26, but ND took Largest Army on the very next roll to lead 4 to 3. On turn 38 MB took Longest Road and the lead back at 5 to 4, a 2 VP swing, and nobody passed MB again. The dice did much of the work, giving MB 71 cards against 59 expected, so MB won comfortably despite losing 7 cards to the robber, the most at the table. MB also never discarded a card to a 7, while JD threw away 10 and finished tied for second with ND on 7 points, 3 of them from VP cards.",
+   "model": "claude-opus-5-5"
+  },
+  "2025-09-26-a": {
+   "hash": "cbac352b3011f16e",
+   "headline": "MS Seals 5-Point Win With Final-Turn Longest Road",
+   "recap": "MS won it on turn 48, taking Longest Road on the final turn to reach 10 with 2 VP cards nobody had seen until then. JD and ND finished tied for second on 5, and the blowout took most of the game to show: MS first went ahead 5 to 4 at turn 32 and led for only 8% of the game. MS started from the weakest opening at 17 dots, but the dice made up for it with the hottest rolls at the table, 46 cards against 40 expected, and MS stole 4 cards without losing any. ND led longer than anyone, 25% of the game, and got the coldest dice for it, the most cards robbed at 7, and another 8 blocked by the robber.",
+   "model": "claude-opus-5-5"
+  },
+  "2025-10-25-a": {
+   "hash": "9d83dbb0229e4d87",
+   "headline": "ND Reveals 2 Hidden VP Cards, Steals Game 43",
+   "recap": "ND won by turning over 2 hidden VP cards on turn 82, reaching 14 and leaving JD and MS on 13 each. JD was the sole leader going into that final move, in a game with 8 lead changes. Longest Road kept moving between MS, JD and ND until ND took it for good on turn 66. MS got within 3 of winning on turn 67 despite the weakest opening, the coldest dice and 17 cards discarded to 7s. Meanwhile a guest had the hottest dice at the table, +23 cards, took Largest Army on turn 77 and still finished 4th on 11.",
+   "model": "claude-opus-5-5"
+  },
+  "2025-10-25-b": {
+   "hash": "19eb4289322879b6",
+   "headline": "MS Wins as JD and ND Fight Over Road",
+   "recap": "MS won it on the final turn, 92, with a city that moved MS ahead 9 to 8 on the visible board and 3 VP cards that nobody had seen. Until then it was a road fight between JD and ND, who passed Longest Road and the lead back and forth from turn 30 on. JD spent 48% of the game out front despite the coldest dice at the table and got within 3 of winning on turn 76. MS answered on turn 79 with Largest Army, a 2 VP swing and the play of the game. ND pulled Longest Road back one last time on turn 90, which left JD and ND tied on 8 and MS winning after leading for 1% of the game.",
+   "model": "claude-opus-5-5"
+  },
+  "2025-11-01-a": {
+   "hash": "832dd48568e4ec1f",
+   "headline": "JD Takes Both Awards From MS, Holds Off AT",
+   "recap": "JD won 12 to 11 on turn 109 and closed it out by taking Longest Road back from MS. The road changed owners all game, going from MS to AT to JD to MS and back to JD, and the lead changed hands 5 times along the way. On turn 92 MS held both Longest Road and Largest Army and was within 3 of winning, until JD took Largest Army on turn 103 for a 4 VP swing and a 9 to 7 lead. JD had the hottest dice at +12 cards and still discarded 28 to sevens. AT had the weakest opening and led for only 6% of the game, yet finished 1 VP short with 4 VP cards.",
+   "model": "claude-opus-5-5"
+  },
+  "2025-11-04-a": {
+   "hash": "a2e5e9009e12285c",
+   "headline": "3 Hidden VP Cards Carry MS Past JD",
+   "recap": "MS won on turn 79 by revealing 3 VP cards, finishing 1 point ahead of JD. JD spent the longest stretch in front and held both Longest Road and Largest Army. On turn 68 JD got within 3 of winning, despite being robbed of 11 cards, more than anyone else. MS closed in on the hottest dice of the game, 85 cards against 65 expected, then made the play of the game on turn 74: a settlement and an island bonus that swung 3 VP. JD, ND, AT and MB all took the lead at some point, and MS got there only once, on the turn that ended it.",
+   "model": "claude-opus-5-5"
+  },
+  "2025-11-09-a": {
+   "hash": "361edf2e436cbb54",
+   "headline": "JD Wins Four Islands From the Weakest Start",
+   "recap": "JD won Four Islands with 13 VP on turn 92 and was already in front when a settlement and an island bonus finished it. The lead changed hands 3 times. MS spent the longest stretch in front, and AT went ahead on turn 69 after taking Longest Road on turn 63. JD took the lead back on turn 83, then took Longest Road from AT on turn 89 for a 3 VP swing, the play of the game. JD did it from the weakest opening at 16 dots, while MS had the best at 22, had 14 cards stolen, the most of anyone, and finished third.",
+   "model": "claude-opus-5-5"
+  },
+  "2026-01-07-a": {
+   "hash": "ebf73c81e0a657d7",
+   "headline": "Late Longest Road Carries ND Past DH",
+   "recap": "ND won with a settlement and an island bonus on turn 43, finishing on 10 to DH's 6 and LD's 3. The final margin hides how long DH ran the game. DH went ahead 4 to 3 on turn 24 and spent more of the game in sole lead than anyone, and ND only got back in front on turn 40 by taking Longest Road, a 2 VP swing that made it 7 to 6. ND started with the best opening at the table, 22 dots, and still won despite having 10 cards blocked by the robber. LD had the hottest dice of the game, 37 cards against 25 expected, and came away with 1 settlement built and 3 VP.",
+   "model": "claude-opus-5-5"
+  },
+  "2026-01-07-b": {
+   "hash": "99eea1fe8a5615e5",
+   "headline": "DH Snatches Longest Road From ND, Then the Game",
+   "recap": "DH finished it on turn 55, taking Largest Army, adding a settlement and turning over a hidden VP card to reach 16. ND set the pace through the middle of the game with the hottest dice at the table, Longest Road from turn 38 and the longest spell in sole lead, despite having 9 cards stolen and 10 more blocked by the robber. Everything turned on turn 52, when DH took Longest Road from ND and the lead with it, 12 to 9, a 3 VP swing. DH spent only 16% of the game in sole lead, but it was the part that counted.",
+   "model": "claude-opus-5-5"
+  },
+  "2026-01-07-c": {
+   "hash": "ddd0e9afe6bb4d54",
+   "headline": "DH runs away with New Shores by 7 points",
+   "recap": "DH won by 7 points, closing it out on turn 53 with a settlement and an island bonus after sitting alone in front for 85% of the game. The only scare came on turn 22, when ND went ahead 5 to 4. DH answered on turn 23 with a city and a settlement to retake the lead 6 to 5, and nobody got in front again. It was not the dice: DH collected 74 cards against 79 expected, discarded 9 to 7s and made 0 player trades, leaning instead on the best opening at the table and 4 VP from islands. LD started from the weakest opening and took Longest Road on turn 51, which got LD to second on 8 just in time to watch DH reach 15.",
+   "model": "claude-opus-5-5"
+  },
+  "2026-01-07-d": {
+   "hash": "f60e9d9387a75e11",
+   "headline": "ND takes over at turn 53 and cruises home",
+   "recap": "ND won game 51 by 6 points, finishing on turn 86 with a settlement and 2 hidden VP cards to reach 16. DH took the first lead on turn 16, but ND went ahead 5 to 4 on turn 53 and was never caught. ND took Longest Road on turn 68, then built a settlement and claimed an island bonus on turn 80, a 4 VP swing against the nearest challenger. The dice did nobody else any favors: DH collected 61 cards against 73 expected, and LD discarded 18 cards to 7s and finished third on 8 despite taking Largest Army on turn 75. The game ranks 96 of 101 for closeness, one of the most one-sided the group has played.",
+   "model": "claude-opus-5-5"
+  },
+  "2026-01-08-a": {
+   "hash": "316ecc7c5f330b70",
+   "headline": "LD Edges ND by 1 With Final-Turn City",
+   "recap": "LD won 16 to 15, closing it out with a city on the final turn and leaving ND 1 VP short. The lead changed hands 6 times, and the play of the game came on turn 56, when LD built a city and took Longest Road from ND for a 5 VP swing. ND, who held the sole lead for 54% of the game, went back in front on turn 58, but LD took the lead again on turn 74 and finished with the hottest dice at the table, 11 cards above expectation. DH had the best opening at 21 dots, then the coldest dice at 28 cards below expectation, and finished on 11. LD had 13 cards blocked by the robber and ND discarded 13 to 7s, so the suffering was split evenly and it still came down to 1 point.",
+   "model": "claude-opus-5-5"
+  },
+  "2026-01-08-b": {
+   "hash": "c890298350f741d9",
+   "headline": "DH Rolls Hot and Runs Away by 8",
+   "recap": "DH won game 53 by 8 points, finishing on 17 while LD and ND tied for second on 9. ND briefly led 6 to 5 on turn 26, but DH retook the lead on turn 31 and nobody else took it again. The play of the game came on turn 40, when DH added Longest Road and a settlement for a 3 VP swing, and the hottest dice at the table, 93 cards against 74 expected, did the rest. LD took Longest Road on turn 57, which mostly set up the finish: DH took it back on turn 67 and ended the game with it.",
+   "model": "claude-opus-5-5"
+  },
+  "2026-01-09-a": {
+   "hash": "38ab09f9f2aa3601",
+   "headline": "DH Takes Longest Road Last, and the Game",
+   "recap": "DH won Fog Islands with 14 VP to LD's 10, already in front when they took Longest Road on the final turn. The dice did a lot of the work: DH collected 113 cards against 90 expected, the hottest at the table, while ND started from the weakest opening at 18 dots and ran 9 cards cold. The lead changed hands 4 times, and ND's only spell on top, 9 to 8 on turn 58, ended when DH went back ahead 10 to 9 on turn 62, after which nobody took the lead from them again. Longest Road went from ND to LD on turn 72, back to ND on turn 73 and then to DH on turn 74, which settled the road and the game together.",
+   "model": "claude-opus-5-5"
+  },
+  "2026-01-10-a": {
+   "hash": "39d5511cff2846cb",
+   "headline": "DH Never Trails in Group's Most One-Sided Game",
+   "recap": "DH won 14 to 7, taking the lead on turn 3 and holding it alone for 94% of the game without a single lead change. The dice ran hot for DH, 101 cards against 88 expected, and cold for ND, 26 against 43, and DH was also robbed the most at the table, 5 cards, and won by 7 anyway. Longest Road went from LD to ND and back to LD before DH took it on turn 51 for a 3 VP swing, then closed it out with a settlement on turn 63. LD had the best opening at 22 dots and built no cities, and the game ranked 101 of 101 for closeness, the most one-sided of all the group's games.",
+   "model": "claude-opus-5-5"
+  },
+  "2026-01-10-b": {
+   "hash": "16a63371a522ff4b",
+   "headline": "ND Takes Longest Road From LD on Final Turn",
+   "recap": "ND won it on the final turn, taking Longest Road from LD on turn 77 to go ahead 11 to 10 and finishing on 13 with 2 VP cards. That ended a long run for LD, who took the first lead on turn 12, held the sole lead for 47% of the game, picked up Longest Road on turn 48 and got within 3 of winning on turn 60. LD also had the hottest dice at +9 cards, but had 9 cards stolen and discarded 8 more to 7s before finishing third on 9 VP. DH took second on 10 despite the coldest dice and 13 cards blocked by the robber. ND spent 1% of the game in the lead, which turned out to be the right 1%.",
+   "model": "claude-opus-5-5"
+  },
+  "2026-01-10-c": {
+   "hash": "93adaef4bdf9dffe",
+   "headline": "DH Turns Weakest Opening Into 7-Point Rout",
+   "recap": "DH won 14 to 7, finishing on turn 69 by taking Longest Road from LD and revealing 2 hidden VP cards. ND had the first lead, 3 to 2 on turn 14, but DH went ahead 4 to 3 on turn 24 and nobody took the lead back. DH started from the weakest opening at the table, 19 dots, and made up for it with the hottest dice: 106 cards against 86 expected, enough to throw 19 away to sevens and still pull clear. LD had the best opening at 21 dots and held Longest Road from turn 49 until the final turn, then finished on 3 VP. For closeness, the game ranks 99 of the group's 101.",
+   "model": "claude-opus-5-5"
+  },
+  "2026-01-11-a": {
+   "hash": "99290ca3216d9477",
+   "headline": "Robbed of 11 cards, ND still wins by 8",
+   "recap": "ND won 16 to 8 in a game ranked 100th of 101 for closeness, taking the lead at turn 9 and never letting anyone else hold it. ND had 11 cards stolen, the most at the table, and discarded 8 more to 7s, and the lead held anyway. The play of the game came at turn 63, a settlement and an island bonus worth a 3 VP swing, and ND finished it at turn 78 with the same move. DH had the best opening at 20 dots but got 50 cards from dice against 77 expected, while LD rolled hot and then discarded 12 cards to 7s. LD did take Largest Army at turn 76, just in time to watch ND finish at turn 78.",
+   "model": "claude-opus-5-5"
+  },
+  "2026-01-11-b": {
+   "hash": "f7ce18a29292ea64",
+   "headline": "DH Grabs Longest Road and the Game",
+   "recap": "DH won 14 to 9, finishing on turn 82 by taking Longest Road from ND and building the winning settlement on the same turn. ND had taken the road from LD on turn 81 and kept it only until DH's very next roll. LD spent 52% of the game in sole lead. Even DH's best turn, a settlement and an island bonus on turn 58 worth a 3 VP swing, did not put DH back in front until turn 79, at 11 to 10. DH got there from the weakest opening at the table, 18 dots, with 14 cards blocked by the robber along the way, while ND had the best opening and still finished level with LD on 9 after coming up 13 cards short on the dice.",
+   "model": "claude-opus-5-5"
+  },
+  "2026-01-13-a": {
+   "hash": "ac7b70931e94eea8",
+   "headline": "DH wins as ND and LD swap Longest Road",
+   "recap": "DH won with a city on turn 66 and reached 14 VP, while ND and LD finished level on 12. The key turn was 48. ND had just taken Longest Road and an 11 to 9 lead, and DH answered with a settlement and an island bonus, a 3 VP swing that put DH back in front 12 to 11. DH won on the coldest dice at the table, 6 cards short of expectation with 14 cards discarded to 7s, while LD ran 18 cards hot and led only briefly, 13 to 12 on turn 53. From turn 61, ND and LD spent the endgame passing Longest Road back and forth, and DH, back in front 13 to 11, never gave up the lead again.",
+   "model": "claude-opus-5-5"
+  },
+  "2026-01-13-b": {
+   "hash": "d57a1e1af73d5850",
+   "headline": "DH Wins It With a Final-Turn Island Bonus",
+   "recap": "DH won it on turn 73 by building a settlement that also brought an island bonus, finishing 14 to 11 over ND, with LD on 10. The lead changed hands 4 times, and the late stretch was crowded: LD went ahead 10 to 9 on turn 60, then ND took Longest Road and the lead, 11 to 10, on turn 62. DH had the hottest dice at the table, collecting 94 cards against 86 expected. ND discarded 9 cards to 7s along the way, and LD turned the best opening of the game, 22 dots, into 3% of the game in sole lead.",
+   "model": "claude-opus-5-5"
+  },
+  "2026-02-10-a": {
+   "hash": "ce76e02121bdab94",
+   "headline": "JD Rallies Past AT With 2 Hidden VP Cards",
+   "recap": "JD won on turn 75, taking Longest Road from MS and revealing 2 hidden VP cards to finish on 13 to AT's 8. For most of the game it looked like AT's: AT took Longest Road and Largest Army on turn 31 to go ahead 5 to 4, and by turn 52 was within 3 of winning with JD 3 VP behind. AT held the sole lead for 53% of the game but also discarded 15 cards to 7s along the way. Late on, Longest Road changed hands twice: MS took it from AT on turn 71, JD went ahead 9 to 8 on turn 72, and then JD took the road from MS on the final turn. JD was in sole lead for just 8% of the game, including the only part that counted.",
+   "model": "claude-opus-5-5"
+  },
+  "2026-02-10-b": {
+   "hash": "9087602aab8d37a4",
+   "headline": "MS Outlasts AT in Longest Road Tug of War",
+   "recap": "MS reached 12 VP on turn 107 with a settlement and a hidden VP card, finishing 3 clear of JD after leading for 50% of the game. The real fight was over Longest Road, which MS and AT traded all game, with a late stretch where it changed hands on turns 86, 87, 89, 93 and 95. MS took it on turn 95 and kept it, and that was the play of the game, a 3 VP swing. The hottest dice at the table helped too: MS drew 119 cards from the dice against 104 expected. JD held Largest Army and 2 VP cards but discarded 13 cards to 7s, while MS never discarded a single card.",
+   "model": "claude-opus-5-5"
+  },
+  "2026-02-12-a": {
+   "hash": "de967c3f4d970f36",
+   "headline": "MS Erases 7-Point Deficit, Reveals 3 VP Cards",
+   "recap": "MS won on turn 76 by revealing 3 VP cards, finishing 14 to 12 over ND after trailing by as many as 7 points. ND had the best opening and the hottest dice, held both Longest Road and Largest Army, and on turn 50 sat within 3 of winning with MS 6 behind. MS took Longest Road on turn 52 for a 4 VP swing and led by turn 55. After ND took the road back to go up 12 to 8, MS answered with Largest Army and edged ahead 11 to 10 on turn 70. The hidden cards did the rest for the player with the weakest opening at the table, 19 dots, while AT discarded 13 cards to 7s and finished on 4.",
+   "model": "claude-opus-5-5"
+  },
+  "2026-02-12-b": {
+   "hash": "5ed2a722735e40d9",
+   "headline": "AT keeps the lead and edges MS by 1",
+   "recap": "AT took the lead at turn 15, no one else ever led outright, and AT closed out a 14 to 13 win over MS on turn 90 with a settlement and a hidden VP card. Longest Road came at turn 36, and the play of the game followed at turn 48: a settlement and an island bonus for a 3 VP swing, all while the robber sat on 24 of AT's cards. MS had the coldest dice at the table, 71 cards against 86 expected, and finished 1 VP short with 4 VP cards in the total. ND had the hottest dice and still discarded 18 cards to 7s. The final margin was 1 point, but the game ranked 92 of 101 for closeness, putting it in the group's most one-sided tier.",
+   "model": "claude-opus-5-5"
+  },
+  "2026-02-15-a": {
+   "hash": "dfdc5e31b41121af",
+   "headline": "ND settles New Shores with island bonuses",
+   "recap": "ND reached 14 on turn 61 with a settlement and an island bonus, winning by 4 after holding the lead since taking Longest Road on turn 43. MS had gone ahead 5 to 3 on turn 29 despite the weakest opening at the table, but ND's turn 52 put the game away: a city, a settlement and an island bonus for a 4 VP swing. JD had 10 cards blocked by the robber and picked up Largest Army on turn 60, just before ND finished. The islands made the difference, paying ND 4 VP against 2 apiece for JD and MS.",
+   "model": "claude-opus-5-5"
+  },
+  "2026-03-07-a": {
+   "hash": "620a11ceabec8e3c",
+   "headline": "MS Crosses the Desert From 5 VP Behind",
+   "recap": "MS won Through the Desert 15 to 12 over ND, closing it out on turn 63 with a settlement and an island bonus. ND had gone ahead 9 to 7 on turn 56, and MS answered on turn 60 with the play of the game: Largest Army, a settlement and an island bonus, a 5 VP swing that made it 12 to 10. It counts as a comeback, since MS was as many as 5 VP down at one point, but MS also had the best opening at 23 dots, the hottest dice at 13 cards over expectation and the lead for 54% of the game. ND's 2 VP cards got them to 12, and JD never led and finished on 6.",
+   "model": "claude-opus-5-5"
+  },
+  "2026-03-11-a": {
+   "hash": "402f1ca77eb2633d",
+   "headline": "MS Cruises to 15 Without Building a City",
+   "recap": "MS won going away, closing it out on turn 75 with Largest Army and 2 hidden VP cards to finish on 15, while AT and ND were tied for second on 7. ND took the lead on turn 17, but MS went back ahead 9 to 7 on turn 45 and nobody took it from them again. The real fight came late over Longest Road: MS took it from AT on turn 69, lost it back on turn 70 and took it again on turn 72, a 4 VP swing and the play of the game. AT had the best opening at 21 dots but the coldest dice, 6 cards short, and also had 11 cards blocked by the robber, while MS rolled hottest at +11 cards. MS built 0 cities all game, so every point came from settlements, islands, cards and the two big bonuses.",
+   "model": "claude-opus-5-5"
+  },
+  "2026-03-18-a": {
+   "hash": "a661f9c3a0a8484e",
+   "headline": "JD Retakes Longest Road to Seal New Shores Blowout",
+   "recap": "JD won New Shores 15 to 9, closing it out on turn 73 by taking Longest Road back from ND, who had grabbed it on turn 63. The decisive play came on turn 25, when a settlement and an island bonus put JD ahead 5 to 4 for a 3 VP swing, and JD went on to lead for 67% of the game, adding Largest Army on turn 64 for good measure. JD did it all on perfectly average dice, 60 cards against 60 expected, while ND had the hottest dice at the table and handed 11 cards back to the 7s. MS had the coldest dice, 10 cards short, and finished on 3. The game ranks 93rd of 101 for closeness, putting it among the most one-sided the group has played.",
+   "model": "claude-opus-5-5"
+  },
+  "2026-03-18-b": {
+   "hash": "019fd7c2d7df5889",
+   "headline": "MB holds off JD and 4 hidden VP cards",
+   "recap": "MB won 10 to 9, closing it out with a city on turn 95 after taking the first lead on turn 7 and never letting anyone else hold it outright. MB had the best opening at the table at 21 dots and took Longest Road on turn 43, but kept getting caught by 7s and discarded 16 cards. MS had the coldest dice of the game, 11 cards light, and still took Largest Army with 5 knights. JD finished 1 VP short holding 4 hidden VP cards, after being robbed of 12 cards and losing 16 more to robber blocks.",
+   "model": "claude-opus-5-5"
+  },
+  "2026-03-24-a": {
+   "hash": "4bc4d6b1c1fcec33",
+   "headline": "ND Flips 2 Hidden VP Cards to Win",
+   "recap": "ND won on turn 62, taking Largest Army and revealing 2 VP cards on the same turn to finish on 11, ahead of LD on 9. Before that, the story had been the Longest Road fight: LD took it on turn 44, MS took it away on turn 51, and LD took it back on turn 60 for a 9 to 7 lead. MS spent 44% of the game in sole lead and still finished third on 7. ND won from the weakest opening at the table, 16 dots, after leading for just 8% of the game. LD had the best opening, the hottest dice and Longest Road at the finish, and came second anyway.",
+   "model": "claude-opus-5-5"
+  },
+  "2026-06-05-a": {
+   "hash": "400a8a44af35c200",
+   "headline": "JD Wins Through the Desert on the Final Turn",
+   "recap": "JD won it on the final turn with a settlement and an island bonus, taking the lead 13 to 10 on turn 68 and finishing on 14. ND held the lead longest, taking Longest Road on turn 17 and spending 52% of the game alone in front, until MS, ND again and AT passed the lead around between turns 51 and 60. JD's answer came on turn 63 with a city, Largest Army and a settlement in one turn, a 4 VP swing against the best opponent. JD led for just 7% of the game, while ND, who had the hottest dice at the table, finished 4th.",
+   "model": "claude-opus-5-5"
+  },
+  "2026-07-18-a": {
+   "hash": "9b159be90fd40cfe",
+   "headline": "MS Reclaims Longest Road on Final Turn to Win",
+   "recap": "MS reached 14 on turn 65 by taking Longest Road back from ND, finishing 14 to 9 with JD on 7. ND had the first lead at turn 9, but MS took Largest Army and the lead on turn 34, 6 to 4, and went on to lead for longer than anyone else. Longest Road changed hands all game: MS took it on turn 44, ND took it away on turn 54, and MS took it back for the win. The dice helped MS along too, paying out 79 cards against 69 expected, while JD came up 6 cards short and never held the sole lead.",
+   "model": "claude-opus-5-5"
+  },
+  "2026-08-30-a": {
+   "hash": "0da2ea87725fb260",
+   "headline": "ND reclaims Longest Road, then takes the game",
+   "recap": "ND won on the final turn with a settlement and an island bonus, reaching 14 and finishing 4 clear of MS. It was a comeback: LD got within 3 of winning at turn 40 and spent more of the game in sole lead than anyone, with 5 lead changes in all. The turn that decided it came at 63, when ND took Longest Road back from MS for a 3 VP swing, after the road had gone from ND to LD to MS and back again. ND did it despite 11 cards blocked by the robber. LD had the hottest dice at the table, discarded 8 cards to sevens and finished third.",
+   "model": "claude-opus-5-5"
+  },
+  "2026-09-01-a": {
+   "hash": "bd5e8e01c0289c9a",
+   "headline": "MS Rides Hot Dice and Islands to 14",
+   "recap": "MS closed out game 75 with a city on turn 53, reaching 14 to finish 2 clear of ND after retaking the lead on turn 44. The key turn came at 20, when a settlement and an island bonus put MS ahead 6 to 5 for a 3 VP swing, and islands ended up supplying 6 of MS's points. The lead changed hands 4 times, with LD in front after taking Longest Road on turn 37, but MS led for 47% of the game on the hottest dice at the table, 53 cards against 39 expected, despite being robbed the most at 7 cards. ND took Longest Road back from LD on the final turn and looked like the bigger threat going in, which counted for little once MS built that city. DH and LD each discarded 12 cards to 7s, while MS discarded none.",
+   "model": "claude-opus-5-5"
+  },
+  "2026-09-07-a": {
+   "hash": "9b40217343a08129",
+   "headline": "JD Wins the Longest Road Tug of War",
+   "recap": "JD reached 14 VP on turn 81 with a settlement, an island bonus and a hidden VP card, finishing 4 ahead of MS. For a long stretch it was LD's game: LD took the lead on turn 12 despite the weakest opening at the table and held the sole lead for 47% of the game, until JD grabbed Longest Road and the lead on turn 61. From there the road changed hands twice more. MS took it on turn 63 and the lead on turn 73, and JD took both back on turn 76 with a settlement alongside, a 4 VP swing that held up to the finish. JD had the best opening and the hottest dice but spent only 10% of the game in the lead, which turned out to be the right 10%.",
+   "model": "claude-opus-5-5"
+  },
+  "2026-09-10-a": {
+   "hash": "a26609ae2b41bb2a",
+   "headline": "MS Takes Longest Road From LD, Then Everything Else",
+   "recap": "MS won 11 to 6, sealing it on turn 61 by taking Largest Army and revealing 2 hidden VP cards. For a long stretch it looked like LD's game: LD took Longest Road and the lead on turn 31 and got within 3 of winning by turn 39, despite the coldest dice at the table and 10 cards blocked by the robber. The game turned on turn 57, when MS took Longest Road from LD for a 4 VP swing and a 7 to 6 lead. The final margin of 5 reads like a blowout, but LD spent more of the game in sole lead than the winner did.",
+   "model": "claude-opus-5-5"
+  },
+  "2026-09-11-a": {
+   "hash": "2736d23380cdd6f9",
+   "headline": "MS Saves the Blowout for the Very Last Turn",
+   "recap": "MS won 11 to 7 on turn 70, the last of the game, taking Largest Army to go ahead 8 to 7 and finishing it on the spot. DH spent the most time in front, taking the first lead on turn 12 and holding sole lead for 34% of the game, despite having 12 cards stolen, the most at the table, and 12 more blocked by the robber. MS had the hottest dice, 6 cards above expectation, though 8 cards went to discards on 7s. For a player who led for 1% of the game, MS won by 4, with 3 VP cards that nobody could see until the end.",
+   "model": "claude-opus-5-5"
+  },
+  "2026-09-14-a": {
+   "hash": "b36cfc08d101229b",
+   "headline": "MS snatches Longest Road from ND to win",
+   "recap": "MS won it on turn 66, the final turn, by taking Longest Road from ND to reach 10 VP. ND had grabbed Longest Road and the lead on turn 23 and held the sole lead for 46% of the game, getting within 3 of winning by turn 43 with MS 2 VP behind. MS stayed in range with Largest Army on turn 49, a 2 VP swing, despite the coldest dice at the table: 56 cards from dice against an expected 68, plus 10 cards discarded to 7s. DH looked like the likeliest winner going into the last turn and finished 1 VP short with 2 VP cards. MS spent 2% of the game in the sole lead, which turned out to be exactly enough.",
+   "model": "claude-opus-5-5"
+  },
+  "2026-09-20-a": {
+   "hash": "5a59931f98f58298",
+   "headline": "ND flips a hidden VP card to edge MS",
+   "recap": "ND won on turn 85 by revealing a hidden VP card to reach 14, finishing 1 point ahead of MS, who had looked like the likelier winner going into the final turn. The lead changed hands 5 times, and MS went ahead 13 to 11 on turn 77, one turn after ND had taken the lead back along with Longest Road. Longest Road ran its own tug of war, passing from ND to JD, back to ND and back to JD again between turns 66 and 78. ND got there from the weakest opening at the table, 19 dots, and lost 7 cards to robbers along the way, more than anyone else, with 6 of the winning points coming from islands.",
+   "model": "claude-opus-5-5"
+  },
+  "2026-09-26-a": {
+   "hash": "a4c405a9530d5ab8",
+   "headline": "ND wins the Longest Road tug of war",
+   "recap": "ND finished on 15 VP at turn 90, sealing it with Largest Army and 1 hidden VP card after holding the sole lead for 79% of the game. Longest Road was the running fight: JD and ND traded it from turn 29 on, and when JD grabbed it on turn 74 to go up 11 to 10, ND took it back on turn 78 for a 12 to 9 lead and a 4 VP swing. ND did all this from the weakest opening at the table, 20 dots, while being robbed of 11 cards, more than anyone else. Behind them, DH discarded 16 cards to 7s and never led alone, and JD had 19 cards blocked by the robber.",
+   "model": "claude-opus-5-5"
+  },
+  "2026-10-01-a": {
+   "hash": "f372a47f9de6e878",
+   "headline": "Late Road and Army Carry MS Past DH",
+   "recap": "MS won with 14 VP on turn 50, taking Largest Army and revealing 1 hidden VP card to finish 4 clear of DH. For most of the night it looked like DH's game: DH took the first lead on turn 17, 5 to 2, held the sole lead for 52% of the game and had the hottest dice at +5 cards, though DH also discarded 6 cards to sevens. MS didn't get in front until turn 47, when a city and Longest Road made it 11 to 9, a 3 VP swing and the play of the game. Even with MS ahead on the board going into the final turn, DH still looked like the player to beat, which held up only until MS's next turn.",
+   "model": "claude-opus-5-5"
+  },
+  "2026-10-03-a": {
+   "hash": "ea28ffc3f13bdfaf",
+   "headline": "LD Reclaims Longest Road on Final Turn to Win",
+   "recap": "LD won it on the final turn by taking Longest Road back from JD on turn 67 to reach 13 VP, 1 ahead of MS. It was a comeback from 7 VP down, after JD had got within 3 of winning at turn 40. LD's grab of Longest Road on turn 52 swung 4 VP, JD took it back along with the lead on turn 60, and LD took it back once more to end the game. MS looked like the biggest threat going into the last turn despite the coldest dice at the table, and finished 1 VP short. LD spent just 6% of the game in the lead, while JD spent 39% of it there and finished fourth.",
+   "model": "claude-opus-5-5"
+  },
+  "2026-10-03-b": {
+   "hash": "e6d44b55933e294d",
+   "headline": "DH rallies from 5 down, hidden card seals it",
+   "recap": "DH won on turn 88 by revealing a hidden VP card, finishing on 14 to JD's 13. It was a comeback: JD took the lead 10 to 7 on turn 47 and got within 3 of winning, leaving DH 5 VP behind. DH answered on turn 53 by taking Longest Road from JD along with the lead, 11 to 9, a 4 VP swing and the play of the game. Going into the final turn, JD still looked like the likelier winner on everything the table could see, which is the trouble with points nobody can see.",
+   "model": "claude-opus-5-5"
+  },
+  "2026-10-03-c": {
+   "hash": "bd21d2d3aaa426c9",
+   "headline": "LD never led, then 3 VP cards won it",
+   "recap": "LD won on turn 76 without ever having led, revealing 3 VP cards to reach 14 and leave DH and MS both stuck on 13. For most of the game it looked like MS's game to lose: MS spent 58% of it in sole lead and got within 3 of winning on turn 62, with LD 6 VP behind. LD answered on turn 64 with Largest Army, a settlement and an island bonus in one turn, a 5 VP swing. Late on, Longest Road went from MS to ND and back, and DH, who had the hottest dice at the table despite discarding 8 cards to 7s, went ahead 13 to 12 on turn 73. DH was still in front when LD's cards came out.",
+   "model": "claude-opus-5-5"
+  },
+  "2026-10-07-a": {
+   "hash": "1f61cf64b8207145",
+   "headline": "MS Outlasts ND's Hot Dice to Reach 14",
+   "recap": "MS won comfortably at 14 VP, 4 clear of ND, leading for 67% of the game and closing it out with a settlement on turn 55. The decisive move came early. On turn 19, MS built a settlement and claimed an island bonus, a 3 VP swing that produced a 5 to 4 lead and the game's only lead change. Longest Road followed on turn 23. ND had the best opening at the table and the hottest dice, collecting 70 cards against 49 expected, and still finished 4 VP short. MS was also the robber's favorite target, losing 5 cards, more than anyone else, and won anyway.",
+   "model": "claude-opus-5-5"
+  },
+  "2026-10-07-b": {
+   "hash": "cbbfd32b00a9da6e",
+   "headline": "DH Grabs Largest Army, Then Longest Road, for 13",
+   "recap": "DH ended the game on turn 71 by taking Longest Road from ND, finishing on 13, 3 ahead of MS. The lead changed hands 5 times. MS went up 9 to 7 on turn 50, and nobody else took the lead until DH claimed Largest Army on turn 67 to go ahead 11 to 10. Longest Road then went from MS to ND on turn 68, and ND held it until DH took it on the winning turn. JD took the first lead at 3 to 2 on turn 17, then got 31 cards from the dice against 43 expected and finished third on 7.",
+   "model": "claude-opus-5-5"
+  },
+  "2026-10-11-a": {
+   "hash": "7b59db3d2f9c5e66",
+   "headline": "DH Snatches Longest Road, Wins on Final Turn",
+   "recap": "DH won it on the final turn, taking Longest Road from MS and adding a settlement with an island bonus to finish on 15, with 2 VP cards nobody had seen. For most of the game MS looked like the one to beat, spending 44% of it in sole lead to DH's 4% and getting within 3 of winning on turn 50. DH had the hottest dice at the table, 64 cards against 45 expected, and was also robbed the most, losing 6 cards. The lead changed hands 6 times, and JD, who had the best opening at 23 dots, never held the sole lead and finished with 5.",
+   "model": "claude-opus-5-5"
+  },
+  "2026-10-11-b": {
+   "hash": "b0b3b3b4d37bcb5a",
+   "headline": "JD Cruises to 14 as Hot Dice Outrun Robber",
+   "recap": "JD won by 6, finishing on turn 67 by taking Longest Road from ND and turning over a hidden VP card. JD went in front on turn 27, one turn after MS's brief spell at the top, and nobody else took the lead after that. The turn that settled it came at 57, when a settlement, an island bonus and a city swung 4 VP against the nearest challenger. JD's dice ran hot, 65 cards against 55 expected, which more than covered losing 5 cards to the robber, the most at the table. ND took Longest Road from AT on turn 65 and looked like the bigger threat going into the last turn, right up until JD took the road back.",
+   "model": "claude-opus-5-5"
+  },
+  "2026-10-13-a": {
+   "hash": "39463ceb42d8ecaf",
+   "headline": "JD Takes Lead at Turn 10 and Keeps It",
+   "recap": "JD won 14 to 11, closing it out at turn 70 with a settlement and a hidden VP card on top of a lead that had stood since turn 10. JD went ahead 3 to 2 that early, took Longest Road at turn 22 and was sole leader for 76% of the game, while DH and LD never held the sole lead at all. JD lost 7 cards to theft, the most of anyone, but collected 78 cards from dice against 75 expected and never had to slow down. DH still took second despite the weakest opening at 19 dots and the coldest dice, collecting 49 cards against 57 expected.",
+   "model": "claude-opus-5-5"
+  },
+  "2026-10-13-b": {
+   "hash": "d8fb259cdfb8ce65",
+   "headline": "AT turns weakest opening into 6-point blowout",
+   "recap": "AT won Through the Desert on turn 86 with Largest Army and 2 hidden VP cards, finishing 14 to 8 over MS after already leading going into that turn. AT started from the weakest opening at the table, 18 dots, and still led for 76% of the game. The only real wobble came on turns 57 and 58, when JD took Longest Road from AT and MS went ahead 7 to 6. AT answered on turn 62 with a settlement and an island bonus, a 3 VP swing that made it 9 to 7, and nobody took the lead back after that. JD held Longest Road to the end but finished third on 7 VP, with the coldest dice at the table: 57 cards against 85 expected.",
+   "model": "claude-opus-5-5"
+  },
+  "2026-10-14-a": {
+   "hash": "b47af49627544b80",
+   "headline": "ND answers late Longest Road swipe with winning city",
+   "recap": "ND won game 92 with a city on the final turn, finishing on 14 to LD's 11 after spending 74% of the game in sole lead. The one real scare came on turn 63, when LD took Longest Road, held by ND since turn 17, and with it the lead, 10 to 9. LD's spell in front lasted until ND's next turn. ND had the hottest dice at the table, 71 cards against 64 expected, and was also robbed the most, losing 7 cards to the robber. At the other end, AT turned the best opening of anyone, 21 dots, into 5 VP and last place.",
+   "model": "claude-opus-5-5"
+  },
+  "2026-10-14-b": {
+   "hash": "f7d2a91e1d5a1da9",
+   "headline": "LD Turns Weakest Opening Into Runaway Win",
+   "recap": "LD won game 93 from the front, finishing on 15 VP to AT's 10 after leading for 81% of the game. The lead came on turn 21, when a settlement and an island bonus swung 3 VP and put LD ahead 6 to 3. LD then took Largest Army on turn 65 to answer AT's Longest Road. LD built all this from the weakest opening at the table, 16 dots, while collecting fewer cards from dice than expected and losing 16 cards to theft, more than anyone else. On turn 105 LD closed it out the same way the lead had started, with a settlement and an island bonus.",
+   "model": "claude-opus-5-5"
+  },
+  "2026-11-04-a": {
+   "hash": "c54133626ac783a2",
+   "headline": "Hot Dice Carry DH From Weakest Opening to 13",
+   "recap": "DH won Game 94 with 13 points to MS's 11, finishing it on turn 83 by taking Largest Army. DH started with the weakest opening at 16 dots, but the dice made up for it: 97 cards against 81 expected, the hottest dice in the game. MS took the first lead on turn 18, DH went ahead 4 to 3 on turn 26 and led for 70% of the game, and taking Longest Road from DH on turn 69 wasn't enough for MS to catch up. LD had the best opening at 22 dots and finished with 5 points after discarding 12 cards to 7s.",
+   "model": "claude-opus-5-5"
+  },
+  "2026-11-06-a": {
+   "hash": "a2aa2add4d933af5",
+   "headline": "MS Island-Hops Past ND on the Final Turn",
+   "recap": "MS won 14 to 13 over ND with a settlement and an island bonus on turn 93, the last turn of the game. MS had trailed by as many as 5 VP and led for just 1% of the game, while ND took the lead on turn 82, got within 3 of winning and looked like the likelier winner until the final move. The finish repeated turn 53, when the same kind of move, a settlement and an island bonus, gave MS the play of the game and a 3 VP swing. Islands brought MS 6 points in all. LD spent the most time in front, 33% of the game, and still finished fifth after discarding 16 cards to 7s.",
+   "model": "claude-opus-5-5"
+  },
+  "2026-11-08-a": {
+   "hash": "378601fc8d936d61",
+   "headline": "LD Seals It With Longest Road on Final Turn",
+   "recap": "LD won it on turn 79 by taking Longest Road from JD, finishing on 14 with 2 VP cards nobody had seen, 4 clear of MS. JD, DH and ND each had a spell in front through the middle game until turn 54, when LD built a settlement, collected an island bonus and added a city for a 4 VP swing and a 9 to 8 lead. LD's dice ran hottest at the table, 97 cards against 88 expected, though 9 of them were stolen and 13 more went to sevens. MS opened best, took Largest Army and looked like the more dangerous player right up to the final turn. JD, with the coldest dice and 10 cards blocked by the robber, finished last and lost Longest Road on the final turn as well.",
+   "model": "claude-opus-5-5"
+  },
+  "2026-11-13-a": {
+   "hash": "8a6e7838d0c0511c",
+   "headline": "MS outlasts 7 lead changes, finishes with Largest Army",
+   "recap": "MS won it from the front, taking Largest Army from LD on turn 98 to finish on 15. Getting there took a comeback in a game where the lead changed hands 7 times: MS fell as far as 6 VP behind, and on turn 69 LD got within 3 of winning. The play of the game came on turn 90, when a settlement and an island bonus put MS back ahead 13 to 12 and swung 3 VP against the best opponent. MS did all of it while losing 11 cards to thieves, the most at the table, with another 9 blocked by the robber. AT looked like the likeliest winner on the visible board before the last turn and ended tied with ND on 13, with 3 of those points from hidden VP cards.",
+   "model": "claude-opus-5-5"
+  },
+  "2026-11-14-a": {
+   "hash": "72df966b9cd9e876",
+   "headline": "ND Strikes Last, Then Reveals 3 Hidden Points",
+   "recap": "ND won it on the final turn, building a settlement and taking an island bonus to go ahead 12 to 9, then revealed 3 hidden VP cards to finish on 15. Until then the game had mostly belonged to JD, who overcame the weakest opening at the table to take the lead at turn 30, added Longest Road at turn 39 and spent 47% of the game in sole lead despite being robbed of 6 cards and having 12 cards blocked by the robber. ND had the best opening and the hottest dice, +10 cards over expectation, and made the play of the game at turn 56 with a city and Largest Army for a 3 VP swing. The 15 to 9 final ranks 91st of 101 games for closeness, a blowout that stayed hidden in ND's hand until the last roll.",
+   "model": "claude-opus-5-5"
+  },
+  "2026-11-14-b": {
+   "hash": "6eda654a91b51192",
+   "headline": "JD Reclaims Lead in One Turn, Rides It Home",
+   "recap": "JD closed out Game 99 with a city on turn 79, finishing on 14 to ND's 12 after spending 62% of the game in sole lead. The lead changed hands 5 times, and the sharpest exchange came late: DH went ahead 9 to 8 on turn 58, and JD answered on the very next roll with a settlement and an island bonus to go up 11 to 9. JD added Largest Army on turn 67 to go with Longest Road, while DH fought the coldest dice at the table and discarded 8 cards to 7s. ND took second without ever holding the lead outright, yet was still the player who looked most dangerous going into the final turn.",
+   "model": "claude-opus-5-5"
+  },
+  "2026-11-14-c": {
+   "hash": "b9f035d4c7b9c471",
+   "headline": "ND Takes Back Longest Road and the Game",
+   "recap": "ND won game 100 on the final turn, taking Longest Road back from JD and building a settlement to reach 14. ND had gone ahead 8 to 5 on turn 18, but on turn 43 JD took Longest Road away and DH moved in front 9 to 8. ND answered on turn 48 with a settlement and an island bonus, a 3 VP swing that put ND back up 11 to 10. JD had the hottest dice at the table, 55 cards against 46 expected, and finished third anyway, with 8 cards blocked by the robber and a Longest Road that ND came back for.",
+   "model": "claude-opus-5-5"
+  },
+  "2026-11-14-d": {
+   "hash": "b0952b26e725087d",
+   "headline": "Hidden VP card hands ND the closest game yet",
+   "recap": "ND won by revealing a hidden VP card on turn 76, finishing on 14 to JD's 13. It was the closest of the group's 101 games, with 6 lead changes and Longest Road passing back and forth between MS, ND and JD. ND spent just 5% of the game in sole lead, and going into the last turn the visible points made DH look like the most dangerous player, after DH turned the weakest opening into the hottest dice. JD finished 1 VP short after having 14 cards blocked by the robber and discarding 10 to 7s.",
+   "model": "claude-opus-5-5"
+  }
+ }
+}

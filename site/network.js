@@ -518,8 +518,7 @@
     const rows = nodes.filter((p) => pr[p]);
     const terms = Object.entries(R.pairs).filter(([, p]) => p.terms && (p.terms.ab || p.terms.ba));
     return `<section class="block" id="pairs">
-      <h2>Trading terms and setup contention</h2>
-      <h3>Roller premium ${ctx.info("net_terms", "Roller premium and terms of trade")}</h3>
+      <h2>Trading terms ${ctx.info("net_terms", "Roller premium and terms of trade")}</h2>
       <p class="note"><b>How to read:</b> when trading on their own turn, how many cards a player gives per card they get, compared with everyone else, who give ${ctx.num((pr._field || {}).P, 2)} per card on average. ×1 is the usual price; left means they get better deals, right means they pay more.</p>
       ${rows.length ? `<div class="panel"><div class="chart" id="pr-prem"></div>
         ${ctx.tableView([{ label: "Player" }, { label: "Trades as roller", num: true }, { label: "Given per received", num: true }, { label: "vs the field", num: true }, { label: "95% interval", num: true }],
@@ -529,7 +528,9 @@
         ${terms.flatMap(([k, p]) => { const [a, b] = k.split("|"); return [[a, b, p.terms.n_ab, p.terms.ab], [b, a, p.terms.n_ba, p.terms.ba]]; }).filter((r) => r[3])
           .map(([a, b, n, t]) => `<tr><td>${ctx.who(a)}</td><td>${ctx.who(b)}</td><td class="num">${n}</td><td class="num">×${ctx.num(t.rho, 2)}</td><td class="num">${iv(ctx, t.lo, t.hi)}</td></tr>`).join("")}</tbody></table></div>
         <p class="note">Above 1: the roller gives more per card received when trading with that partner than with anyone else.</p>` : ""}
-      <h3 style="margin-top:28px">Setup contention ${ctx.info("net_contention", "Board contention at setup")}</h3>
+    </section>
+    <section class="block">
+      <h2>Setup contention ${ctx.info("net_contention", "Board contention at setup")}</h2>
       <p class="note">How much two players' starting settlements compete: the number dots on hexes both of them touch at the first roll, per shared game. Darker means they tend to start on the same hexes and share the same numbers.</p>
       <div class="panel" style="padding:12px"><p class="note" style="margin:0 0 10px">Average shared dots at the first roll, per shared game.</p><div id="pr-cont"></div></div>
     </section>`;
@@ -708,7 +709,7 @@
         return `<tr><td>${ctx.who(o)}</td><td class="num">${p.games}</td><td class="num">${f(out)}</td><td class="num">${f(inn)}</td><td class="num">${p.trade.O} <span class="sub">${ctx.num(p.trade.per100, 1)} per 100 rolls</span></td></tr>`;
       }).join("");
       return `<section class="block"><h2>Robber and trades</h2>
-        <p class="note">Against the shared robber model and the trade partner model. More on the <a href="#/network">Network</a> page.</p>
+        <p class="note">Against the shared robber model and the trade partner model. More on the <a href="#/robber">Robber</a> and <a href="#/trading">Trading</a> pages.</p>
         ${tiles.length ? `<div class="tiles">${tiles.join("")}</div>` : ""}
         ${rows ? `<div class="panel table-wrap" style="margin-top:12px"><table><thead><tr><th>With</th><th class="num">Shared games</th><th class="num">Robs them ${ctx.info("net_robber", "Shared robber model")}</th><th class="num">Robbed by them</th><th class="num">Trades together</th></tr></thead><tbody>${rows}</tbody></table></div>
         <p class="note">Robbing columns: cards stolen divided by what the robber model expected, shrunk toward ×1 (small text: stolen vs expected). Above ×1 means more than the board explains. Pairs with 10 or more shared games.</p>` : ""}
@@ -723,7 +724,7 @@
       if (!A) return "";
       const s7 = A.leader.seven, P = A.partner;
       return `<section class="block"><h2>The robber, the leader and trade partners</h2>
-        <p class="note">From the shared robber model on all games (${A.counts.land_moves} robber moves, 7s and knights fit separately). Details, per-player and per-pair numbers are on the <a href="#/network">Network</a> page.</p>
+        <p class="note">From the shared robber model on all games (${A.counts.land_moves} robber moves, 7s and knights fit separately). Details, per-player and per-pair numbers are on the <a href="#/robber">Robber</a> page.</p>
         <div class="tiles">
           ${ctx.Charts.statTile({ value: `×${ctx.num(s7.stage2_vp.or, 2)}`, label: `Leader tax, per public VP ${ctx.info("op_leader", "Leader tax")}`, sub: `after a 7, each visible VP closer to the lead multiplies the odds of being the one robbed by this much; 95% ${ctx.num(s7.stage2_vp.or_lo, 2)} to ${ctx.num(s7.stage2_vp.or_hi, 2)}` })}
           ${ctx.Charts.statTile({ value: ctx.pct(A.leader.base_rate_all), label: "Robber placements touching the leader", sub: `against ${ctx.pct(A.leader.uniform_rate_all)} if it went on a random legal hex` })}

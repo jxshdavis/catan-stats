@@ -23,6 +23,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import insights  # noqa: E402  (model-based and group stats)
+import recaps  # noqa: E402  (written game recaps, stored in data/recaps.json)
+import story  # noqa: E402  (per-game turning points and notes)
 
 # Analysis modules that read the per-action logs. Each has KEY, and compute_all(games, replays, events, ctx)
 # for a result stored once at stats.json[KEY] (all games), and may have compute_view(games, replays,
@@ -806,7 +808,7 @@ def compute_views(players_doc, games_doc, name_mode="usernames", replays_doc=Non
         if hasattr(mod, "compute_view"):
             for key, sub in slices.items():
                 views[key][mod.KEY] = mod.compute_view(sub, replays, events, ctx, module_out[mod.KEY])
-    return {
+    out = {
         "schema_version": 3,
         "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "ranking": {
@@ -828,9 +830,44 @@ def compute_views(players_doc, games_doc, name_mode="usernames", replays_doc=Non
         "timelines": {gid: dense_timeline(r["timeline"], max(r["timeline"]["turn"]))
                       for gid, r in replays.items()},
     }
+    # Built last: a game's story draws on the race, closeness, comeback and threat numbers above.
+    out[story.KEY] = story.compute(out["views"]["all"]["games"], events, out)
+    return out
 
 
-def build(check_only=False, data_dir=DATA, out_dir=DIST):
+def recap_facts(stats):
+    """What each game's written recap is based on, keyed by game id (see story.facts)."""
+    names = {p["id"]: p["name"] for p in stats["views"]["all"]["players"]}
+    name_of = lambda pid: "a guest" if is_guest(pid) else names.get(pid, str(pid))
+    return {g["id"]: story.facts(g, stats[story.KEY][g["id"]], stats, name_of)
+            for g in stats["views"]["all"]["games"] if g["id"] in stats[story.KEY]}
+
+
+def load_stats(data_dir=DATA):
+    """Stats for the real data, for scripts that need them without writing dist/."""
+    opt = lambda name: load_json(data_dir / name) if (data_dir / name).exists() else None
+    site = opt("site.json") or {}
+    return compute_views(load_json(data_dir / "players.json"), load_json(data_dir / "games.json"),
+                         site.get("player_names", "usernames"), opt("replays.json"), events_doc=opt("replay_events.json"))
+
+
+def add_recaps(stats, data_dir, write):
+    """Attach the stored recaps that still match their games. With write, first ask Claude for the missing ones."""
+    facts = recap_facts(stats)
+    path = data_dir / "recaps.json"
+    doc = recaps.load(path)
+    if write and recaps.missing(doc, facts):
+        try:
+            recaps.ensure(doc, facts, on_write=lambda d: recaps.save(d, path))
+        except recaps.NoCredentials as e:
+            print(f"recaps: not writing new ones, {e}", file=sys.stderr)
+    stats["recaps"] = recaps.current(doc, facts)
+    left = len(facts) - len(stats["recaps"])
+    if facts:
+        print(f"recaps: {len(stats['recaps'])} of {len(facts)} games have one" + (f", {left} without" if left else ""))
+
+
+def build(check_only=False, data_dir=DATA, out_dir=DIST, write_recaps=False):
     try:
         players_doc = load_json(data_dir / "players.json")
         games_doc = load_json(data_dir / "games.json")
@@ -862,6 +899,7 @@ def build(check_only=False, data_dir=DATA, out_dir=DIST):
         return 1
     stats = compute_views(players_doc, games_doc, name_mode, replays_doc, events_doc=events_doc)
     stats["site"] = site
+    add_recaps(stats, data_dir, write_recaps)
     if out_dir.exists():
         shutil.rmtree(out_dir)
     shutil.copytree(SITE, out_dir)
@@ -881,5 +919,7 @@ if __name__ == "__main__":
     ap.add_argument("--check", action="store_true", help="validate the data files without building")
     ap.add_argument("--data", type=Path, default=DATA, help="folder holding players.json and games.json")
     ap.add_argument("--out", type=Path, default=DIST, help="output folder (default dist/)")
+    ap.add_argument("--no-recaps", action="store_true",
+                    help="don't ask Claude to write missing game recaps (see scripts/recaps.py); stored ones are still used")
     args = ap.parse_args()
-    sys.exit(build(args.check, args.data.resolve(), args.out.resolve()))
+    sys.exit(build(args.check, args.data.resolve(), args.out.resolve(), write_recaps=not args.no_recaps))

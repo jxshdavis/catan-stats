@@ -41,7 +41,8 @@
     const name = p ? esc(p.name) : esc(pid);
     const lead = p && p.leaderboard_rank === 1;
     const inner = `<span class="pmark${lead ? " lead" : ""}"${lead ? ' title="First on the leaderboard"' : ""}><span class="hex" style="--c:${color(pid)}" aria-hidden="true"></span></span><span>${name}</span>`;
-    return link ? `<a class="who" href="#/player/${encodeURIComponent(pid)}">${inner}</a>` : `<span class="who">${inner}</span>`;
+    const tag = `class="who" data-pid="${esc(pid)}"`;
+    return link ? `<a ${tag} href="#/player/${encodeURIComponent(pid)}">${inner}</a>` : `<span ${tag}>${inner}</span>`;
   };
   const aliasList = (p) => p.aliases.map(esc).join(", ");
   const gameLabel = (g) => `Game ${g.number}, ${fmtDate(g.date)}`;
@@ -366,6 +367,7 @@
         <div class="hot-grid">${cards.map(card).join("")}</div>
       </section>` : ""}
 
+      ${answersTeaser()}
 
       <section class="block">
         <h2>Wins above expected over time</h2>
@@ -395,7 +397,7 @@
     legend.style.paddingBottom = "0";
     const gi = gamesByIndex();
     lineChart(document.getElementById("trend"), {
-      series, yRef: 0, ariaLabel: "Wins above expected for each player after every game",
+      series, yRef: 0, highlight: hlIn(ranked), ariaLabel: "Wins above expected for each player after every game",
       xLabel: (x) => (x === 0 ? "<b>Start</b>" : `<b>${esc(gameLabel(gi[x]))}</b>`),
       xTickLabel: (x) => (x === 0 ? "start" : x),
     });
@@ -411,7 +413,7 @@
     const p = P[pid];
     if (!p) return notFound(`There's no player with the id "${esc(pid)}".`);
     if (!p.games) {
-      main.innerHTML = `<a class="back" href="#/">Back to leaderboard</a><h1>${esc(p.name)}</h1>${filterBar()}<p class="empty">${esc(p.name)} hasn't played ${VIEW === "all" ? "a recorded game" : `a recorded ${esc(viewLabel(VIEW))} game`} yet.</p>`;
+      main.innerHTML = `${playerSwitch(pid)}<h1>${esc(p.name)}</h1>${filterBar()}<p class="empty">${esc(p.name)} hasn't played ${VIEW === "all" ? "a recorded game" : `a recorded ${esc(viewLabel(VIEW))} game`} yet.</p>`;
       return;
     }
     const active = S.players.filter((x) => x.games > 0).length;
@@ -453,7 +455,7 @@
     const hasSteals = h2h.some((h) => h.replay_games);
     const rpHtml = rp ? `<section class="block">
         <h2>From the replays</h2>
-        <p class="note">Averages per game, read from TwoSheep's turn-by-turn record.${basedOn(rp.games, "a replay")} <a href="#/style">Compare everyone</a></p>
+        <p class="note">Averages per game, read from TwoSheep's turn-by-turn record.${basedOn(rp.games, "a replay")} <a href="#/players">All players</a></p>
         <div class="tiles">
           <div class="tile"><div class="v">${num(rp.dice_ratio, 2)}×<span class="tile-mk">${mk(pid, "luck")}</span></div><div class="k">Dice luck</div><div class="s">${num(rp.avg_resources_from_dice)} cards from dice against ${num(rp.avg_expected_from_dice)} expected</div></div>
           <div class="tile"><div class="v">${num(rp.avg_opening_dots)}<span class="tile-mk">${mk(pid, "opening_dots")}</span></div><div class="k">Opening dots</div><div class="s">Number dots under the two starting settlements</div></div>
@@ -471,7 +473,7 @@
       </tbody></table></div>` : `<p class="empty">No dev card purchases recorded yet.</p>`;
 
     main.innerHTML = `
-      <a class="back" href="#/">Back to leaderboard</a>
+      ${playerSwitch(pid)}
       <div class="player-head"><span class="pmark${p.leaderboard_rank === 1 ? " lead" : ""}"${p.leaderboard_rank === 1 ? ' title="First on the leaderboard"' : ""}><span class="hex" style="--c:${color(pid)}" aria-hidden="true"></span></span><h1>${esc(p.name)}</h1></div>
       <p class="lede">Ranked ${ord(p.leaderboard_rank)} of ${active}. ${p.games} ${p.games === 1 ? "game" : "games"} recorded.</p>
       ${hooksHtml("player-head", pid)}
@@ -593,6 +595,7 @@
       height: 200, color: color(pid), valueLabels: true, ariaLabel: `Finishing positions for ${p.name}`,
       bars: places.map((k) => { const c = p.finish_counts[k] || 0; return { label: ord(k), value: c, tip: `${c} ${c === 1 ? "game" : "games"}` }; }),
     });
+    autoRail(`#/player/${encodeURIComponent(pid)}`);
   }
 
   // Per-player numbers from the group models, with the same method notes as the Findings page.
@@ -612,35 +615,9 @@
       </tbody></table></div><p class="note">Over ${wr.wins} wins: where ${esc(p.name)}'s winning points came from, compared with other players' wins in the same kind of game.</p>` : "";
     return `<section class="block">
         <h2>Compared with the table</h2>
-        <p class="note">From the group models on the <a href="#/findings">Findings</a> page, each comparing ${esc(p.name)} with the people at the same tables. Intervals are 95%; one that crosses the "no difference" value (0, or 1×) means the games so far can't tell.</p>
+        <p class="note">From the group models behind the <a href="#/questions">Questions</a>, each comparing ${esc(p.name)} with the people at the same tables. Intervals are 95%; one that crosses the "no difference" value (0, or 1×) means the games so far can't tell.</p>
         ${tiles.length ? `<div class="tiles">${tiles.join("")}</div>` : ""}
         ${recipe}
-      </section>`;
-  }
-
-  function h2hPage() {
-    const ranked = S.players.filter((p) => p.games > 0);
-    const H = {};
-    for (const h of S.head_to_head) H[h.player + "|" + h.opponent] = h;
-    const fill = (r) => {
-      const t = Math.min(1, Math.abs(r - 0.5) * 2) * 60;
-      const pole = r >= 0.5 ? "var(--div-pos)" : "var(--div-neg)";
-      return `color-mix(in oklab, ${pole} ${t.toFixed(0)}%, var(--div-mid))`;
-    };
-    const head = ranked.map((p) => `<th class="colh" scope="col">${who(p.id)}</th>`).join("");
-    const body = ranked.map((a) => `<tr><th class="rowh" scope="row">${who(a.id)}</th>${ranked.map((b) => {
-      if (a.id === b.id) return `<td><div class="cell self" aria-label="same player"></div></td>`;
-      const h = H[a.id + "|" + b.id];
-      if (!h) return `<td><div class="cell" style="--fill:transparent"><span>no games</span></div></td>`;
-      return `<td><div class="cell" style="--fill:${fill(h.ahead_rate)}" title="${esc(a.name)} finished ahead of ${esc(b.name)} in ${h.ahead + h.tied / 2} of ${h.games} games"><b>${pct(h.ahead_rate)}</b><span>${h.ahead + h.tied / 2} of ${h.games}</span></div></td>`;
-    }).join("")}</tr>`).join("");
-    main.innerHTML = `
-      <h1>Head to head</h1>
-      <p class="lede">Read across a row: how often that player finished ahead of each opponent in the games they both played. Ties count as half.</p>
-      ${filterBar()}
-      <section class="block panel" style="padding:14px">
-        <div class="table-wrap"><table class="matrix"><thead><tr><th></th>${head}</tr></thead><tbody>${body}</tbody></table></div>
-        <div class="scale"><span>Usually behind</span><span class="bar" aria-hidden="true"></span><span>Usually ahead</span></div>
       </section>`;
   }
 
@@ -666,6 +643,7 @@
       <h1>Games</h1>
       <p class="lede">${S.summary.games} ${S.summary.games === 1 ? "game" : "games"} recorded, newest first.</p>
       ${filterBar()}
+      <p class="note" style="margin-top:14px">Looking for a particular kind of game? See the <a href="#/winning/closest">closest and most one-sided games</a> and the <a href="#/winning/comebacks">comebacks</a>.</p>
       ${d ? `<section class="block">
         <h2>Dice across these games</h2>
         <p class="note">${d.rolls} rolls across ${S.summary.games_with_dice} ${S.summary.games_with_dice === 1 ? "game" : "games"}. ${diceSentence(d)}</p>
@@ -709,24 +687,32 @@
       if (!isGuest(pid)) return P[pid] ? P[pid].name : pid;
       return g.n_guests > 1 ? `Guest (${ord(g.players.find((x) => x.player === pid).rank)})` : "Guest";
     };
+    const devTable = hasDev ? `<div class="panel table-wrap" style="margin-top:12px"><table><thead><tr><th>Dev cards bought</th>${cards.map(([, l]) => `<th class="num">${l}</th>`).join("")}</tr></thead>
+          <tbody>${g.players.map((r) => `<tr><td>${who(r.player)}</td>${cards.map(([k]) => `<td class="num">${r.dev_cards_bought ? r.dev_cards_bought[k] || "" : ""}</td>`).join("")}</tr>`).join("")}</tbody></table></div>` : "";
     const replayTable = rps.length ? `<section class="block">
-        <h2>From the replay</h2>
+        <h2>Player numbers</h2>
         <p class="note">Expected is what each player's buildings would produce with average dice, robber included. Blocked counts cards the robber kept from them.</p>
         <div class="panel table-wrap"><table>
           <thead><tr><th>Player</th><th class="num">From dice</th><th class="num">Expected</th><th class="num">Blocked</th><th class="num">Robber moves</th><th class="num">Steals</th><th class="num">Robbed</th><th class="num">Lost to 7s</th><th class="num">Trades</th><th class="num">Bank trades</th><th class="num">Monopoly</th><th class="num">Longest road</th></tr></thead>
           <tbody>${rps.map(({ r, x }) => `<tr><td>${who(r.player)}</td><td class="num">${x.resources_from_dice}</td><td class="num">${num(x.expected_from_dice)}</td><td class="num">${x.blocked_by_robber}</td><td class="num">${x.robber_moves}</td><td class="num">${x.steals}</td><td class="num">${x.stolen_from}</td><td class="num">${x.cards_discarded}</td><td class="num">${x.trades}</td><td class="num">${x.bank_trades}</td><td class="num">${x.monopoly_cards || ""}</td><td class="num">${x.longest_road_length}</td></tr>`).join("")}</tbody>
         </table></div>
+        <details class="tv"><summary>Building and development cards</summary>
         <div class="panel table-wrap" style="margin-top:12px"><table>
           <thead><tr><th>Player</th><th class="num">Settlements</th><th class="num">Cities</th><th class="num">Roads</th><th class="num">Ships</th><th class="num">Knights played</th><th class="num">Rolls</th><th class="num">7s rolled</th><th class="num">Opening dots</th></tr></thead>
           <tbody>${rps.map(({ r, x }) => `<tr><td>${who(r.player)}</td><td class="num">${x.built.settlement}</td><td class="num">${x.built.city}</td><td class="num">${x.built.road}</td><td class="num">${x.built.ship || ""}</td><td class="num">${x.dev_cards_played.knight || ""}</td><td class="num">${x.rolls}</td><td class="num">${x.sevens_rolled}</td><td class="num">${x.opening_dots}</td></tr>`).join("")}</tbody>
         </table></div>
         <p class="note">Built counts pieces placed during the game, free Road Building roads included, so starting settlements and roads aren't in it, and a settlement later upgraded still counts.</p>
+        ${devTable}</details>
       </section>` : "";
+    const all = ROOT.views.all.games.slice().sort((a, b) => a.number - b.number);
+    const at = all.findIndex((x) => x.id === g.id), prevG = all[at - 1], nextG = all[at + 1];
     main.innerHTML = `
       <a class="back" href="#/games">Back to games</a>
       <h1>${fmtDate(g.date, { weekday: "long", month: "long", day: "numeric", year: "numeric" })}</h1>
       <p class="lede">${who(winner.player)} won with ${winner.vp} VP${g.turns ? ` in ${g.turns} turns` : ""}. ${esc(g.type_label)}, ${g.n_bots ? `${g.n_players - g.n_bots} players and ${g.n_bots === 1 ? "a TwoSheep bot" : g.n_bots + " TwoSheep bots"}` : `${g.n_players} players`}${g.vp_to_win ? `, playing to ${g.vp_to_win}` : ""}. Game ${g.number} on record.</p>
       ${settings.notes ? `<p class="note">${esc(settings.notes)}</p>` : ""}
+
+      ${gameSummary(g)}
 
       <section class="block">
         <h2>Final scores</h2>
@@ -763,7 +749,7 @@
         ${tableView([{ label: "Roll" }, { label: "Rolled", num: true }, { label: "Expected", num: true }], Object.keys(g.dice.counts).map((k) => [k, g.dice.counts[k], num(g.dice.expected[k])]))}</div>
       </section>` : ""}
 
-      <div class="two-col">
+      ${rps.length ? "" : `<div class="two-col">
         ${hasProd ? `<section class="block">
           <h2>Dice production</h2>
           <p class="note">Resources each player received from rolls.</p>
@@ -775,10 +761,14 @@
           <div class="panel table-wrap"><table><thead><tr><th>Player</th>${cards.map(([, l]) => `<th class="num">${l}</th>`).join("")}</tr></thead>
           <tbody>${g.players.map((r) => `<tr><td>${who(r.player)}</td>${cards.map(([k]) => `<td class="num">${r.dev_cards_bought ? r.dev_cards_bought[k] || "" : ""}</td>`).join("")}</tr>`).join("")}</tbody></table></div>
         </section>` : ""}
-      </div>
+      </div>`}
 
       ${replayTable}
-      ${hooksHtml("game", g)}`;
+      ${hooksHtml("game", g)}
+      <nav class="day-nav">
+        ${prevG ? `<a href="#/game/${encodeURIComponent(prevG.id)}">Previous: game ${prevG.number}, ${fmtDate(prevG.date)}</a>` : "<span></span>"}
+        ${nextG ? `<a href="#/game/${encodeURIComponent(nextG.id)}">Next: game ${nextG.number}, ${fmtDate(nextG.date)}</a>` : "<span></span>"}
+      </nav>`;
     hooksDraw("game", g);
     hooksDraw("game-race", g);
     if (g.dice) diceChart(document.getElementById("dice-game"), g.dice, "Dice roll counts for this game, with expected counts");
@@ -799,10 +789,48 @@
         Array.from({ length: turns }, (_, t) => t).filter((t) => t % every === 0 || t === turns - 1)
           .map((t) => [t === 0 ? "After setup" : t].concat(g.players.map((r) => tl.vp[r.player][t]))));
     }
+    autoRail(`#/game/${encodeURIComponent(g.id)}`);
   }
 
   // The momentum module draws the board VP race when it has this game; otherwise the true VP timeline is used.
   const raceHooked = (g) => hookList("game-race").length > 0 && !!(((ROOT.momentum || {}).games || {})[g.id]);
+
+  // ---- Game summary: label, written recap, a line per player, turning points (scripts/story.py, recaps.py) ----
+  const TAG_LABELS = { comeback: "Comeback", close: "Close game", blowout: "Blowout", solid: "Solid win" };
+  const POINT_LABELS = { lead: "Lead", title: "Title", play: "Play of the game", reach: "In reach", win: "Finish" };
+  // Story text names other players as {pid}; swap in their chips.
+  const fillTokens = (text) => esc(text).replace(/\{([\w-]+)\}/g, (_, pid) => who(pid));
+  // The recap is plain text; turn this game's player names into their chips.
+  function linkNames(text, g) {
+    let html = esc(text);
+    for (const r of g.players) {
+      const p = P[r.player];
+      if (isGuest(r.player) || !p || !p.name) continue;
+      const re = new RegExp(`(^|[^\\w>])${p.name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}(?![\\w<])`, "g");
+      html = html.replace(re, (_, pre) => pre + who(r.player));
+    }
+    return html;
+  }
+  function gameSummary(g) {
+    const st = (ROOT.stories || {})[g.id], rc = (ROOT.recaps || {})[g.id];
+    if (!st) return "";
+    const ps = g.players.slice().sort((a, b) => a.rank - b.rank);
+    const wname = isGuest(g.winner) ? "A guest" : P[g.winner] ? P[g.winner].name : g.winner;
+    const lines = ps.map((r) => `<tr><td>${who(r.player)}</td><td class="num">${ord(r.rank)}, ${r.vp} VP</td>
+      <td class="recap-notes">${(st.notes[r.player] || []).map(esc).join('<span class="dot" aria-hidden="true"> · </span>') || '<span class="sub">nothing out of the ordinary</span>'}</td></tr>`).join("");
+    const points = st.points.map((p) => `<li class="tp-${p.kind}"><span class="tp-t">Turn ${p.t}</span><span class="tp-k">${POINT_LABELS[p.kind] || ""}</span><span class="tp-x">${who(p.who)} ${fillTokens(p.text)}</span></li>`).join("");
+    return `<section class="block recap" data-title="Summary">
+        <div class="sec-kicker"><span class="sec-q">${TAG_LABELS[st.tag] || "Summary"}</span>${st.closeness && st.closeness.closest_tier ? `<span class="tag tag-desc">Closest tier</span>` : ""}${st.hidden_threat ? `<span class="tag tag-desc" title="Going into the last turn, the threat index rated someone else more likely to win.">Hidden threat</span>` : ""}</div>
+        <h2>${rc ? esc(rc.headline) : `${esc(wname)} wins, ${ps[0].vp} to ${ps[1].vp}`}</h2>
+        ${rc ? `<div class="verdict recap-text">${linkNames(rc.recap, g)}</div>
+        <p class="note">Recap written by Claude from the numbers on this page, and checked against them.</p>` : `<div class="verdict recap-text">${gameStory(g).text}</div>`}
+        <h3>Player by player</h3>
+        <div class="panel table-wrap"><table><tbody>${lines}</tbody></table></div>
+        <h3>Turning points</h3>
+        <p class="note">${st.lead.changes} lead ${st.lead.changes === 1 ? "change" : "changes"} over ${st.turns} turns, on the points everyone could see. Turn numbers match the race chart below.</p>
+        <ol class="tp">${points}</ol>
+      </section>`;
+  }
 
   function closenessTile(g) {
     const r = ((ROOT.closeness || {}).games || {})[g.id];
@@ -837,10 +865,11 @@
       </section>`;
   }
 
-  function stylePage() {
+  function stylePage(into) {
+    const out = into || main;
     const ranked = S.players.filter((p) => p.games > 0 && p.replay);
     if (!ranked.length) {
-      main.innerHTML = `<h1>Play style</h1>${filterBar()}<p class="empty">No decoded replays in these games yet.</p>`;
+      out.innerHTML = `<h1>Play style</h1>${filterBar()}<p class="empty">No decoded replays in these games yet.</p>`;
       return;
     }
     const n = S.summary.games_with_replays;
@@ -864,7 +893,7 @@
       return `<td><div class="cell" style="--fill:color-mix(in oklab, var(--div-neg) ${((r / maxRate) * 60).toFixed(0)}%, var(--div-mid))" title="${esc(a.name)} stole ${h.steals} cards from ${esc(b.name)} in ${h.replay_games} games together"><b>${num(r, 2)}</b><span>${h.steals} in ${h.replay_games}</span></div></td>`;
     }).join("")}</tr>`).join("");
 
-    main.innerHTML = `
+    out.innerHTML = `
       <h1>Play style</h1>
       <p class="lede">How everyone plays, from TwoSheep's turn-by-turn record of ${n} ${n === 1 ? "game" : "games"}. Numbers are per game unless they say otherwise.</p>
       ${filterBar()}
@@ -873,7 +902,7 @@
       ${luckSection()}
       <section class="block">
         <h2>Dice luck: actual against expected</h2>
-        <p class="note">A second way to measure luck: cards each player got from rolls against what their own settlements and cities would have produced with average dice at the moment of each roll, robber included. Above 1.00× means the dice ran hot for them. Good placement shows up in the expected column; luck is the gap. Gold counts as one card. Unlike the table above, this is not compared with tablemates, so dice that favored the whole table lift everyone.</p>
+        <p class="note">A second way to measure luck: cards each player got from rolls against what their own settlements and cities would have produced with average dice at the moment of each roll, robber included. Above 1.00× means the dice ran hot for them. Good placement shows up in the expected column; luck is the gap. Gold counts as one card. Unlike dice luck by player, this is not compared with tablemates, so dice that favored the whole table lift everyone.</p>
         <div class="panel table-wrap"><table>
           <thead><tr><th>Player</th><th class="num">Games</th><th class="num">From dice</th><th class="num">Expected</th><th class="num">Difference</th><th class="num">Luck</th><th class="hide-sm" style="width:28%"></th></tr></thead>
           <tbody>${lucky.map((p) => { const r = p.replay; return row([`<td>${who(p.id)}</td>`, `<td class="num">${r.games}</td>`, td(r.avg_resources_from_dice), td(r.avg_expected_from_dice),
@@ -923,7 +952,8 @@
   }
 
   // ---- Findings: group-level models and tests ------------------------------------------
-  function findingsPage() {
+  function findingsPage(into) {
+    const out = into || main;
     const I = ins();
     const order = S.players.filter((p) => p.games > 0).map((p) => p.id);  // leaderboard order, never re-sorted
     const rowsFor = (obj, f) => order.filter((pid) => obj && obj[pid]).map((pid) => f(pid, obj[pid]));
@@ -936,7 +966,7 @@
     const d = I.dice_calibration;
     const cl = ROOT.closeness;
 
-    main.innerHTML = `
+    out.innerHTML = `
       <h1>Findings</h1>
       <p class="lede">What the games say as a group: openings, seats, the robber, trading, where winning points come from, the dice, and which games were closest.</p>
       <p class="note">Most charts here put a number next to what pure luck would give. Lines through dots are 95% intervals: the range the true value most likely sits in. When an interval crosses the "no effect" line, the games so far can't tell that effect apart from luck.</p>
@@ -980,7 +1010,7 @@
 
       <section class="block">
         <h2>Robbed vs an even split ${info("steal_share", "Steal share vs an even split")}</h2>
-        <p class="note"><b>How to read:</b> 1× means a player lost exactly their fair share of stolen cards, if everyone else's steals were split evenly among their possible victims. Right of the line: robbed more; left: robbed less. This ignores the board, so a player who leads or has the best production can be robbed more for good reasons. The <a href="#/network">Network</a> page has a version that allows for that.</p>
+        <p class="note"><b>How to read:</b> 1× means a player lost exactly their fair share of stolen cards, if everyone else's steals were split evenly among their possible victims. Right of the line: robbed more; left: robbed less. This ignores the board, so a player who leads or has the best production can be robbed more for good reasons. <a href="#/robber/over-robbed">Robbed beyond the board</a> has a version that allows for that.</p>
         ${Object.keys(I.steal_share || {}).length ? `<div class="panel"><div class="chart" id="f-steal"></div></div>` : guardNote(0, 10)}
       </section>
 
@@ -1159,7 +1189,7 @@
       <h2>What's recorded</h2>
       <p>${s.games} ${s.games === 1 ? "game" : "games"}. By type: ${Object.entries(s.games_by_type).map(([k, n]) => `${esc(k)} ${n}`).join(", ")}. Seat order is recorded for ${s.games_with_seats}, dice counts for ${s.games_with_dice}, and turn-by-turn replays for ${s.games_with_replays}. ${s.games_with_guests} ${s.games_with_guests === 1 ? "game includes" : "games include"} guests.</p>
       <h2>Models and intervals</h2>
-      <p>Every interval on the site is 95%. Intervals come from a bootstrap that resamples whole games unless a note says otherwise. Only two effects are tested, both chosen in advance and only in the all-games view: the opening effect on the Findings page, and (once the decoder records each roll) whether early dice luck snowballs. Everything else is an estimate with an interval and no significance wording.</p>
+      <p>Every interval on the site is 95%. Intervals come from a bootstrap that resamples whole games unless a note says otherwise. Only two effects are tested, both chosen in advance and only in the all-games view: the opening effect on the Openings page, and (once the decoder records each roll) whether early dice luck snowballs. Everything else is an estimate with an interval and no significance wording.</p>
       <p>Guards: a player needs 10 games in a view for a per-player row or a "vs the table" marker. A model needs 30 games; a smaller view reuses the all-games estimate and says so. Guests and bots never get a row, but they stay in every denominator and choice set.</p>
       ${ROOT.views.all.insights && ROOT.views.all.insights.opening_robustness ? `<h3>Opening effect: spot or player? ${info("robustness", "Robustness refits")}</h3>
       <p>The headline b (all games) next to four refits that control for who the player is, the seat, or use the full finishing order. Bars are b ± 1.96 SE.</p>
@@ -1186,27 +1216,421 @@
     main.innerHTML = `<h1>Not found</h1><p class="lede">${msg} <a href="#/">Go to the leaderboard</a></p>`;
   }
 
+  // ---- Head to head (a block on the Players page) -------------------------------------------------
+  function h2hBlock() {
+    const ranked = S.players.filter((p) => p.games > 0);
+    const H = {};
+    for (const h of S.head_to_head) H[h.player + "|" + h.opponent] = h;
+    const fill = (r) => {
+      const t = Math.min(1, Math.abs(r - 0.5) * 2) * 60;
+      const pole = r >= 0.5 ? "var(--div-pos)" : "var(--div-neg)";
+      return `color-mix(in oklab, ${pole} ${t.toFixed(0)}%, var(--div-mid))`;
+    };
+    const head = ranked.map((p) => `<th class="colh" scope="col">${who(p.id)}</th>`).join("");
+    const body = ranked.map((a) => `<tr><th class="rowh" scope="row">${who(a.id)}</th>${ranked.map((b) => {
+      if (a.id === b.id) return `<td><div class="cell self" aria-label="same player"></div></td>`;
+      const h = H[a.id + "|" + b.id];
+      if (!h) return `<td><div class="cell" style="--fill:transparent"><span>no games</span></div></td>`;
+      return `<td><div class="cell" style="--fill:${fill(h.ahead_rate)}" title="${esc(a.name)} finished ahead of ${esc(b.name)} in ${h.ahead + h.tied / 2} of ${h.games} games"><b>${pct(h.ahead_rate)}</b><span>${h.ahead + h.tied / 2} of ${h.games}</span></div></td>`;
+    }).join("")}</tr>`).join("");
+    return `<section class="block" id="sec-h2h">
+        <h2>Head to head</h2>
+        <p class="note">Read across a row: how often that player finished ahead of each opponent in the games they both played. Ties count as half.</p>
+        <div class="panel" style="padding:14px">
+          <div class="table-wrap"><table class="matrix"><thead><tr><th></th>${head}</tr></thead><tbody>${body}</tbody></table></div>
+          <div class="scale"><span>Usually behind</span><span class="bar" aria-hidden="true"></span><span>Usually ahead</span></div>
+        </div>
+      </section>`;
+  }
+
+  // ---- Players: everyone at a glance, then head to head ---------------------------------------------
+  function playersPage() {
+    const ranked = S.players.filter((p) => p.games > 0);
+    if (!ranked.length) {
+      main.innerHTML = `<h1>Players</h1>${filterBar()}<p class="empty">No games recorded in this view yet.</p>`;
+      return;
+    }
+    const B = (ROOT.classes || {}).badges || {};
+    const card = (p) => {
+      const bs = ((B[p.id] || {}).badges || []).map((b) => b.name);
+      return `<a class="p-card" href="#/player/${encodeURIComponent(p.id)}">
+        <div class="hot-top">${who(p.id, false)}${onFire(p.id) ? `<span class="fire-badge">${FLAME}On fire</span>` : ""}</div>
+        <div class="p-rank">Ranked ${ord(p.leaderboard_rank)}, ${p.games} ${p.games === 1 ? "game" : "games"}</div>
+        <dl><dd>${fmtSigned(p.above_expected, 1)}</dd><dt>Above expected</dt><dd>${pct(p.win_rate)}</dd><dt>Win rate</dt><dd>${p.wins}</dd><dt>Wins</dt></dl>
+        ${bs.length ? `<div class="chipline">${bs.map((b) => `<span class="mini"><b>${esc(b)}</b></span>`).join("")}</div>` : ""}
+      </a>`;
+    };
+    main.innerHTML = `
+      <h1>Players</h1>
+      <p class="lede">Pick a player for their full page: record, luck, robber, trading and style. Badges are style labels that are clear of noise over all games.</p>
+      ${filterBar()}
+      <div class="p-grid">${ranked.map(card).join("")}</div>
+      ${h2hBlock()}`;
+  }
+
+  const playerSwitch = (pid) => `<nav class="p-switch" aria-label="Players"><a class="p-all" href="#/players">All players</a>${
+    S.players.filter((p) => p.games > 0 || p.id === pid).map((p) => who(p.id).replace('class="who"', `class="who"${p.id === pid ? ' aria-current="page"' : ""}`)).join("")}</nav>`;
+
+  // ---- Topic pages ----------------------------------------------------------------------------------
+  // A topic page draws the original style, findings and network blocks into holding boxes, then keeps only
+  // the sections Topics assigns to it, in its order, with the question, answer and confidence tag on top.
+  const TP = window.Topics;
+  const SRC = {
+    style: (el) => stylePage(el),
+    findings: (el) => findingsPage(el),
+    network: (el) => { if (Pages.network) Pages.network.render(Object.assign(ctx(), { main: el })); },
+  };
+  const slugOf = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+  const headText = (h) => {
+    const c = h.cloneNode(true);
+    c.querySelectorAll(".info, .sub").forEach((x) => x.remove());
+    return c.textContent.replace(/\s+/g, " ").trim();
+  };
+  const tagHtml = (tag) => (TP.TAGS[tag] ? `<span class="tag tag-${tag}" title="${esc(TP.TAGS[tag].tip)}">${TP.TAGS[tag].label}</span>` : "");
+  const tagKey = () => `<p class="note key-note">${Object.keys(TP.TAGS).map(tagHtml).join("")}<span>Tags say how sure each answer is. Every interval is 95%. <a href="#/about">How it works</a></span></p>`;
+  const qRow = (q) => `<a class="q-row" data-tag="${q.a ? q.a.tag : ""}" href="#/${q.topic}/${q.id}"><span class="q-q">${esc(q.q)}</span>`
+    + (q.a ? `<span class="q-a">${tagHtml(q.a.tag)}${esc(q.a.text)}</span>` : `<span class="q-a empty">Not enough games in this view yet.</span>`) + `</a>`;
+
+  // "How to read" paragraphs fold away; the answer line above the chart carries the result.
+  function foldHowTo(root) {
+    root.querySelectorAll(".note").forEach((n) => {
+      const b = n.firstChild;
+      if (!b || b.nodeType !== 1 || b.tagName !== "B" || !/^How to read/.test(b.textContent)) return;
+      b.remove();
+      const d = document.createElement("details"), body = document.createElement("div");
+      d.className = "howto";
+      d.innerHTML = "<summary>How to read this</summary>";
+      body.className = "note";
+      body.append(...n.childNodes);
+      d.append(body);
+      n.replaceWith(d);
+    });
+  }
+  // The <h3> parts of a long section from index `from` on start collapsed, each under its own title or question.
+  function foldParts(sec, e, c) {
+    [...sec.querySelectorAll(":scope > h3")].slice(e.fold).forEach((h3) => {
+      const title = headText(h3);
+      const sub = (e.subs || []).find((u) => u.match === title);
+      const a = sub ? TP.answer(sub.answer, c) : null;
+      const d = document.createElement("details"), sm = document.createElement("summary");
+      d.className = "part";
+      if (sub) d.id = "sec-" + sub.id;
+      sm.innerHTML = `<span class="part-t">${esc(sub ? sub.q : title)}</span>${a ? tagHtml(a.tag) : ""}${a && a.text ? `<span class="part-a">${esc(a.text)}</span>` : ""}`;
+      const rest = [];
+      for (let n = h3.nextSibling; n && !(n.nodeType === 1 && n.tagName === "H3"); n = n.nextSibling) rest.push(n);
+      h3.replaceWith(d);
+      h3.removeAttribute("style");
+      let top = h3;
+      if (sub) h3.className = "part-h";
+      else {
+        // The summary already carries the title; keep only the method note button.
+        const infos = [...h3.querySelectorAll(":scope > .info")];
+        top = infos.length ? document.createElement("div") : null;
+        if (top) { top.className = "part-about"; top.append("About this part ", ...infos); }
+      }
+      d.append(sm, ...(top ? [top] : []), ...rest);
+    });
+  }
+  function decorate(sec, e, c) {
+    const a = TP.answer(e.answer, c);
+    sec.id = "sec-" + e.id;
+    const h2 = sec.querySelector(":scope > h2");
+    const infos = [...h2.querySelectorAll(":scope > .info")];
+    h2.textContent = (a && a.head) || e.title;
+    infos.forEach((i) => h2.append(" ", i));
+    h2.insertAdjacentHTML("beforebegin", `<div class="sec-kicker"><span class="sec-q">${esc(e.q)}</span>${a ? tagHtml(a.tag) : ""}<a class="sec-link" href="#/${e.topic}/${e.id}" title="Link to this section" aria-label="Link to this section">#</a></div>`);
+    if (a && a.text) h2.insertAdjacentHTML("afterend", `<div class="verdict">${esc(a.text)}</div>`);
+    foldHowTo(sec);
+    if (e.fold !== undefined) foldParts(sec, e, c);
+    const rel = (e.rel || []).map((r) => [r, TP.titleOf(r)]).filter((r) => r[1]);
+    if (rel.length) sec.insertAdjacentHTML("beforeend", `<div class="related">Related:${rel.map(([r, t]) => `<a href="#/${r}">${esc(t)}</a>`).join("")}</div>`);
+  }
+
+  function topicPage(key) {
+    const T = TP.topic(key), secs = TP.sectionsOf(key);
+    // The shared trade and robber graph opens on the layer this topic is about.
+    const layer = (secs.find((s) => s.layer) || {}).layer;
+    if (layer) { try { localStorage.setItem("net-layer", layer); } catch (e) { /* storage blocked */ } }
+    main.innerHTML = `<h1>${esc(T.title)}</h1><p class="lede">${esc(T.lede)}</p>${filterBar()}${tagKey()}
+      <div id="topic-body">${T.sources.map((s) => `<div data-src="${s}"></div>`).join("")}</div>`;
+    const body = document.getElementById("topic-body");
+    for (const s of T.sources) SRC[s](body.querySelector(`[data-src="${s}"]`));
+    const found = [];
+    for (const e of secs) {
+      const box = body.querySelector(`[data-src="${e.src}"]`);
+      const sec = [...box.querySelectorAll("section.block")].find((s) => {
+        const h = s.querySelector(":scope > h2");
+        return h && headText(h) === e.match;
+      });
+      if (sec) found.push({ e, sec });
+    }
+    if (!found.length) {
+      body.innerHTML = `<p class="empty">No decoded replays in these games yet.</p>`;
+      return;
+    }
+    const c = ctx();
+    found.forEach(({ e, sec }) => decorate(sec, e, c));
+    body.replaceChildren(...found.map((f) => f.sec));
+    layoutWithRail(found.map(({ e }) => ({ id: "sec-" + e.id, slug: e.id, title: e.title })), "#/" + key);
+  }
+
+  // ---- Questions: every question with its short answer ------------------------------------------------
+  function questionsPage() {
+    const qs = TP.questions(ctx());
+    const count = (t) => qs.filter((q) => q.a && q.a.tag === t).length;
+    main.innerHTML = `
+      <h1>Questions</h1>
+      <p class="lede">Everything this site tries to answer, with the short answer from the games so far. Pick a question to see the chart behind it.</p>
+      ${filterBar()}
+      <div class="chips q-filter" role="group" aria-label="Filter by confidence"><span class="chips-k">Show</span>
+        <button type="button" class="chip on" data-tag="" aria-pressed="true">All <span class="n">${qs.length}</span></button>
+        ${Object.keys(TP.TAGS).map((t) => `<button type="button" class="chip" data-tag="${t}" aria-pressed="false" title="${esc(TP.TAGS[t].tip)}">${TP.TAGS[t].label} <span class="n">${count(t)}</span></button>`).join("")}</div>
+      ${TP.TOPICS.map((t) => `<section class="block q-topic">
+        <h2><a href="#/${t.key}">${esc(t.title)}</a></h2>
+        <p class="note">${esc(t.lede)}</p>
+        <div class="q-list">${qs.filter((q) => q.topic === t.key).map(qRow).join("")}</div>
+      </section>`).join("")}`;
+    const btns = [...main.querySelectorAll(".q-filter button")];
+    btns.forEach((b) => b.addEventListener("click", () => {
+      btns.forEach((x) => { x.classList.toggle("on", x === b); x.setAttribute("aria-pressed", String(x === b)); });
+      main.querySelectorAll(".q-row").forEach((r) => { r.hidden = !!b.dataset.tag && r.dataset.tag !== b.dataset.tag; });
+      main.querySelectorAll(".q-topic").forEach((s) => { s.hidden = !s.querySelector(".q-row:not([hidden])"); });
+    }));
+  }
+  // On the home page: the answers that are clear of luck so far.
+  function answersTeaser() {
+    const all = TP.questions(ctx());
+    const qs = all.filter((q) => q.a && q.a.tag === "clear").slice(0, 6);
+    if (!qs.length) return "";
+    return `<section class="block">
+        <h2>What the games say</h2>
+        <p class="note">The answers that are clear of luck so far. <a href="#/questions">All ${all.length} questions</a></p>
+        <div class="q-list">${qs.map(qRow).join("")}</div>
+      </section>`;
+  }
+
+  // ---- Section menu: a rail on wide screens, a jump list in the sticky bar on narrow ones -------------
+  let spyOff = null;
+  function layoutWithRail(items, base) {
+    const lay = document.createElement("div"), rail = document.createElement("nav"), col = document.createElement("div");
+    lay.className = "rail-layout"; rail.className = "rail"; col.className = "rail-body";
+    rail.setAttribute("aria-label", "On this page");
+    rail.innerHTML = `<div class="rail-h">On this page</div><ol>${items.map((i) => `<li><a href="${base}/${i.slug}">${esc(i.title)}</a></li>`).join("")}</ol>`;
+    col.append(...main.childNodes);
+    lay.append(rail, col);
+    main.append(lay);
+    document.body.classList.add("has-rail");
+    const jump = document.getElementById("sec-jump");
+    jump.innerHTML = `<option value="">Jump to a section</option>${items.map((i) => `<option value="${esc(i.slug)}">${esc(i.title)}</option>`).join("")}`;
+    jump.dataset.base = base;
+    const links = [...rail.querySelectorAll("a")], els = items.map((i) => document.getElementById(i.id));
+    let tick = false;
+    const spy = () => {
+      tick = false;
+      let k = -1;
+      els.forEach((el, i) => { if (el && el.getBoundingClientRect().top < 150) k = i; });
+      links.forEach((a, i) => a.classList.toggle("on", i === k));
+      if (document.activeElement !== jump) jump.value = k >= 0 ? items[k].slug : "";
+    };
+    const on = () => { if (!tick) { tick = true; requestAnimationFrame(spy); } };
+    window.addEventListener("scroll", on, { passive: true });
+    spyOff = () => window.removeEventListener("scroll", on);
+    spy();
+  }
+  // Player and game pages get the same menu from their own headings.
+  function autoRail(base) {
+    foldHowTo(main);
+    const items = [];
+    main.querySelectorAll("section.block").forEach((s) => {
+      const h = s.querySelector(":scope > h2");
+      if (!h) return;
+      const title = s.dataset.title || headText(h), slug = slugOf(title);
+      if (!slug || items.some((i) => i.slug === slug)) return;
+      s.id = "sec-" + slug;
+      items.push({ id: s.id, slug, title });
+    });
+    if (items.length >= 4) layoutWithRail(items, base);
+  }
+  function scrollToSec(id) {
+    const go = () => {
+      const el = document.getElementById("sec-" + id);
+      if (!el) return false;
+      if (el.tagName === "DETAILS") el.open = true;
+      const part = el.closest("details.part");
+      if (part) part.open = true;
+      el.scrollIntoView();
+      return true;
+    };
+    if (!go()) { window.scrollTo(0, 0); return; }
+    // Charts above the target redraw once the page settles, which moves it; land on it again.
+    requestAnimationFrame(() => requestAnimationFrame(go));
+    setTimeout(go, 350);
+  }
+
+  // ---- Highlight one player everywhere ----------------------------------------------------------------
+  let HL = "";
+  try { HL = localStorage.getItem("hl") || ""; } catch (e) { /* storage blocked */ }
+  const hlIn = (players) => (HL && players.some((p) => p.id === HL) ? HL : undefined);
+  function applyHL() {
+    let st = document.getElementById("hl-style");
+    if (!st) { st = document.createElement("style"); st.id = "hl-style"; document.head.appendChild(st); }
+    if (!P[HL] || !/^[\w-]+$/.test(HL)) HL = "";
+    const q = HL ? `.who[data-pid="${HL}"]` : "";
+    st.textContent = !q ? "" : `
+      ${q} { outline: 1.5px solid var(--ink); outline-offset: 3px; border-radius: 3px; }
+      table:not(.games-table):not(.matrix) tbody tr:has(> :nth-child(-n+2) ${q}) > * { background: var(--hl-row); }
+      table.matrix tr:has(> th.rowh ${q}) > th.rowh, table.matrix th.colh:has(${q}) { background: var(--hl-row); }
+      .fp-lab:has(${q}), .p-card:has(${q}), .hot-card:has(${q}) { background: var(--hl-row); }`;
+    const sel = document.getElementById("hl-select"), link = document.getElementById("hl-link");
+    sel.value = HL;
+    link.hidden = !HL;
+    if (HL) link.setAttribute("href", `#/player/${encodeURIComponent(HL)}`);
+  }
+
+  // ---- Sticky bar: which games are showing, highlight, section jump ---------------------------------------
+  function updateBar() {
+    document.getElementById("view-label").textContent = viewLabel(VIEW);
+    document.getElementById("view-pill").classList.toggle("filtered", VIEW !== "all");
+    closeViewPop();
+  }
+  function closeViewPop() {
+    document.getElementById("view-pop").hidden = true;
+    document.getElementById("view-pill").setAttribute("aria-expanded", "false");
+  }
+  function setupBar() {
+    const pill = document.getElementById("view-pill"), pop = document.getElementById("view-pop");
+    pill.addEventListener("click", () => {
+      if (!pop.hidden) return closeViewPop();
+      pop.innerHTML = filterBar() || `<p class="note">Only one kind of game is recorded so far.</p>`;
+      pop.hidden = false;
+      pill.setAttribute("aria-expanded", "true");
+    });
+    document.addEventListener("click", (e) => { if (!pop.hidden && !pop.contains(e.target) && !pill.contains(e.target)) closeViewPop(); });
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !pop.hidden) { closeViewPop(); pill.focus(); } });
+    const sel = document.getElementById("hl-select");
+    sel.insertAdjacentHTML("beforeend", ROOT.views.all.players.filter((p) => p.games > 0).map((p) => `<option value="${esc(p.id)}">${esc(p.name)}</option>`).join(""));
+    sel.addEventListener("change", () => {
+      HL = sel.value;
+      try { localStorage.setItem("hl", HL); } catch (e) { /* storage blocked */ }
+      applyHL();
+      route(true); // some charts dim the other players
+    });
+    const jump = document.getElementById("sec-jump");
+    jump.addEventListener("change", () => { if (jump.value) location.hash = `${jump.dataset.base}/${jump.value}${viewQuery(VIEW)}`; jump.blur(); });
+  }
+
+  // ---- Search: pages, questions, players and games -----------------------------------------------------------
+  function searchIndex() {
+    const out = [];
+    const add = (label, hint, href, extra, top) => out.push({ label, hint, href, top: !!top, low: label.toLowerCase(), text: `${label} ${hint} ${extra || ""}`.toLowerCase() });
+    add("Leaderboard", "Page", "#/", "home ranking", true);
+    add("Questions", "Page", "#/questions", "findings answers index", true);
+    for (const t of TP.TOPICS) add(t.title, "Topic", "#/" + t.key, t.lede, true);
+    add("Players", "Page", "#/players", "head to head", true);
+    add("Head to head", "Players", "#/players/h2h", "matrix");
+    add("Games", "Page", "#/games", "list dice", true);
+    add("How it works", "Page", "#/about", "methods ranking about", true);
+    for (const p of ROOT.views.all.players.filter((x) => x.games > 0)) add(p.name, "Player", `#/player/${encodeURIComponent(p.id)}`, (p.aliases || []).join(" "), true);
+    for (const q of TP.questions(ctx())) add(q.q, `${TP.topic(q.topic).nav}: ${q.title}`, `#/${q.topic}/${q.id}`, q.a ? `${q.a.head || ""} ${q.a.text || ""}` : "");
+    for (const g of ROOT.views.all.games) {
+      const w = isGuest(g.winner) ? "a guest" : (P[g.winner] ? P[g.winner].name : g.winner);
+      add(`Game ${g.number}, ${fmtDate(g.date)}`, `${w} won`, `#/game/${encodeURIComponent(g.id)}`, `${g.type_label} ${g.date} ${fmtDate(g.date, { month: "long", day: "numeric", year: "numeric" })}`);
+    }
+    return out;
+  }
+  function setupSearch() {
+    const pal = document.getElementById("pal"), input = document.getElementById("pal-in"), list = document.getElementById("pal-list");
+    let items = [], shown = [], cur = 0, back = null;
+    const mark = () => {
+      [...list.children].forEach((li, i) => li.setAttribute("aria-selected", String(i === cur)));
+      const li = list.children[cur];
+      if (li) { input.setAttribute("aria-activedescendant", li.id); li.scrollIntoView({ block: "nearest" }); }
+    };
+    const render = () => {
+      const q = input.value.trim().toLowerCase(), toks = q.split(/\s+/).filter(Boolean);
+      const score = (i) => (i.low.startsWith(q) ? 0 : toks.every((t) => i.low.includes(t)) ? 1 : 2);
+      shown = (toks.length ? items.filter((i) => toks.every((t) => i.text.includes(t))).sort((a, b) => score(a) - score(b)) : items.filter((i) => i.top)).slice(0, toks.length ? 12 : 20);
+      cur = 0;
+      list.innerHTML = shown.length
+        ? shown.map((i, k) => `<li role="option" id="pal-o-${k}"><a data-keep href="${esc(i.href + viewQuery(VIEW))}" tabindex="-1"><span>${esc(i.label)}</span><span class="pal-hint-r">${esc(i.hint)}</span></a></li>`).join("")
+        : `<li><p class="pal-empty">Nothing matches.</p></li>`;
+      mark();
+    };
+    const close = (refocus) => { pal.hidden = true; if (refocus && back && back.focus) back.focus(); };
+    const open = () => {
+      if (!ROOT) return;
+      items = searchIndex();
+      back = document.activeElement;
+      pal.hidden = false;
+      input.value = "";
+      render();
+      input.focus();
+    };
+    document.getElementById("search-btn").addEventListener("click", open);
+    input.addEventListener("input", render);
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+        e.preventDefault();
+        if (shown.length) { cur = (cur + (e.key === "ArrowDown" ? 1 : shown.length - 1)) % shown.length; mark(); }
+      } else if (e.key === "Enter" && shown[cur]) {
+        e.preventDefault();
+        close(false);
+        location.hash = shown[cur].href.slice(1) + viewQuery(VIEW);
+      }
+    });
+    list.addEventListener("click", (e) => { if (e.target.closest("a")) close(false); });
+    pal.addEventListener("mousedown", (e) => { if (e.target === pal) close(true); });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && !pal.hidden) { close(true); return; }
+      const typing = /^(INPUT|TEXTAREA|SELECT)$/.test((e.target && e.target.tagName) || "") || (e.target && e.target.isContentEditable);
+      if (((e.key === "k" || e.key === "K") && (e.metaKey || e.ctrlKey)) || (e.key === "/" && !typing && !e.metaKey && !e.ctrlKey && !e.altKey)) {
+        e.preventDefault();
+        if (pal.hidden) open(); else input.focus();
+      }
+    });
+  }
+
   // ---- Router -------------------------------------------------------------------
-  function route() {
+  // #/<page>[/<id>][/<section>]?view=..&players=..  A link to another section of the page already on screen
+  // only scrolls; everything else renders the page again.
+  let RENDERED = null;
+  const NAV_KEYS = { "": "leaderboard", day: "leaderboard", questions: "questions", players: "players", player: "players", h2h: "players",
+    games: "games", game: "games", about: "about" };
+  function route(force) {
     Tip.hide();
     const [path, query] = location.hash.replace(/^#\/?/, "").split("?");
     const qs = new URLSearchParams(query || "");
     const want = viewKey(qs.get("view") || "all", qs.get("players"));
-    setView(ROOT.views[want] ? want : ROOT.views[qs.get("view")] ? qs.get("view") : "all");
-    PAGE_PATH = path || "";
-    const parts = PAGE_PATH.split("/").map(decodeURIComponent);
+    const view = ROOT.views[want] ? want : ROOT.views[qs.get("view")] ? qs.get("view") : "all";
+    const parts = (path || "").split("/").map(decodeURIComponent);
     const page = parts[0] || "";
-    const navKey = { "": "leaderboard", player: "leaderboard", day: "leaderboard", h2h: "h2h", style: "style", findings: "findings", games: "games", game: "games", about: "about" }[page] || (Pages[page] && page);
+    if (TP.REDIRECTS[page]) { location.replace(`#/${TP.REDIRECTS[page]}${query ? "?" + query : ""}`); return; }
+    const topic = TP.topic(page);
+    // How many path parts pick the page; one more picks a section on it.
+    const n = topic || page === "players" ? 1 : page === "player" || page === "game" ? 2 : parts.length;
+    const sec = page === "h2h" ? "h2h" : parts[n];
+    const key = `${page === "h2h" ? "players" : parts.slice(0, n).join("/")}|${view}`;
+    PAGE_PATH = path || "";
+    if (force !== true && key === RENDERED) {
+      if (sec) scrollToSec(sec); else window.scrollTo(0, 0);
+      scopeLinks(document);
+      return;
+    }
+    const keepY = force === true ? window.scrollY : null;
+    setView(view);
+    if (spyOff) { spyOff(); spyOff = null; }
+    document.body.classList.remove("has-rail");
+    const navKey = topic ? page : NAV_KEYS[page] || (Pages[page] && page);
     document.querySelectorAll("[data-nav]").forEach((a) => {
       if (a.dataset.nav === navKey) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current");
     });
     document.body.classList.toggle("is-home", page === "");
     if (page === "") leaderboard();
+    else if (topic) topicPage(page);
+    else if (page === "questions") questionsPage();
+    else if (page === "players" || page === "h2h") playersPage();
     else if (page === "player") playerPage(parts[1]);
     else if (page === "day") dayPage(parts[1]);
-    else if (page === "h2h") h2hPage();
-    else if (page === "style") stylePage();
-    else if (page === "findings") findingsPage();
     else if (page === "games") gamesPage();
     else if (page === "game") gamePage(parts[1]);
     else if (page === "about") { aboutPage(); drawAboutCharts(); }
@@ -1216,7 +1640,13 @@
     const title = S.site.title || "Catan Stats";
     const h1 = main.querySelector("h1");
     document.title = h1 && page !== "" ? `${h1.textContent} | ${title}` : title;
-    window.scrollTo(0, 0);
+    RENDERED = key;
+    updateBar();
+    const cur = document.querySelector('.nav [aria-current="page"]');
+    if (cur && cur.scrollIntoView) cur.scrollIntoView({ block: "nearest", inline: "nearest" });
+    if (keepY !== null) window.scrollTo(0, keepY);
+    else if (sec) scrollToSec(sec);
+    else window.scrollTo(0, 0);
   }
 
   function setView(key) {
@@ -1242,7 +1672,7 @@
       const dark = root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
       root.dataset.theme = dark ? "light" : "dark";
       try { localStorage.setItem("theme", root.dataset.theme); } catch (e) {}
-      route(); // charts read CSS variables at draw time
+      route(true); // charts read CSS variables at draw time
     });
   }
 
@@ -1267,7 +1697,10 @@
     document.getElementById("site-title").textContent = S.site.title || "Catan Stats";
     drawMasthead();
     document.getElementById("built-at").textContent = `Updated ${new Date(S.generated_at).toLocaleString("en-US", { dateStyle: "medium", timeStyle: "short" })}.`;
-    window.addEventListener("hashchange", route);
+    setupBar();
+    setupSearch();
+    applyHL();
+    window.addEventListener("hashchange", () => route());
     route();
   }
   init();
