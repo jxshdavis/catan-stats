@@ -1,0 +1,13 @@
+{
+  "about": "Hand-named chapters for history.html. Each era is a name and the id of its first game. history_data.py snaps each start to the first game of that night, ends each era where the next one starts, and computes dates and counts. New games extend the last era until a new entry is added here.",
+  "eras": [
+    {"name": "The founding table", "first": "2025-01-15-a"},
+    {"name": "JD's spring", "first": "2025-02-28-a"},
+    {"name": "MS's rise", "first": "2025-07-04-a"},
+    {"name": "DH's January", "first": "2026-01-07-a"},
+    {"name": "Late-winter three-handers", "first": "2026-02-10-a"},
+    {"name": "The long pause", "first": "2026-06-05-a"},
+    {"name": "MS's autumn", "first": "2026-09-01-a"},
+    {"name": "The open field", "first": "2026-10-11-a"}
+  ]
+}

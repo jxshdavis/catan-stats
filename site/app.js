@@ -637,12 +637,50 @@
     });
   }
 
+  // The Games tab has two views: the list (a table, newest first) and the book, which reads through every
+  // game's headline in order. The choice and the book's reading order are remembered on this device.
+  const stored = (k, d) => { try { return localStorage.getItem(k) || d; } catch (e) { return d; } };
+  const store = (k, v) => { try { localStorage.setItem(k, v); } catch (e) { /* storage blocked */ } };
+  const gameHeadline = (g) => {
+    const rc = (ROOT.recaps || {})[g.id];
+    if (rc && rc.headline) return esc(rc.headline);
+    const ps = g.players.slice().sort((a, b) => a.rank - b.rank);
+    const wname = isGuest(g.winner) ? "A guest" : P[g.winner] ? P[g.winner].name : g.winner;
+    return `${esc(wname)} wins, ${ps[0].vp} to ${ps[1] ? ps[1].vp : 0}`;
+  };
+  const orderLine = (g) => `<div class="order">${g.players.map((r) => `<span>${who(r.player).replace('class="who', `class="who${r.rank === 1 ? " win" : ""}`)} <span class="vp">${r.vp}</span></span>`).join("")}</div>`;
+  function bookHtml(order) {
+    const games = S.games.slice().sort((a, b) => (order === "new" ? b.number - a.number : a.number - b.number));
+    let month = "", out = "";
+    for (const g of games) {
+      const m = g.date.slice(0, 7);
+      if (m !== month) {
+        if (month) out += `</ol>`;
+        month = m;
+        const n = games.filter((x) => x.date.slice(0, 7) === m).length;
+        out += `<h2 class="book-month">${fmtDate(m + "-01", { month: "long", year: "numeric" })} <span class="sub">${n} ${n === 1 ? "game" : "games"}</span></h2><ol class="book-list">`;
+      }
+      out += `<li class="book-entry">
+        <div class="book-no">Game ${g.number}<span class="dot" aria-hidden="true"> · </span>${fmtDate(g.date, { weekday: "short", month: "short", day: "numeric" })}</div>
+        <h3 class="book-head"><a href="#/game/${encodeURIComponent(g.id)}">${gameHeadline(g)}</a></h3>
+        <div class="book-meta"><span class="book-map">${esc(g.type_label)}</span>${orderLine(g)}</div>
+      </li>`;
+    }
+    return `<div class="book">${out}${month ? "</ol>" : ""}</div>`;
+  }
+
   function gamesPage() {
     const d = S.dice_overall;
+    const mode = stored("games-view", "book") === "list" ? "list" : "book";
+    const order = stored("book-order", "old") === "new" ? "new" : "old";
+    const n = S.summary.games;
+    const sw = (key, val, cur, text) => `<button type="button" class="chip${val === cur ? " on" : ""}" data-set="${key}" data-val="${val}" aria-pressed="${val === cur}">${text}</button>`;
     main.innerHTML = `
       <h1>Games</h1>
-      <p class="lede">${S.summary.games} ${S.summary.games === 1 ? "game" : "games"} recorded, newest first.</p>
+      <p class="lede">${n} ${n === 1 ? "game" : "games"} recorded${mode === "book" ? `, one headline each, ${order === "new" ? "newest" : "oldest"} first` : ", newest first"}.</p>
       ${filterBar()}
+      <div class="chips size games-view" role="group" aria-label="How to show the games"><span class="chips-k">Show as</span>${sw("games-view", "book", mode, "Book")}${sw("games-view", "list", mode, "List")}${mode === "book" ? `<span class="chips-k book-order-k">Read</span>${sw("book-order", "old", order, "Oldest first")}${sw("book-order", "new", order, "Newest first")}` : ""}</div>
+      ${mode === "book" ? (n ? bookHtml(order) : `<p class="empty">No games in this view.</p>`) : `
       <p class="note" style="margin-top:14px">Looking for a particular kind of game? See the <a href="#/winning/closest">closest and most one-sided games</a> and the <a href="#/winning/comebacks">comebacks</a>.</p>
       ${d ? `<section class="block">
         <h2>Dice across these games</h2>
@@ -656,11 +694,20 @@
           <thead><tr><th>Date</th><th>Finishing order</th><th class="num hide-sm">Turns</th></tr></thead>
           <tbody>${S.games.map((g) => `<tr>
             <td class="date"><a href="#/game/${encodeURIComponent(g.id)}">${fmtDate(g.date)}</a><div class="sub">Game ${g.number}, ${esc(g.type_label)}</div></td>
-            <td><div class="order">${g.players.map((r) => `<span>${who(r.player).replace('class="who', `class="who${r.rank === 1 ? " win" : ""}`)} <span class="vp">${r.vp}</span></span>`).join("")}</div></td>
+            <td>${orderLine(g)}</td>
             <td class="num hide-sm">${g.turns ?? ""}</td></tr>`).join("")}</tbody>
         </table></div>
-      </section>`;
-    if (d) diceChart(document.getElementById("dice-all"), d, "Dice roll counts across these games, with expected counts");
+      </section>`}`;
+    main.querySelectorAll(".games-view [data-set]").forEach((b) => b.addEventListener("click", () => {
+      store(b.dataset.set, b.dataset.val);
+      const y = window.scrollY;
+      gamesPage();
+      scopeLinks(main);
+      window.scrollTo(0, y);
+      const again = main.querySelector(`.games-view [data-set="${b.dataset.set}"][data-val="${b.dataset.val}"]`);
+      if (again) again.focus({ preventScroll: true });
+    }));
+    if (d && mode === "list") diceChart(document.getElementById("dice-all"), d, "Dice roll counts across these games, with expected counts");
   }
 
   function gamePage(gid) {
@@ -1529,6 +1576,7 @@
     add("Players", "Page", "#/players", "head to head", true);
     add("Head to head", "Players", "#/players/h2h", "matrix");
     add("Games", "Page", "#/games", "list dice", true);
+    add("History", "Page", "history.html", "timeline story eras milestones", true);
     add("How it works", "Page", "#/about", "methods ranking about", true);
     for (const p of ROOT.views.all.players.filter((x) => x.games > 0)) add(p.name, "Player", `#/player/${encodeURIComponent(p.id)}`, (p.aliases || []).join(" "), true);
     for (const q of TP.questions(ctx())) add(q.q, `${TP.topic(q.topic).nav}: ${q.title}`, `#/${q.topic}/${q.id}`, q.a ? `${q.a.head || ""} ${q.a.text || ""}` : "");
@@ -1538,6 +1586,8 @@
     }
     return out;
   }
+  // Pages inside this app keep the chosen view; the History page is its own file.
+  const palHref = (i) => (i.href.startsWith("#") ? i.href + viewQuery(VIEW) : i.href);
   function setupSearch() {
     const pal = document.getElementById("pal"), input = document.getElementById("pal-in"), list = document.getElementById("pal-list");
     let items = [], shown = [], cur = 0, back = null;
@@ -1552,7 +1602,7 @@
       shown = (toks.length ? items.filter((i) => toks.every((t) => i.text.includes(t))).sort((a, b) => score(a) - score(b)) : items.filter((i) => i.top)).slice(0, toks.length ? 12 : 20);
       cur = 0;
       list.innerHTML = shown.length
-        ? shown.map((i, k) => `<li role="option" id="pal-o-${k}"><a data-keep href="${esc(i.href + viewQuery(VIEW))}" tabindex="-1"><span>${esc(i.label)}</span><span class="pal-hint-r">${esc(i.hint)}</span></a></li>`).join("")
+        ? shown.map((i, k) => `<li role="option" id="pal-o-${k}"><a data-keep href="${esc(palHref(i))}" tabindex="-1"><span>${esc(i.label)}</span><span class="pal-hint-r">${esc(i.hint)}</span></a></li>`).join("")
         : `<li><p class="pal-empty">Nothing matches.</p></li>`;
       mark();
     };
@@ -1575,7 +1625,8 @@
       } else if (e.key === "Enter" && shown[cur]) {
         e.preventDefault();
         close(false);
-        location.hash = shown[cur].href.slice(1) + viewQuery(VIEW);
+        const h = palHref(shown[cur]);
+        if (h.startsWith("#")) location.hash = h.slice(1); else location.href = h;
       }
     });
     list.addEventListener("click", (e) => { if (e.target.closest("a")) close(false); });

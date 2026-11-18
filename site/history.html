@@ -1,0 +1,1823 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>History | Catan Night</title>
+  <meta name="description" content="The story of our Catan group, game by game: milestones, special games and who held the top.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpolygon points='16,1 29,8.5 29,23.5 16,31 3,23.5 3,8.5' fill='%23e3b23c'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=Inter:opsz,wght@14..32,300..750&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="history.css">
+  <script>
+    // Apply a saved theme before first paint, as the main site does (same key).
+    try { var t = localStorage.getItem("theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+  </script>
+</head>
+<body>
+  <a class="skip" href="#page">Skip to content</a>
+  <header class="site-head wrap">
+    <div class="dateline"><span id="mast-issue"></span><span class="dl-mid" id="mast-date"></span><span id="mast-meta"></span></div>
+    <a class="brand" href="./">Catan Night</a>
+    <div class="res-rule" aria-hidden="true"><i style="--c:var(--res-wood)"></i><i style="--c:var(--res-brick)"></i><i style="--c:var(--res-sheep)"></i><i style="--c:var(--res-wheat)"></i><i style="--c:var(--res-ore)"></i></div>
+  </header>
+  <div class="wrap"><div class="topbar-in">
+      <nav class="nav" aria-label="Main">
+        <a href="./#/">Leaderboard</a>
+        <a href="./#/questions">Questions</a>
+        <span class="nav-sep" aria-hidden="true"></span>
+        <a href="./#/openings">Openings</a>
+        <a href="./#/luck">Luck</a>
+        <a href="./#/robber">Robber</a>
+        <a href="./#/trading">Trading</a>
+        <a href="./#/winning">Winning</a>
+        <span class="nav-sep" aria-hidden="true"></span>
+        <a href="./#/players">Players</a>
+        <a href="./#/games">Games</a>
+        <a href="history.html" aria-current="page">History</a>
+        <a href="./#/about">How it works</a>
+      </nav>
+      <button class="theme-btn" id="theme-btn" type="button" aria-label="Switch color theme">
+        <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><circle cx="10" cy="10" r="7" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10 3a7 7 0 0 1 0 14z" fill="currentColor"/></svg>
+      </button>
+  </div></div>
+  <main id="page" tabindex="-1">
+    <section class="intro wrap" id="intro">
+      <h1>History</h1>
+      <p class="lede" id="lede"></p>
+      <p class="howto" id="howto"></p>
+      <div class="key" id="key" aria-hidden="true"></div>
+      <p class="views">
+        <a href="#list" class="viewlink" id="toList" aria-label="Read the history as a list (recommended for screen readers)">Read as a list</a>
+        <a href="#journey" class="viewlink" id="toJourney" hidden>Read as a journey</a>
+      </p>
+    </section>
+
+    <div class="track" id="track">
+      <div class="stage" id="stage">
+        <div class="mast wrap">
+          <div class="mast-in">
+            <div class="mast-era" id="mastEra"><span class="kick" id="eraKick"></span><span class="eraname" id="eraName"></span></div>
+            <div class="mast-r">
+              <span class="when" id="when"></span>
+              <span class="steps">
+                <button type="button" id="prevB" aria-label="Previous beat">&lsaquo;</button><button type="button" id="nextB" aria-label="Next beat">&rsaquo;</button>
+              </span>
+              <details class="chapters" id="chapters"><summary>Chapters</summary><ol id="chapList"></ol></details>
+              <a href="#list" class="viewlink small" id="toList2">Read as a list</a>
+            </div>
+          </div>
+        </div>
+        <div class="zone wrap" id="zone"></div>
+        <div class="band" id="band" aria-hidden="true"><svg id="bandSvg" focusable="false"></svg></div>
+        <div class="mini wrap">
+          <div class="mm" id="mm" role="slider" tabindex="0" aria-label="Position in the history, by game" aria-valuemin="1">
+            <svg id="mmSvg" aria-hidden="true" focusable="false"></svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <section class="list wrap" id="list" hidden>
+      <figure class="overview" id="overview">
+        <svg id="ovSvg" aria-hidden="true" focusable="false"></svg>
+        <figcaption id="ovCap"></figcaption>
+      </figure>
+      <div id="listBody"></div>
+    </section>
+
+    <section class="coda wrap" id="coda">
+      <h2 id="codaH"></h2>
+      <p class="coda-sum" id="codaSum"></p>
+      <nav class="index" id="index" aria-label="Every beat"></nav>
+      <details class="method" id="method"><summary>How this is drawn</summary><div id="methodBody"></div></details>
+    </section>
+    <div class="sr" id="live" aria-live="polite"></div>
+  </main>
+  <footer class="foot wrap">Game data from <a href="https://twosheep.io">TwoSheep.io</a>, the free online Catan platform by Odd Stone Studios, used with their permission. This is a fan site for one group of friends.</footer>
+
+  <style>
+    :root {
+      --rule-soft: color-mix(in oklab, var(--ink) 55%, var(--page));
+      --played: color-mix(in oklab, var(--ink-2) 20%, var(--page));
+      --case: color-mix(in oklab, var(--ink-2) 55%, transparent);
+      --half: color-mix(in oklab, var(--ink-2) 45%, var(--page));
+    }
+    .sr { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+    body { overflow-x: clip; }
+
+    /* Intro */
+    .intro { padding-bottom: 8px; }
+    .intro .lede { margin-bottom: 10px; }
+    .howto { font-size: 14px; color: var(--ink-2); max-width: 68ch; margin: 0 0 12px; }
+    .key { display: flex; flex-wrap: wrap; gap: 6px 22px; font-size: 12.5px; color: var(--ink-2); margin: 0 0 14px; }
+    .key > span { display: inline-flex; align-items: center; gap: 7px; }
+    .key svg { display: block; flex: none; overflow: visible; }
+    .views { margin: 0 0 22px; font-size: 14px; }
+    .viewlink { color: var(--ink); }
+    .viewlink.small { font-size: 13px; white-space: nowrap; }
+
+    /* Player marks in text */
+    .who { display: inline-flex; align-items: baseline; gap: 4px; white-space: nowrap; font-weight: 600; color: var(--ink); }
+    .who i { width: 8px; height: 8px; border-radius: 50%; background: var(--c); display: inline-block; align-self: center;
+      box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--ink) 22%, transparent); }
+    .nw { white-space: nowrap; }
+    .who.guest { color: var(--muted); font-weight: 400; }
+    .who.guest i { background: repeating-linear-gradient(45deg, var(--muted) 0 1.4px, transparent 1.4px 3px); }
+
+    /* The track and the pinned stage */
+    .track { position: relative; }
+    .stage { position: sticky; top: 0; height: 100vh; height: 100dvh; display: flex; flex-direction: column; overflow: hidden;
+      background: var(--page); transition: opacity 150ms ease-out; }
+    .stage.blink { opacity: 0; transition: none; }
+    .mast { flex: none; width: 100%; padding-top: 10px; }
+    .mast-in { display: flex; justify-content: space-between; align-items: flex-end; gap: 6px 20px; min-height: 48px; padding-bottom: 7px;
+      border-bottom: 1px solid var(--ink); }
+    .mast-era { min-width: 0; display: flex; flex-direction: column; }
+    .mast-era .kick { font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); line-height: 1.3; white-space: nowrap; }
+    .mast-era .eraname { font-family: var(--serif); font-style: italic; font-size: 22px; line-height: 1.15; white-space: nowrap; overflow: hidden;
+      text-overflow: ellipsis; }
+    .mast-r { display: flex; align-items: center; gap: 8px 14px; font-size: 13px; color: var(--ink-2); flex: none; padding-bottom: 1px; }
+    .when { white-space: nowrap; min-width: 0; }
+    .when b { font-weight: 500; color: var(--ink); }
+    .steps { display: inline-flex; gap: 4px; }
+    .steps button { width: 30px; height: 30px; display: grid; place-items: center; padding: 0 0 3px; font: 400 21px/1 var(--serif); color: var(--ink);
+      background: var(--page); border: 1px solid var(--axis); border-radius: 2px; cursor: pointer; }
+    .steps button:hover { border-color: var(--ink); }
+    .steps button:disabled { opacity: .35; cursor: default; border-color: var(--axis); }
+    .chapters { position: relative; }
+    .chapters summary { cursor: pointer; list-style: none; color: var(--ink); white-space: nowrap; }
+    .chapters summary::-webkit-details-marker { display: none; }
+    .chapters summary::after { content: ""; display: inline-block; width: 5px; height: 5px; margin: 0 0 3px 7px; border-right: 1.25px solid var(--ink-2);
+      border-bottom: 1.25px solid var(--ink-2); transform: rotate(45deg); }
+    .chapters[open] summary::after { transform: rotate(-135deg); margin-bottom: 0; }
+    .chapters ol { position: absolute; z-index: 5; right: 0; top: calc(100% + 16px); width: min(430px, calc(100vw - 32px)); margin: 0; padding: 6px 0 8px;
+      list-style: none; background: var(--page); border-top: 1px solid var(--ink); border-bottom: 1px solid var(--hair); }
+    .chapters li a { display: grid; grid-template-columns: 2.6em minmax(0, 1fr); gap: 0 6px; padding: 6px 4px; text-decoration: none; color: var(--ink); }
+    .chapters li a:hover .cn { text-decoration: underline; text-decoration-color: var(--axis); }
+    .chapters .cr { font-size: 10.5px; letter-spacing: .08em; color: var(--muted); padding-top: 4px; }
+    .chapters .cn { font-family: var(--serif); font-style: italic; font-size: 17px; line-height: 1.2; }
+    .chapters .cd { grid-column: 2; font-size: 12px; color: var(--muted); }
+    .chapters li.cur .cn { font-weight: 600; }
+
+    .zone { flex: 1 1 auto; position: relative; min-height: 0; width: 100%; }
+    .band { flex: none; height: clamp(200px, 34vh, 280px); padding: 0 16px; position: relative; }
+    @supports (height: 1dvh) { .band { height: clamp(200px, 34dvh, 280px); } }
+    #bandSvg { display: block; width: 100%; height: 100%; overflow: hidden; }
+    #ovSvg { display: block; width: 100%; height: 270px; overflow: hidden; }
+    .mini { flex: none; width: 100%; padding-top: 6px; padding-bottom: 10px; }
+    .mm { height: 24px; cursor: pointer; position: relative; border-radius: 2px; }
+    .mm svg { display: block; width: 100%; height: 24px; overflow: visible; }
+
+    /* Backbone drawing */
+    .bb text { font-family: var(--font); font-size: 10.5px; fill: var(--muted); }
+    .bb .grid { stroke: var(--hair); stroke-width: 1; }
+    .bb .floor { stroke: var(--axis); stroke-width: 1; }
+    .bb .plate { fill: var(--page); }
+    .bb .ylab { fill: var(--muted); font-size: 10.5px; }
+    .bb .rlab { fill: var(--muted); font-size: 10.5px; letter-spacing: .08em; }
+    .bb .live .rlab { font-size: 10px; }
+    .bb .small .rlab { font-size: 9.5px; letter-spacing: .08em; }
+    .bb .lbnote { font-family: var(--serif); font-style: italic; font-size: 12px; fill: var(--muted); }
+    .bb .rl { fill: none; stroke-width: var(--lw, 1.5px); stroke-linejoin: round; stroke-linecap: round; }
+    .bb .cs { display: none; fill: none; stroke: var(--ink-2); stroke-opacity: .55; stroke-width: calc(var(--lw, 1.5px) + 1.5px); stroke-linejoin: round; }
+    .bb .guestdot { fill: var(--page); stroke: var(--muted); stroke-width: 1.2; }
+    .bb .erarule { stroke: var(--rule-soft); stroke-width: 1; stroke-opacity: .55; }
+    .bb .eraname { font-family: var(--serif); font-style: italic; font-size: 15px; fill: var(--muted); }
+    .bb .eraname.now { fill: var(--ink); }
+    .bb .fold { stroke: var(--muted); stroke-width: 1; }
+    .bb .folddays { font-size: 10px; fill: var(--muted); }
+    .bb .mon { fill: var(--ink-2); font-size: 10.5px; }
+    .bb .yr { font-family: var(--serif); font-size: 13px; font-weight: 600; fill: var(--ink); }
+    .bb .ftick { stroke: var(--hair); stroke-width: 1; }
+    .bb .ptick { stroke: var(--axis); stroke-width: 1; }
+    .bb .btick { stroke: var(--ink); stroke-width: 1.5; }
+    .bb .ring { fill: none; stroke: var(--ink); stroke-width: 1.4; }
+    .bb .span { fill: var(--wash); }
+    .bb .elab { fill: var(--ink); font-size: 11.5px; }
+    .bb .elab tspan.n { fill: var(--ink-2); }
+    .bb .lead { stroke: var(--muted); stroke-width: .75; }
+    .bb .eranum { font-size: 9.5px; letter-spacing: .08em; fill: var(--muted); }
+
+    /* Beats */
+    .beat { display: grid; grid-template-columns: minmax(0, 44ch) minmax(0, 344px); gap: 0 clamp(28px, 4.5vw, 56px); align-items: start; justify-content: start; }
+    .zone .beat { position: absolute; left: 16px; right: 16px; top: clamp(16px, 4.6vh, 44px); visibility: hidden; opacity: 0; }
+    .zone .beat.on { visibility: visible; }
+    .kicker { font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 0 0 7px; line-height: 1.3; }
+    .kicker::before { content: ""; display: block; width: 36px; height: 1px; background: var(--ink); margin-bottom: 11px; }
+    .beat h3 { font-family: var(--serif); font-weight: 500; font-size: 30px; line-height: 1.12; letter-spacing: -0.012em; margin: 0 0 11px;
+      text-wrap: balance; color: var(--ink); }
+    .beat .body { font-size: 16.5px; line-height: 1.55; color: var(--ink-2); margin: 0; text-wrap: pretty; }
+    .beat figure { margin: 0; padding-top: 30px; min-width: 0; }
+    .beat figcaption { font-size: 12px; line-height: 1.4; color: var(--muted); margin-top: 8px; max-width: 344px; }
+    .beat.tight h3 { font-size: 26px; }
+    .beat.tight .body { font-size: 15.5px; line-height: 1.5; }
+    .beat.tighter h3 { font-size: 24px; margin-bottom: 8px; }
+    .beat.tighter .body { font-size: 14.5px; line-height: 1.48; }
+    @media (max-width: 799px) {
+      .beat { grid-template-columns: minmax(0, 1fr); }
+      .beat .text { max-width: 60ch; }
+      .beat figure { padding-top: 16px; }
+    }
+
+    /* Charts */
+    .beat .fig { --k: 1; }
+    .ch { display: block; overflow: visible; max-width: 100%; height: auto; }
+    .ch text { font-family: var(--font); font-size: 11px; fill: var(--ink-2); }
+    .ch .m { fill: var(--muted); font-size: 10.5px; }
+    .ch .s { font-size: 10px; }
+    .ch .k { fill: var(--ink); }
+    .ch .b { font-weight: 600; }
+    .ch .hair { stroke: var(--hair); stroke-width: 1; fill: none; }
+    .ch .axisl { stroke: var(--axis); stroke-width: 1; fill: none; }
+    .ch .inkf { fill: var(--ink); }
+    .ch .ink2f { fill: var(--ink-2); }
+    .ch .halff { fill: var(--half); }
+    .ch .washf { fill: var(--wash); }
+    .ch .playedf { fill: var(--played); }
+    .ch .inks { stroke: var(--ink); fill: none; }
+    .ch .muteds { stroke: var(--muted); fill: none; }
+    .ch .cs { display: none; fill: none; stroke: var(--ink-2); stroke-opacity: .55; stroke-linejoin: round; stroke-linecap: round; }
+    .ch .ln { fill: none; stroke-linejoin: round; stroke-linecap: round; }
+    .ch .a-line { stroke-dasharray: 1 1; stroke-dashoffset: calc(1 - var(--k)); }
+    .ch .a-bx { transform-box: view-box; transform: scaleX(var(--k)); }
+    .ch .a-by { transform-box: view-box; transform: scaleY(var(--k)); }
+    .ch .a-dot { opacity: clamp(0, calc((var(--k) - var(--o, 0)) * 7), 1); }
+    .ch .a-rev { clip-path: inset(-20px calc((1 - var(--k)) * 100%) -20px -20px); }
+    .ch .a-txt { opacity: clamp(0, calc(var(--k) * 3 - 2), 1); }
+    .hc { font-size: 12.5px; color: var(--ink-2); }
+    .hc.a-txt { opacity: clamp(0, calc(var(--k) * 3 - 2), 1); }
+    .hc .a-dot { opacity: clamp(0, calc((var(--k) - var(--o, 0)) * 7), 1); }
+    .firsts { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 0 22px; max-width: 344px; }
+    .firsts h4 { font-size: 12px; font-weight: 500; color: var(--muted); margin: 0 0 5px; padding-bottom: 4px; border-bottom: 1px solid var(--hair);
+      white-space: nowrap; }
+    .firsts ol { list-style: none; margin: 0; padding: 0; }
+    .firsts li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0 6px; padding: 2px 0; line-height: 1.35; }
+    .firsts li .fl { grid-column: 1 / -1; }
+    .firsts li .fw { color: var(--muted); font-size: 11.5px; }
+    .firsts li .fw .who { font-weight: 500; color: var(--ink-2); }
+    .firsts li.hi .fl { color: var(--ink); font-weight: 600; }
+    .firsts li.hi .fw .who { color: var(--ink); font-weight: 600; }
+    .chips { display: flex; gap: 0 18px; flex-wrap: nowrap; padding-top: 2px; }
+    .chips .chip2 { display: flex; flex-direction: column; align-items: center; gap: 4px; flex: none; }
+    .chips .chip2 > span:first-child { display: inline-flex; align-items: center; gap: 5px; font-size: 13px; font-weight: 600; color: var(--ink);
+      line-height: 1.2; }
+    .chips .chip2 i { width: 9px; height: 9px; border-radius: 50%; background: var(--c); box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--ink) 22%, transparent); }
+    .chips .chip2 small { font-size: 10px; color: var(--muted); }
+
+    /* List view */
+    .list { padding-top: 6px; }
+    .overview { margin: 0 0 40px; border-top: 1px solid var(--ink); padding-top: 10px; }
+    .overview figcaption { font-size: 12px; color: var(--muted); margin-top: 4px; }
+    .era-h { margin: 0 0 22px; padding-top: 18px; border-top: 1px solid var(--hair); }
+    .era-h .ek { font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+    .era-h h2 { font-family: var(--serif); font-style: italic; font-weight: 500; font-size: 30px; line-height: 1.1; margin: 4px 0 0; }
+    .list .beat { position: static; visibility: visible; opacity: 1; transform: none; margin: 0 0 52px; }
+    .list .beat .fig { --k: 1 !important; }
+    .list .era { margin-bottom: 18px; }
+
+    /* Coda */
+    .coda { border-top: 1px solid var(--ink); margin-top: 0; padding-top: 18px; }
+    .coda h2 { font-family: var(--serif); font-weight: 500; font-size: 30px; margin: 0 0 6px; }
+    .coda-sum { color: var(--ink-2); margin: 0 0 18px; max-width: 70ch; }
+    .index { columns: 2 340px; column-gap: 40px; }
+    .index section { break-inside: avoid; margin: 0 0 16px; }
+    .index h3 { font-family: var(--serif); font-style: italic; font-weight: 500; font-size: 18px; margin: 0; }
+    .index h3 small { font-family: var(--font); font-style: normal; font-size: 11.5px; color: var(--muted); margin-left: 6px; font-weight: 400; }
+    .index ol { list-style: none; padding: 0; margin: 4px 0 0; }
+    .index li { display: grid; grid-template-columns: 8.6em minmax(0, 1fr); gap: 0 10px; padding: 2px 0; font-size: 14px; }
+    .index li span { color: var(--muted); font-size: 12.5px; padding-top: 1px; }
+    .index a { text-decoration-color: var(--axis); }
+    dl.mkey { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 7px 16px; margin: 12px 0; }
+    dl.mkey dt { color: var(--ink); font-weight: 600; }
+    dl.mkey dd { margin: 0; }
+    @media (max-width: 760px) { dl.mkey { grid-template-columns: 1fr; gap: 2px; } dl.mkey dd { margin-bottom: 8px; } }
+
+    /* Views */
+    body.listview .track { display: none; }
+    body.listview #toList2 { display: none; }
+
+    /* Narrower stages */
+    @media (max-width: 1000px) { .mast-r { gap: 8px 10px; } .when .of { display: none; } }
+    @media (max-width: 860px) { .viewlink.small { display: none; } .mast-era .eraname { font-size: 20px; } .when .wd { display: none; } }
+    @media (max-height: 760px) {
+      .beat h3 { font-size: 27px; }
+      .beat .body { font-size: 15.5px; line-height: 1.5; }
+    }
+    @media (max-width: 420px) { .index li { grid-template-columns: 1fr; } }
+  </style>
+  <script src="data/history.js"></script>
+  <script>
+  (function () {
+    "use strict";
+    const $ = (id) => document.getElementById(id);
+    $("theme-btn").addEventListener("click", () => {
+      const el = document.documentElement;
+      const dark = el.dataset.theme ? el.dataset.theme === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches;
+      el.dataset.theme = dark ? "light" : "dark";
+      try { localStorage.setItem("theme", el.dataset.theme); } catch (e) {}
+    });
+    {
+      // On a narrow screen the nav scrolls sideways; show this page's tab, as the main site does.
+      const nav = document.querySelector(".nav"), cur = nav.querySelector('[aria-current="page"]');
+      const over = cur.getBoundingClientRect().right - nav.getBoundingClientRect().right;
+      if (over > 0) nav.scrollLeft += over + 8;
+    }
+    const H = window.HISTORY;
+    if (!H || H.v !== 2) {
+      $("lede").textContent = "The history isn't available right now. The rest of the site is.";
+      $("track").hidden = true;
+      return;
+    }
+    const M = H.meta, G = H.games, N = G.length, P = H.players, E = H.eras, BEATS = H.beats, PAC = M.pacing;
+    const U = M.axis.total_u, ASOF = M.as_of, CROWN_MIN = M.crown_min;
+    const PIDS = Object.keys(P);
+    {
+      const day = (d) => new Date(d + "T12:00:00");
+      $("mast-issue").textContent = `No. ${M.as_of.n}`;
+      $("mast-date").textContent = day(M.as_of.d).toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric" });
+      $("mast-meta").textContent = `${PIDS.length} players · since ${day(M.span[0]).toLocaleDateString("en-US", { month: "long", year: "numeric" })}`;
+    }
+    const root = document.documentElement;
+    const reduceMQ = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const stage = $("stage"), track = $("track"), zone = $("zone"), live = $("live");
+
+    // ---------- text helpers ----------
+    const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+    const ini = (p) => (P[p] ? P[p].initials : "guest");
+    const col = (p) => (P[p] ? `var(--tc-${P[p].color})` : "var(--muted)");
+    const who = (p) => `<span class="who${P[p] ? " p-" + p : " guest"}" style="--c:${col(p)}"><i></i>${esc(ini(p))}</span>`;
+    // A possessive stays on the same line as the initials it belongs to.
+    const tokHTML = (s) => esc(s).replace(/\{([\w-]+)\}('s)?/g, (_, p, s2) => (s2 ? `<span class="nw">${who(p)}${s2}</span>` : who(p)));
+    const tokText = (s) => String(s).replace(/\{([\w-]+)\}/g, (_, p) => ini(p));
+    const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+    const r2 = (v) => Math.round(v * 100) / 100;
+    const smooth = (t) => t * t * (3 - 2 * t);
+    const easeOut = (t) => 1 - (1 - t) * (1 - t);
+    const easeIn = (t) => t * t;
+    const MINUS = "−";
+    const sgn = (v, d) => (v > 0 ? "+" : v < 0 ? MINUS : "") + Math.abs(v).toFixed(d);
+    const ROMAN = (n) => { const t = [[10, "X"], [9, "IX"], [5, "V"], [4, "IV"], [1, "I"]]; let s = ""; for (const [v, c] of t) while (n >= v) { s += c; n -= v; } return s; };
+    const MON = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const DAY = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    const dp = (d) => { const x = new Date(d + "T12:00:00Z"); return { y: x.getUTCFullYear(), m: x.getUTCMonth(), d: x.getUTCDate(), w: x.getUTCDay() }; };
+    const fPlain = (d) => { const a = dp(d); return `${a.d} ${MON[a.m]} ${a.y}`; };
+    const fDay = (d) => { const a = dp(d); return `${DAY[a.w]} ${a.d} ${MON[a.m]} ${a.y}`; };
+    const fRange = (d0, d1) => {
+      const a = dp(d0), b = dp(d1);
+      if (d0 === d1) return `${a.d} ${MON[a.m]} ${a.y}`;
+      if (a.y === b.y && a.m === b.m) return `${a.d} to ${b.d} ${MON[a.m]} ${a.y}`;
+      if (a.y === b.y) return `${a.d} ${MON[a.m]} to ${b.d} ${MON[b.m]} ${a.y}`;
+      return `${a.d} ${MON[a.m]} ${a.y} to ${b.d} ${MON[b.m]} ${b.y}`;
+    };
+    const addDays = (d, k) => { const x = new Date(d + "T12:00:00Z"); x.setUTCDate(x.getUTCDate() + k); return x.toISOString().slice(0, 10); };
+    const gamesWord = (a, b) => (a === b ? `game ${a}` : `games ${a} to ${b}`);
+
+    // Text widths for SVG layout, measured with the real fonts once they have loaded.
+    const mctx = document.createElement("canvas").getContext("2d");
+    const tw = (s, font) => { mctx.font = font || "400 11px Inter, system-ui, sans-serif"; return mctx.measureText(s).width; };
+    const F11 = "400 11px Inter, system-ui, sans-serif", F105 = "400 10.5px Inter, system-ui, sans-serif", F10 = "400 10px Inter, system-ui, sans-serif";
+    const F115 = "400 11.5px Inter, system-ui, sans-serif", F11B = "600 11px Inter, system-ui, sans-serif";
+
+    // ---------- indexes ----------
+    const gIdx = new Map(G.map((g, i) => [g.id, i]));
+    const byN = (n) => G[n - 1];
+    const beatIdx = new Map(BEATS.map((b, k) => [b.id, k]));
+    const tauOfN = (n) => byN(n).u + 0.5;
+    const raceAt = (p, i) => (H.race[p][i] == null ? null : H.race[p][i]);
+    const maxWinsAfter = G.map((g, i) => Math.max(0, ...PIDS.map((p) => raceAt(p, i) || 0)));
+    const Dfor = (mx) => Math.max(10, 5 * Math.ceil((mx + 2) / 5));
+    const D_FINAL = Dfor(maxWinsAfter[N - 1]);
+    const firstLb = H.crowns.lb.findIndex((x) => x);
+
+    // last game whose slot has started strictly before tau (the game being played or just played), -1 before game 1
+    function curGame(tau) {
+      let lo = -1, hi = N - 1;
+      while (lo < hi) { const m = (lo + hi + 1) >> 1; if (G[m].u - 0.5 < tau - 1e-6) lo = m; else hi = m - 1; }
+      return lo;
+    }
+    // last game whose centre the cursor has passed
+    function lastCentre(tau) {
+      let lo = -1, hi = N - 1;
+      while (lo < hi) { const m = (lo + hi + 1) >> 1; if (G[m].u <= tau + 1e-9) lo = m; else hi = m - 1; }
+      return lo;
+    }
+    function eraOfTau(tau) { const i = curGame(tau); return i < 0 ? 0 : G[i].era; }
+
+    // ---------- low-contrast casing ----------
+    // A player colour under this contrast against the page gets a thin --ink-2 casing. The threshold is above 3:1 so that
+    // MS's dark-theme colour (about 3.4:1) is cased along with JD and MB in the light theme.
+    const CASE_MIN = 3.5;
+    const probe = document.createElement("span");
+    probe.style.cssText = "position:absolute;width:0;height:0;overflow:hidden;pointer-events:none";
+    document.body.appendChild(probe);
+    const lcStyle = document.createElement("style");
+    document.head.appendChild(lcStyle);
+    function rgbOf(c) { probe.style.color = c; const m = getComputedStyle(probe).color.match(/[\d.]+/g) || [0, 0, 0]; return m.slice(0, 3).map(Number); }
+    function relLum(rgb) { const f = (c) => { c /= 255; return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4); }; return 0.2126 * f(rgb[0]) + 0.7152 * f(rgb[1]) + 0.0722 * f(rgb[2]); }
+    function updateCasing() {
+      const pg = relLum(rgbOf("var(--page)")), low = [];
+      for (const p of PIDS) {
+        const l = relLum(rgbOf(col(p))), cr = (Math.max(l, pg) + 0.05) / (Math.min(l, pg) + 0.05);
+        if (cr < CASE_MIN) low.push(p);
+      }
+      // .cs.cs-p outranks the ".bb .cs" and ".ch .cs" rules that hide every casing by default
+      lcStyle.textContent = low.map((p) => `.bb .cs.cs-${p},.ch .cs.cs-${p}{display:inline}.dc-${p}{stroke:var(--case);stroke-width:.75px}`).join("");
+      root.dataset.cased = low.join(" ");
+    }
+
+    // ---------- monotone cubic through the race points ----------
+    function monotone(xs, ys) {
+      const n = xs.length, m = new Array(n).fill(0), d = [];
+      for (let i = 0; i < n - 1; i++) d.push((ys[i + 1] - ys[i]) / (xs[i + 1] - xs[i]));
+      for (let i = 1; i < n - 1; i++) m[i] = d[i - 1] * d[i] <= 0 ? 0 : (d[i - 1] + d[i]) / 2;
+      for (let i = 0; i < n - 1; i++) {
+        if (d[i] === 0) { m[i] = 0; m[i + 1] = 0; continue; }
+        const a = m[i] / d[i], b = m[i + 1] / d[i], s = a * a + b * b;
+        if (s > 9) { const t = 3 / Math.sqrt(s); m[i] = t * a * d[i]; m[i + 1] = t * b * d[i]; }
+      }
+      return { xs, ys, m };
+    }
+    function curveAt(c, x) {
+      const { xs, ys, m } = c, n = xs.length;
+      if (x <= xs[0]) return ys[0];
+      if (x >= xs[n - 1]) return ys[n - 1];
+      let lo = 0, hi = n - 2;
+      while (lo < hi) { const k = (lo + hi + 1) >> 1; if (xs[k] <= x) lo = k; else hi = k - 1; }
+      const h = xs[lo + 1] - xs[lo], t = (x - xs[lo]) / h, t2 = t * t, t3 = t2 * t;
+      return (2 * t3 - 3 * t2 + 1) * ys[lo] + (t3 - 2 * t2 + t) * h * m[lo] + (-2 * t3 + 3 * t2) * ys[lo + 1] + (t3 - t2) * h * m[lo + 1];
+    }
+    // Path in (u, wins) space; the group around it scales to pixels.
+    function curvePath(c, upto) {
+      const { xs, ys, m } = c; let s = `M${xs[0].toFixed(3)} ${ys[0].toFixed(3)}`;
+      for (let i = 0; i < xs.length - 1; i++) {
+        if (upto != null && xs[i] >= upto) break;
+        const h = xs[i + 1] - xs[i];
+        s += `C${(xs[i] + h / 3).toFixed(3)} ${(ys[i] + (m[i] * h) / 3).toFixed(3)} ${(xs[i + 1] - h / 3).toFixed(3)} ${(ys[i + 1] - (m[i + 1] * h) / 3).toFixed(3)} ${xs[i + 1].toFixed(3)} ${ys[i + 1].toFixed(3)}`;
+      }
+      return s;
+    }
+    // Points: 0 at the start of the debut game, then the count after every game at the end of its slot,
+    // with a flat point at the start of any game that follows a gap so the line runs level across folds.
+    const CURVES = {};
+    for (const p of PIDS) {
+      const r = H.race[p], xs = [], ys = [];
+      for (let i = 0; i < N; i++) {
+        if (r[i] == null) continue;
+        const g = G[i], prev = i > 0 ? r[i - 1] : null;
+        if (prev == null) { xs.push(g.u - 0.5); ys.push(0); }
+        else if (g.gap > 0) { xs.push(g.u - 0.5); ys.push(prev); }
+        xs.push(g.u + 0.5); ys.push(r[i]);
+      }
+      if (xs.length) CURVES[p] = monotone(xs, ys);
+    }
+
+    // ---------- pacing: scroll offset to the time cursor ----------
+    const pb = /([\d.]+)\s*\+\s*([\d.]+)\s*\*\s*log2\(days\s*\/\s*([\d.]+)\)/.exec(PAC.px_break) || [0, 100, 36, 7];
+    const pxBreak = (days) => +pb[1] + +pb[2] * Math.log2(days / +pb[3]);
+    // Every beat holds for the stage height plus a fade at each end: the card is fully legible, with its chart drawn,
+    // for at least one page step, so Space or Page Down can never carry a beat past unread.
+    const FADE = PAC.fade_px || 56, DRAW = PAC.draw_px || [14, 56];
+    const holdPx = (size, vh) => Math.round(vh) + 2 * FADE;
+    const XF = FADE; // the hand-over between two beats at one anchor
+    const PIECES = (() => {
+      const out = [];
+      for (let i = 0; i < N; i++) {
+        const g = G[i];
+        out.push({ t0: g.u - 0.5, t1: g.u + 0.5, px: PAC.px_game, kind: "game", i });
+        if (i + 1 < N) {
+          const nx = G[i + 1], a = g.u + 0.5, b = nx.u - 0.5;
+          if (b - a > 1e-6) {
+            const fold = nx.gap > M.axis.break_days;
+            out.push({ t0: a, t1: b, px: fold ? pxBreak(nx.gap) : PAC.px_night, kind: fold ? "fold" : "night", i, days: nx.gap, from: g.d });
+          }
+        }
+      }
+      return out;
+    })();
+    const STOPS = (() => {
+      const out = [];
+      BEATS.forEach((b, k) => {
+        const tau = tauOfN(b.n), last = out[out.length - 1];
+        if (last && Math.abs(last.tau - tau) < 1e-6) last.beats.push(k); else out.push({ tau, n: b.n, beats: [k] });
+      });
+      return out;
+    })();
+    function buildTable(vh) {
+      const segs = []; let s = 0, t = 0;
+      const lin = (t0, t1) => {
+        for (const p of PIECES) {
+          const a = Math.max(t0, p.t0), b = Math.min(t1, p.t1);
+          if (b - a > 1e-9) { const len = (p.px * (b - a)) / (p.t1 - p.t0); segs.push({ type: "lin", t0: a, t1: b, s0: s, len, piece: p }); s += len; }
+        }
+      };
+      STOPS.forEach((st, c) => {
+        const prev = STOPS[c - 1], next = STOPS[c + 1];
+        const mergedPrev = prev && st.tau - prev.tau < PAC.merge_u, mergedNext = next && next.tau - st.tau < PAC.merge_u;
+        if (!mergedPrev) {
+          const a = Math.max(t, st.tau - 1);
+          lin(t, a);
+          segs.push({ type: "in", t0: a, t1: st.tau, s0: s, len: PAC.ease_px }); s += PAC.ease_px;
+        } else lin(t, st.tau);
+        t = st.tau;
+        st.beats.forEach((k, j) => {
+          const len = holdPx(BEATS[k].size, vh);
+          segs.push({ type: "hold", t0: t, t1: t, s0: s, len, beat: k, first: j === 0, last: j === st.beats.length - 1 });
+          BEATS[k]._hold = segs[segs.length - 1];
+          s += len;
+        });
+        if (!mergedNext && st.tau < U - 1e-6) {
+          const b = Math.min(U, st.tau + 1);
+          segs.push({ type: "out", t0: st.tau, t1: b, s0: s, len: PAC.ease_px }); s += PAC.ease_px; t = b;
+        }
+      });
+      lin(t, U);
+      const outro = (PAC.outro_vh || 0.4) * vh;
+      segs.push({ type: "outro", t0: U, t1: U, s0: s, len: outro }); s += outro;
+      return { segs, total: s };
+    }
+    function stateAt(local) {
+      const T = L.table, S = T.segs;
+      if (local <= 0) return { tau: 0, seg: -1, local };
+      if (local >= T.total) return { tau: U, seg: S.length, local };
+      let lo = 0, hi = S.length - 1;
+      while (lo < hi) { const m = (lo + hi + 1) >> 1; if (S[m].s0 <= local) lo = m; else hi = m - 1; }
+      const sg = S[lo], f = clamp((local - sg.s0) / sg.len, 0, 1), d = sg.t1 - sg.t0;
+      const tau = sg.type === "in" ? sg.t0 + d * easeOut(f) : sg.type === "out" ? sg.t0 + d * easeIn(f) : sg.t0 + d * f;
+      return { tau, seg: lo, local, f };
+    }
+    function localForTau(t) {
+      for (const sg of L.table.segs) {
+        if (sg.t1 - sg.t0 < 1e-9) continue;
+        if (t >= sg.t0 - 1e-9 && t <= sg.t1 + 1e-9) {
+          const q = clamp((t - sg.t0) / (sg.t1 - sg.t0), 0, 1);
+          const f = sg.type === "in" ? 1 - Math.sqrt(1 - q) : sg.type === "out" ? Math.sqrt(q) : q;
+          return sg.s0 + f * sg.len;
+        }
+      }
+      return t <= 0 ? 0 : L.table.total;
+    }
+    const holdMid = (k) => BEATS[k]._hold.s0 + 0.5 * BEATS[k]._hold.len;
+    // Where "at game n" is: the beat it anchors, or the moment just after it is played.
+    function localForGame(n) {
+      const k = BEATS.findIndex((b) => b.n === n);
+      if (k >= 0) return { local: holdMid(k), beat: k };
+      return { local: localForTau(byN(n).u + 0.48), beat: null };
+    }
+
+    // ---------- beats as articles ----------
+    const CHARTS = {};
+    const articles = BEATS.map((b, k) => {
+      const a = document.createElement("article");
+      a.className = "beat";
+      a.dataset.id = b.id;
+      a.dataset.k = k;
+      a.setAttribute("aria-labelledby", "bh-" + b.id);
+      a.innerHTML = `<div class="text"><p class="kicker">${esc(b.kicker)}</p><h3 id="bh-${esc(b.id)}">${esc(tokText(b.headline))}</h3><p class="body">${tokHTML(b.body)}</p></div>`
+        + (b.chart ? `<figure class="fig"></figure>` : "");
+      return a;
+    });
+    function renderCharts() {
+      articles.forEach((a, k) => {
+        const b = BEATS[k], c = b.chart;
+        if (!c) return;
+        const fig = a.querySelector("figure");
+        const fn = CHARTS[c.type];
+        const out = fn ? fn(c.data, c, b) : "";
+        fig.innerHTML = out + (c.label ? `<figcaption>${esc(tokText(c.label))}</figcaption>` : "");
+        if (!out && !c.label) fig.hidden = true;
+      });
+    }
+
+    // ---------- chart drawing ----------
+    // Every chart draws in as --k runs from 0 to 1: lines by dash offset, bars from their baseline, dots in order.
+    const svgOpen = (w, h, label) => `<svg class="ch" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" role="img" aria-label="${esc(label)}">`;
+    const T = (x, y, s, cls, anchor, extra) => `<text x="${r2(x)}" y="${r2(y)}"${cls ? ` class="${cls}"` : ""}${anchor ? ` text-anchor="${anchor}"` : ""}${extra || ""}>${esc(s)}</text>`;
+    const lineEl = (x1, y1, x2, y2, cls, extra) => `<line x1="${r2(x1)}" y1="${r2(y1)}" x2="${r2(x2)}" y2="${r2(y2)}" class="${cls}"${extra || ""}/>`;
+    const polyD = (pts) => pts.map((p, i) => `${i ? "L" : "M"}${r2(p[0])} ${r2(p[1])}`).join("");
+    const playerLine = (p, d, w) => `<path d="${d}" class="cs cs-${p} a-line" pathLength="1" style="stroke-width:${w + 1.5}px"/><path d="${d}" class="ln a-line" pathLength="1" style="stroke:${col(p)};stroke-width:${w}px"/>`;
+    const dot = (x, y, r, p, o, extra) => `<circle cx="${r2(x)}" cy="${r2(y)}" r="${r}" class="a-dot dc-${p}" style="fill:${col(p)};--o:${r2(o || 0)}"${extra || ""}/>`;
+    const fmt1 = (v) => (v < 0 ? MINUS : v > 0 ? "+" : "") + Math.abs(v).toFixed(1);
+
+    // Bars with a reference tick: a rate against what chance or a random pick gives.
+    CHARTS.paired_bars = (d, c) => {
+      const w = 340, x0 = 0, x1 = w - 70, rowH = 54, h = d.rows.length * rowH + 12;
+      const sx = (v) => x0 + ((v - d.domain[0]) / (d.domain[1] - d.domain[0])) * (x1 - x0);
+      let o = "";
+      d.rows.forEach((r, i) => {
+        const y = i * rowH;
+        o += T(0, y + 10, r.label, "k");
+        o += `<rect x="${x0}" y="${y + 18}" width="${r2(Math.max(0.5, sx(r.v) - x0))}" height="12" class="inkf a-bx" style="transform-origin:${x0}px 0"/>`;
+        o += lineEl(sx(r.ref), y + 15, sx(r.ref), y + 34, "muteds", ` style="stroke-width:2"`);
+        o += T(Math.max(sx(r.v), sx(r.ref) + 1) + 7, y + 28.5, r.text, "k b a-txt");
+        const rt = r.ref_text, rw = tw(rt, F105), rx = clamp(sx(r.ref), rw / 2, w - rw / 2);
+        o += T(rx, y + 46, rt, "m a-txt", "middle");
+      });
+      const yb = d.rows.length * rowH;
+      o += lineEl(x0 + 0.5, 6, x0 + 0.5, yb - 14, "axisl");
+      o += T(x0, yb + 8, "0", "m s") + T(x1, yb + 8, d.domain[1] + (d.unit || ""), "m s", "middle");
+      const lab = d.rows.map((r) => `${r.label}: ${r.text}, ${r.ref_text}`).join("; ");
+      return svgOpen(w, h, lab) + o + "</svg>";
+    };
+
+    // A cumulative rate against its random expectation, game by game.
+    CHARTS.rate_line = (d) => {
+      const w = 340, h = 128, pl = 34, pr = 82, pt = 8, pb = 22;
+      const sx = (n) => pl + ((n - d.x[0]) / (d.x[1] - d.x[0])) * (w - pl - pr);
+      const sy = (v) => pt + (1 - (v - d.y[0]) / (d.y[1] - d.y[0])) * (h - pt - pb);
+      let o = "";
+      for (const v of [0, 50, 100]) { o += lineEl(pl, sy(v), w - pr, sy(v), "hair"); o += T(pl - 6, sy(v) + 3.5, v + "%", "m s", "end"); }
+      const ref = d.ref.map((p) => [sx(p.n), sy(p.v)]), ser = d.series.map((p) => [sx(p.n), sy(p.v)]);
+      o += `<g class="a-rev"><path d="${polyD(ref)}" class="muteds" style="stroke-width:1.25;stroke-dasharray:3 3"/></g>`;
+      o += `<path d="${polyD(ser)}" class="inks a-line" pathLength="1" style="stroke-width:1.75"/>`;
+      const le = ser[ser.length - 1], re = ref[ref.length - 1];
+      let ly = le[1] + 4, ry = re[1] + 4;
+      if (Math.abs(ly - ry) < 13) { if (ly > ry) ly = ry + 13; else ry = ly + 13; }
+      o += `<circle cx="${r2(le[0])}" cy="${r2(le[1])}" r="2.5" class="inkf a-txt"/>`;
+      o += T(le[0] + 7, ly, d.end_text, "k b a-txt") + T(re[0] + 7, ry, d.ref_text, "m a-txt");
+      o += T(sx(d.x[0]), h - 4, "game " + d.x[0], "m s") + T(sx(d.x[1]), h - 4, "game " + d.x[1], "m s", "end");
+      return svgOpen(w, h, `Line from game ${d.x[0]} to ${d.x[1]} ending at ${d.end_text}, against ${d.ref_text}`) + o + "</svg>";
+    };
+
+    // One dot per player on a shared scale.
+    CHARTS.dot_plot = (d) => {
+      const w = 340, rowH = 17, pt = 6, pl = 32, pr = 40, n = d.rows.length, h = pt + n * rowH + 36;
+      const sx = (v) => pl + ((v - d.domain[0]) / (d.domain[1] - d.domain[0])) * (w - pl - pr);
+      let o = "";
+      const mid = (d.domain[0] + d.domain[1]) / 2, ticks = [d.domain[0], Number.isInteger(mid) ? mid : Math.round(mid / 5) * 5, d.domain[1]];
+      const yb = pt + n * rowH + 2;
+      for (const t of [...new Set(ticks)]) { o += lineEl(sx(t), pt, sx(t), yb, "hair"); o += T(sx(t), yb + 12, String(t), "m s", "middle"); }
+      d.rows.forEach((r, i) => {
+        const y = pt + i * rowH + rowH / 2, hi = r.pid === d.highlight;
+        o += T(0, y + 4, ini(r.pid), hi ? "k b" : "m");
+        o += dot(sx(r.v), y, 3.5, r.pid, (i / n) * 0.7);
+        o += T(sx(r.v) + 8, y + 4, r.text, (hi ? "k b" : "") + " a-txt");
+      });
+      o += T(pl, h - 3, d.axis, "m s");
+      return svgOpen(w, h, d.axis + ": " + d.rows.map((r) => `${ini(r.pid)} ${r.text}`).join(", ")) + o + "</svg>";
+    };
+
+    // Bars up or down from a zero line.
+    CHARTS.hanging_bars = (d) => {
+      const n = d.bars.length, colW = 64, w = n * colW + 20;
+      const mx = Math.max(...d.bars.map((b) => Math.abs(b.v)), 1), scale = 46 / mx;
+      const up = Math.max(0, ...d.bars.map((b) => b.v)) * scale, down = Math.max(0, ...d.bars.map((b) => -b.v)) * scale;
+      const zero = r2(24 + up + 12);
+      let o = T(0, 10, `${ini(d.pid)}'s dice luck, in ${d.unit}`, "m s");
+      o += lineEl(0, zero, n * colW, zero, "axisl");
+      o += T(n * colW + 4, zero + 3.5, "0", "m s");
+      d.bars.forEach((b, i) => {
+        const cx = i * colW + colW / 2, hh = Math.max(0.75, Math.abs(b.v) * scale), y = b.v >= 0 ? zero - hh : zero;
+        o += `<rect x="${r2(cx - 7)}" y="${r2(y)}" width="14" height="${r2(hh)}" class="a-by dc-${d.pid}" style="fill:${col(d.pid)};transform-origin:0 ${r2(zero)}px"/>`;
+        o += T(cx, b.v >= 0 ? y - 4 : y + hh + 12, fmt1(b.v), "k a-txt", "middle");
+      });
+      const yl = zero + down + 30;
+      d.bars.forEach((b, i) => {
+        const cx = i * colW + colW / 2;
+        o += T(cx, yl, b.label, "s", "middle") + T(cx, yl + 13, b.sub, "m s", "middle");
+      });
+      o += T(0, yl + 30, d.note, "m s");
+      return svgOpen(w, yl + 34, `${ini(d.pid)}'s dice luck: ` + d.bars.map((b) => `${b.label} ${fmt1(b.v)} cards, ${b.sub}`).join("; ")) + o + "</svg>";
+    };
+
+    // One square per game, by how the winner finished.
+    CHARTS.ending_strip = (d) => {
+      const longest = Math.max(...d.rows.map(([a, b]) => b - a + 1));
+      const pitch = Math.min(11, Math.floor((344 + 2) / longest * 10) / 10), sq = Math.round((pitch - 2) * 10) / 10;
+      const byn = new Map(d.games.map((g) => [g.n, g.e]));
+      const w = Math.max(300, longest * pitch);
+      let o = "", y = 4;
+      const sqEl = (x, yy, e, k) => {
+        const s = `--o:${r2(k * 0.85)}`;
+        x = r2(x);
+        if (e === "led") return `<rect x="${x}" y="${yy}" width="${sq}" height="${sq}" class="inkf a-dot" style="${s}"/>`;
+        if (e === "reveal") return `<rect x="${x + 0.625}" y="${yy + 0.625}" width="${sq - 1.25}" height="${sq - 1.25}" class="inks a-dot" style="stroke-width:1.25;${s}"/>`;
+        return `<rect x="${x}" y="${yy}" width="${sq}" height="${sq}" class="ink2f a-dot" style="fill-opacity:.45;${s}"/>`;
+      };
+      const total = d.games.length;
+      let idx = 0;
+      for (const [a, b] of d.rows) {
+        for (let n = a; n <= b; n++) {
+          const x = (n - a) * pitch;
+          o += sqEl(x, y, byn.get(n), idx++ / total);
+          if (d.mark === n) o += lineEl(x - 1, y + sq + 3, x + sq + 1, y + sq + 3, "inks a-txt", ` style="stroke-width:1.25"`);
+        }
+        const br = d.bracket && d.bracket.from >= a && d.bracket.to <= b;
+        if (br) {
+          const bx0 = r2((d.bracket.from - a) * pitch), bx1 = r2((d.bracket.to - a) * pitch + sq), by = y + sq + 6;
+          o += `<path d="M${bx0} ${by - 3}V${by}H${bx1}V${by - 3}" class="inks a-txt" style="stroke-width:1"/>`;
+          const bt = d.bracket.text, btw = tw(bt, F105);
+          o += T(clamp(bx1 - btw, 0, bx0), by + 14, bt, "k a-txt");
+        }
+        o += T(0, y + sq + 13, String(a), "m s");
+        if (!br) o += T((b - a) * pitch + sq, y + sq + 13, String(b), "m s", "end");
+        y += sq + (br ? 36 : 26);
+      }
+      // the key, one line each, with the count for the games shown
+      const cnt = { led: 0, walk_off: 0, reveal: 0 };
+      d.games.forEach((g) => (cnt[g.e] = (cnt[g.e] || 0) + 1));
+      let ky = y;
+      for (const e of ["led", "walk_off", "reveal"]) {
+        o += sqEl(0, ky - 7.5, e, 0).replace(" a-dot", "") + T(sq + 7, ky, d.key[e], "") + T(sq + 7 + tw(d.key[e], F11) + 6, ky, String(cnt[e]), "k b");
+        ky += 15;
+      }
+      ky -= 15;
+      return svgOpen(w, ky + 6, `Games ${d.games[0].n} to ${d.games[total - 1].n}: ${cnt.led} ${d.key.led}, ${cnt.walk_off} ${d.key.walk_off}, ${cnt.reveal} ${d.key.reveal}`) + o + "</svg>";
+    };
+
+    // Wins above expected for two players, on one scale that is reused later.
+    CHARTS.wae_lines = (d) => {
+      const w = 340, h = 140, pl = 26, pr = 76, pt = 10, pb = 20;
+      const sx = (n) => pl + ((n - d.x[0]) / (d.x[1] - d.x[0])) * (w - pl - pr);
+      const sy = (v) => pt + (1 - (v - d.y[0]) / (d.y[1] - d.y[0])) * (h - pt - pb);
+      let o = "";
+      for (const v of [d.y[0], 0, d.y[1]]) {
+        o += lineEl(pl, sy(v), w - pr, sy(v), v === 0 ? "axisl" : "hair");
+        o += T(pl - 6, sy(v) + 3.5, v === 0 ? "0" : sgn(v, 0), "m s", "end");
+      }
+      for (const p of d.pids) {
+        const pts = d.series[p].filter((q) => q[0] <= d.drawn_to).map((q) => [sx(q[0]), sy(q[1])]);
+        if (pts.length > 1) o += playerLine(p, polyD(pts), 1.75);
+      }
+      if (d.cross) o += `<circle cx="${r2(sx(d.cross.n))}" cy="${r2(sy(d.cross.v))}" r="3" class="inks a-txt" style="stroke-width:1.25;fill:var(--page)"/>`;
+      // labels at the drawn end go right, earlier marks go above or below their dot
+      const ends = d.marks.filter((m) => m.n === d.drawn_to).map((m) => ({ ...m, y: sy(m.v) + 4 }));
+      ends.sort((a, b) => a.y - b.y);
+      for (let i = 1; i < ends.length; i++) if (ends[i].y - ends[i - 1].y < 13) ends[i].y = ends[i - 1].y + 13;
+      for (const m of d.marks) {
+        const x = sx(m.n), y = sy(m.v);
+        o += dot(x, y, 3, m.pid, 0.85);
+        if (m.n === d.drawn_to) { const e = ends.find((q) => q === m || (q.pid === m.pid && q.n === m.n)); o += T(x + 7, e.y, tokText(m.text), "k a-txt"); }
+        else o += T(x, m.v >= 0 ? y - 7 : y + 14, tokText(m.text), "m s a-txt", "middle");
+      }
+      o += T(sx(d.x[0]), h - 4, "game " + d.x[0], "m s");
+      o += T(sx(d.drawn_to), h - 4, "game " + d.drawn_to, "m s", d.drawn_to === d.x[1] ? "end" : "middle");
+      return svgOpen(w, h, `Wins above expected, games ${d.x[0]} to ${d.drawn_to}: ` + d.marks.filter((m) => m.n === d.drawn_to).map((m) => tokText(m.text)).join(", ")) + o + "</svg>";
+    };
+
+    // A tick per game with dots on the ones that matter.
+    CHARTS.game_strip = (d) => {
+      const w = 340, pl = 4, pr = 4, n0 = d.range[0], n1 = d.range[1];
+      const sx = (n) => pl + ((n - n0) / (n1 - n0)) * (w - pl - pr);
+      let o = "";
+      for (let n = n0; n <= n1; n++) o += lineEl(sx(n), 10, sx(n), 20, "axisl");
+      d.dots.forEach((q, i) => {
+        o += `<circle cx="${r2(sx(q.n))}" cy="15" r="3" class="a-dot dc-${q.pid}" style="fill:${q.pid === d.highlight ? col(q.pid) : "var(--muted)"};--o:${r2((q.n - n0) / (n1 - n0) * 0.85)}"/>`;
+      });
+      o += T(sx(n0), 34, "game " + n0, "m s") + T(sx(n1), 34, "game " + n1, "m s", "end");
+      const mine = d.dots.filter((q) => q.pid === d.highlight).length, rest = d.dots.length - mine;
+      const k1 = `${ini(d.highlight)} ${mine}`, k2 = `others ${rest}`;
+      o += `<circle cx="${pl + 3}" cy="50" r="3" class="dc-${d.highlight}" style="fill:${col(d.highlight)}"/>` + T(pl + 10, 53.5, k1, "k");
+      const x2 = pl + 10 + tw(k1, F11) + 16;
+      o += `<circle cx="${r2(x2 + 3)}" cy="50" r="3" style="fill:var(--muted)"/>` + T(x2 + 10, 53.5, k2, "m");
+      return svgOpen(w, 60, `Games ${n0} to ${n1}: ${k1}, ${k2}`) + o + "</svg>";
+    };
+
+    // Who sat at which game.
+    CHARTS.attendance = (d) => {
+      const lab = 26, cols = d.cols.length, pitch = Math.min(7, Math.floor(((344 - lab) / cols) * 10) / 10), cell = r2(pitch - 1.25);
+      const rp = 12, ch = 9, w = lab + cols * pitch, rows = d.rows.length, ROW0 = d.rows[0].pid;
+      let o = "";
+      d.rows.forEach((r, j) => {
+        const y = j * rp + 1;
+        o += T(0, y + 8, ini(r.pid), r.pid === ROW0 ? "k s b" : "m s");
+        r.cells.forEach((c, i) => {
+          if (!c) return;
+          const x = r2(lab + i * pitch), s = `--o:${r2((i / cols) * 0.85)}`;
+          o += c === 2 ? `<rect x="${x}" y="${y}" width="${cell}" height="${ch}" class="a-dot dc-${r.pid}" style="fill:${col(r.pid)};${s}"/>`
+            : `<rect x="${x}" y="${y}" width="${cell}" height="${ch}" class="playedf a-dot" style="${s}"/>`;
+        });
+      });
+      const yb = rows * rp + 14;
+      o += T(lab, yb, "game " + d.cols[0], "m s") + T(w, yb, "game " + d.cols[cols - 1], "m s", "end");
+      const ky = yb + 16;
+      o += `<rect x="${lab}" y="${ky - 8}" width="${cell}" height="${ch}" class="playedf"/>` + T(lab + 10, ky, "played", "m s");
+      const kx = lab + 10 + tw("played", F10) + 14;
+      o += `<rect x="${r2(kx)}" y="${ky - 8}" width="${cell}" height="${ch}" class="inkf"/>` + T(kx + 10, ky, "won, in the player's colour", "m s");
+      const lbl = d.rows.map((r) => `${ini(r.pid)} played ${r.cells.filter((c) => c).length}, won ${r.cells.filter((c) => c === 2).length}`).join("; ");
+      return svgOpen(Math.max(w, 280), ky + 4, `Games ${d.cols[0]} to ${d.cols[cols - 1]}: ${lbl}`) + o + "</svg>";
+    };
+
+    // One player's line against the 95% luck band.
+    CHARTS.band_line = (d) => {
+      const w = 340, h = 150, pl = 26, pr = 14, pt = 22, pb = 20, n = d.points.length;
+      const sx = (i) => pl + (i / (n - 1)) * (w - pl - pr);
+      const sy = (v) => pt + (1 - (v - d.domain[0]) / (d.domain[1] - d.domain[0])) * (h - pt - pb);
+      let o = "";
+      for (const v of [-4, 0, 4]) { o += lineEl(pl, sy(v), w - pr, sy(v), v === 0 ? "axisl" : "hair"); o += T(pl - 6, sy(v) + 3.5, v === 0 ? "0" : sgn(v, 0), "m s", "end"); }
+      const hi = d.points.map((p, i) => [sx(i), sy(p.hi)]), lo = d.points.map((p, i) => [sx(i), sy(p.lo)]);
+      o += `<g class="a-rev"><path d="${polyD(hi)}L${lo.slice().reverse().map((p) => `${r2(p[0])} ${r2(p[1])}`).join("L")}Z" class="washf"/>`
+        + `<path d="${polyD(hi)}" class="hair" style="stroke:var(--axis)"/><path d="${polyD(lo)}" class="hair" style="stroke:var(--axis)"/></g>`;
+      // name the band where it has most room below the line
+      let bi = 1, room = -1;
+      for (let i = 1; i < n - 3; i++) { const r = d.points[i].v - d.points[i].lo; if (r > room) { room = r; bi = i; } }
+      const blx = clamp(sx(bi) - 34, pl + 2, w - pr - 80);
+      o += T(blx, sy((d.points[bi].v + d.points[bi].lo) / 2) + 4, "95% luck band", "m s a-txt");
+      o += playerLine(d.pid, polyD(d.points.map((p, i) => [sx(i), sy(p.v)])), 2);
+      const mi = d.points.findIndex((p) => p.n === d.mark.n), mx = sx(mi), my = sy(d.mark.v);
+      o += dot(mx, my, 3, d.pid, 0.9);
+      o += T(mx + 3, my - 9, d.mark.text, "k b a-txt", "end");
+      o += T(sx(0), h - 4, "game " + d.points[0].n, "m s") + T(sx(n - 1), h - 4, "game " + d.points[n - 1].n, "m s", "end");
+      return svgOpen(w, h, `${ini(d.pid)}'s wins above expected, games ${d.points[0].n} to ${d.points[n - 1].n}, ending ${d.mark.text}`) + o + "</svg>";
+    };
+
+    // Two groups of two bars on one count scale.
+    CHARTS.bar_pairs = (d) => {
+      const w = 340, x1 = w - 40, gH = 50;
+      const mx = Math.max(...d.groups.flatMap((g) => d.series.map((s) => g[s.key])));
+      const sx = (v) => (v / mx) * x1;
+      let o = "";
+      let kx = 0;
+      d.series.forEach((s, j) => {
+        o += `<rect x="${kx}" y="2" width="10" height="8" class="${j ? "ink2f" : "inkf"}"${j ? ' style="fill-opacity:.45"' : ""}/>` + T(kx + 15, 10, s.label, "m");
+        kx += 15 + tw(s.label, F105) + 18;
+      });
+      d.groups.forEach((g, i) => {
+        const y = 28 + i * gH;
+        o += T(0, y, g.label, "k");
+        d.series.forEach((s, j) => {
+          const by = y + 6 + j * 14;
+          o += `<rect x="0" y="${by}" width="${r2(Math.max(0.75, sx(g[s.key])))}" height="10" class="${j ? "ink2f" : "inkf"} a-bx" style="${j ? "fill-opacity:.45;" : ""}transform-origin:0 0"/>`;
+          o += T(sx(g[s.key]) + 6, by + 9, String(g[s.key]), (j ? "" : "k b ") + "a-txt");
+        });
+      });
+      const h = 28 + d.groups.length * gH - 8;
+      return svgOpen(w, h, d.groups.map((g) => `${g.label}: ` + d.series.map((s) => `${s.label} ${g[s.key]}`).join(", ")).join("; ")) + o + "</svg>";
+    };
+
+    // A win-chance line through one game.
+    CHARTS.chance_line = (d) => {
+      const w = 340, h = 124, pl = 34, pr = 10, pt = 18, pb = 20;
+      const sx = (t) => pl + ((t - d.x[0]) / (d.x[1] - d.x[0])) * (w - pl - pr);
+      const sy = (v) => pt + (1 - (v - d.y[0]) / (d.y[1] - d.y[0])) * (h - pt - pb);
+      let o = "";
+      for (const v of [0, ...d.grid, 100]) { o += lineEl(pl, sy(v), w - pr, sy(v), v === 0 ? "axisl" : "hair"); o += T(pl - 6, sy(v) + 3.5, v + "%", "m s", "end"); }
+      o += playerLine(d.pid, polyD(d.points.map((p) => [sx(p[0]), sy(p[1])])), 1.5);
+      const mx = sx(d.min.turn), my = sy(d.min.v);
+      o += dot(mx, my, 2.5, d.pid, 0.6);
+      o += lineEl(mx, my - 4, mx, sy(30), "muteds a-txt", ` style="stroke-width:.75"`) + T(mx, sy(30) - 4, d.min.text, "k b a-txt", "middle");
+      const ex = sx(d.end.turn), ey = sy(d.end.v);
+      o += dot(ex, ey, 2.5, d.pid, 0.95);
+      o += T(ex, ey - 9, d.end.text, "k a-txt", "end");
+      o += T(sx(d.x[0]), h - 4, "turn " + d.x[0], "m s") + T(sx(d.x[1]), h - 4, "turn " + d.x[1], "m s", "end");
+      return svgOpen(w, h, `${ini(d.pid)}'s win chance by turn: low of ${d.min.text}; ${d.end.text}`) + o + "</svg>";
+    };
+
+    // Two short lists of firsts.
+    CHARTS.firsts = (d) => {
+      let o = `<div class="hc firsts" role="group" aria-label="${esc(d.columns.map((c) => c.title).join(" and "))}">`;
+      let k = 0;
+      const total = d.columns.reduce((a, c) => a + c.rows.length, 0);
+      for (const c of d.columns) {
+        o += `<div><h4>${esc(c.title)}</h4><ol>`;
+        for (const r of c.rows) {
+          o += `<li class="a-dot${r.pid === d.highlight ? " hi" : ""}" style="--o:${r2((k++ / total) * 0.8)}"><span class="fl">${esc(r.label)}</span><span class="fw">${who(r.pid)} · game ${r.n}</span></li>`;
+        }
+        o += "</ol></div>";
+      }
+      return o + "</div>";
+    };
+
+    // One dot per game in order, split into rows; filled is a win. One later game is added and ringed.
+    CHARTS.par_strip = (d) => {
+      const w = 340, rowH = 42, r = 3.4, x0 = r + 1;
+      const longest = Math.max(...d.rows.map((row, i) => row.games.length + (d.mark && d.mark.row === i ? 2 : 0)));
+      const pitch = Math.min(11, Math.floor(((w - 2 * x0) / Math.max(1, longest - 1)) * 10) / 10);
+      const total = d.rows.reduce((a, row) => a + row.games.length, 0) + (d.mark ? 1 : 0);
+      let o = "", k = 0, h = 0;
+      const won = (cx, cy, s) => `<circle cx="${r2(cx)}" cy="${cy}" r="${r}" class="a-dot dc-${d.pid}" style="fill:${col(d.pid)};${s}"/>`;
+      const lost = (cx, cy, s) => `<circle cx="${r2(cx)}" cy="${cy}" r="${r - 0.6}" class="a-dot" style="fill:none;stroke:var(--axis);stroke-width:1.2;${s}"/>`;
+      d.rows.forEach((row, i) => {
+        const y = i * rowH, cy = y + 23;
+        o += T(0, y + 10, row.label, "k") + T(w, y + 10, row.text, "k b a-txt", "end");
+        row.games.forEach((g, j) => { const s = `--o:${r2((k++ / total) * 0.85)}`; o += (g.won ? won : lost)(x0 + j * pitch, cy, s); });
+        h = cy + r + 6;
+        if (d.mark && d.mark.row === i) {
+          const mx = x0 + (row.games.length + 1) * pitch, s = `--o:${r2((k++ / total) * 0.85)}`;
+          o += (d.mark.won ? won : lost)(mx, cy, s);
+          o += `<circle cx="${r2(mx)}" cy="${cy}" r="${r + 2.8}" class="inks a-dot" style="stroke-width:1.2;${s}"/>`;
+          o += T(mx + r + 3, cy + 20, d.mark.text, "k b a-txt", "end");
+          h = cy + 26;
+        }
+      });
+      const lab = d.rows.map((row) => `${row.label}: ${row.text}`).join("; ") + (d.mark ? `; then ${d.mark.text}, ${d.mark.won ? "won" : "lost"}` : "");
+      return svgOpen(w, h, lab) + o + "</svg>";
+    };
+
+    // One bar per game of a drought, with the finishing place under it.
+    CHARTS.drought_bars = (d) => {
+      // the scale runs to a round number of cards, so the gridline labels say exactly where the gridlines are
+      const bw = 10, pitch = 16, foldW = 26, pl = 26, mx = 5 * Math.ceil(Math.max(...d.cols.map((c) => Math.abs(c.v)), 1) / 5), scale = 34 / mx;
+      const zero = 46;
+      let x = pl, o = "";
+      const xs = [];
+      d.cols.forEach((c, i) => {
+        const f = d.folds.find((q) => q.before === c.n);
+        if (f) {
+          const fx = x + (foldW - pitch) / 2 + 2;
+          o += `<path d="M${r2(fx - 4)} ${zero + 5}L${r2(fx)} ${zero - 5}M${r2(fx + 1)} ${zero + 5}L${r2(fx + 5)} ${zero - 5}" class="muteds"/>`;
+          o += T(fx + 0.5, zero - 40, `${f.sat_out} sat out`, "m s", "middle");
+          x += foldW - pitch + 4;
+        }
+        xs.push(x);
+        x += pitch;
+      });
+      const right = x - pitch + bw;
+      o = lineEl(pl - 4, zero, right + 4, zero, "axisl") + o;
+      o += T(pl - 8, zero - 34 + 3.5, "+" + mx, "m s", "end") + T(pl - 8, zero + 3.5, "0", "m s", "end") + T(pl - 8, zero + 34 + 3.5, MINUS + mx, "m s", "end");
+      o += lineEl(pl - 4, zero - 34, right + 4, zero - 34, "hair") + lineEl(pl - 4, zero + 34, right + 4, zero + 34, "hair");
+      d.cols.forEach((c, i) => {
+        const hh = Math.max(0.75, Math.abs(c.v) * scale), y = c.v >= 0 ? zero - hh : zero;
+        o += `<rect x="${r2(xs[i])}" y="${r2(y)}" width="${bw}" height="${r2(hh)}" class="a-by dc-${d.pid}" style="fill:${col(d.pid)};transform-origin:0 ${zero}px"/>`;
+        o += T(xs[i] + bw / 2, zero + 52, String(c.place), "m s a-txt", "middle");
+      });
+      o += T(xs[0], zero + 66, "game " + d.cols[0].n, "m s") + T(right, zero + 66, "game " + d.cols[d.cols.length - 1].n, "m s", "end");
+      o += T(0, zero + 84, d.note, "m s");
+      const tot = d.cols.reduce((a, c) => a + c.v, 0);
+      return svgOpen(Math.max(right + 8, 300), zero + 88, `${ini(d.pid)}'s ${d.cols.length} games without a win: dice luck by game and finishing place. ${d.note}.`) + o + "</svg>";
+    };
+
+    // Six chips in a row.
+    CHARTS.chips = (d) => `<div class="hc chips" role="group" aria-label="${esc(d.items.map((q) => `game ${q.n} ${ini(q.pid)}`).join(", "))}">`
+      + d.items.map((q, i) => `<span class="chip2 a-dot" style="--c:${col(q.pid)};--o:${r2((i / d.items.length) * 0.8)}"><span><i></i>${esc(ini(q.pid))}</span><small>${q.n}</small></span>`).join("") + "</div>";
+
+    // A small race between two players, as steps.
+    CHARTS.mini_race = (d) => {
+      const w = 340, h = 132, pl = 26, pr = 52, pt = 8, pb = 34;
+      const sx = (n) => pl + ((n - d.x[0]) / (d.x[1] - d.x[0])) * (w - pl - pr);
+      const sy = (v) => pt + (1 - (v - d.y[0]) / (d.y[1] - d.y[0])) * (h - pt - pb);
+      let o = `<rect x="${r2(sx(d.band[0]))}" y="${pt}" width="${r2(sx(d.band[1]) - sx(d.band[0]))}" height="${h - pt - pb}" class="washf"/>`;
+      for (let v = Math.ceil(d.y[0] / 5) * 5; v <= d.y[1]; v += 5) { o += lineEl(pl, sy(v), w - pr, sy(v), "hair"); o += T(pl - 6, sy(v) + 3.5, String(v), "m s", "end"); }
+      const ends = [];
+      for (const p of Object.keys(d.series)) {
+        const s = d.series[p];
+        let path = `M${r2(sx(s[0][0]))} ${r2(sy(s[0][1]))}`;
+        for (let i = 1; i < s.length; i++) path += `H${r2(sx(s[i][0]))}V${r2(sy(s[i][1]))}`;
+        o += playerLine(p, path, 1.75);
+        ends.push({ p, y: sy(s[s.length - 1][1]), v: s[s.length - 1][1] });
+      }
+      ends.sort((a, b) => a.y - b.y);
+      for (let i = 1; i < ends.length; i++) if (ends[i].y - ends[i - 1].y < 13) ends[i].y = ends[i - 1].y + 13;
+      for (const e of ends) o += T(sx(d.x[1]) + 6, e.y + 4, `${ini(e.p)} ${e.v}`, "k a-txt");
+      const by = h - pb + 6;
+      d.others.forEach((n, i) => (o += lineEl(sx(n), by, sx(n), by + 5, "muteds a-dot", ` style="stroke-width:1.5;--o:${r2(((n - d.x[0]) / (d.x[1] - d.x[0])) * 0.85)}"`)));
+      if (d.others.length) o += T(sx(d.others[0]) - 1, by + 17, "won by someone else", "m s a-txt");
+      o += T(pl, by + 17, "game " + d.x[0], "m s") + T(sx(d.x[1]), by + 17, "game " + d.x[1], "m s", "end");
+      return svgOpen(w, by + 21, `Wins, games ${d.x[0]} to ${d.x[1]}: ` + ends.map((e) => `${ini(e.p)} ${e.v}`).join(", ")) + o + "</svg>";
+    };
+
+    // Finishing places as one 100% bar per player.
+    CHARTS.stacked_finish = (d) => {
+      const w = 340, lab = 28, pr = 46, rowH = 18, bh = 12, top = 22, bwid = w - lab - pr;
+      let o = "";
+      let kx = lab;
+      for (const [t, f, a] of [["1st", "inkf", 1], ["2nd", "inkf", 0.45], ["3rd or lower", "washf", 1]]) {
+        o += `<rect x="${kx}" y="3" width="10" height="8" class="${f}" style="fill-opacity:${a}"/>` + T(kx + 14, 11, t, "m");
+        kx += 14 + tw(t, F105) + 16;
+      }
+      d.rows.forEach((r, i) => {
+        const y = top + i * rowH;
+        o += T(0, y + 10, ini(r.pid), "s");
+        let x = lab;
+        const segs = [[r.first, col(r.pid), 1], [r.second, col(r.pid), 0.45], [r.rest, "var(--wash)", 1]];
+        segs.forEach(([v, c, a], j) => {
+          const ww = (v / r.games) * bwid;
+          if (ww <= 0) return;
+          o += `<rect x="${r2(x)}" y="${y}" width="${r2(Math.max(0, ww - (j < 2 ? 2 : 0)))}" height="${bh}" class="a-bx${j < 2 ? " dc-" + r.pid : ""}" style="fill:${c};fill-opacity:${a};transform-origin:${lab}px 0"/>`;
+          x += ww;
+        });
+        o += lineEl(lab + bwid + 0.5, y - 1, lab + bwid + 0.5, y + bh + 1, "axisl");
+        o += T(w, y + 10, r.pct, "k a-txt", "end");
+      });
+      return svgOpen(w, top + d.rows.length * rowH, d.rows.map((r) => `${ini(r.pid)} ${r.first} first, ${r.second} second of ${r.games}, ${r.pct}`).join("; ")) + o + "</svg>";
+    };
+
+    // Every game one player has played, as a row of dots with the long absence folded.
+    CHARTS.dot_row_gap = (d) => {
+      const pitch = 8, r = 3, gapW = 30;
+      let x = 4, o = "";
+      const xs = [];
+      const all = d.groups.reduce((a, g) => a + g.games.length, 0);
+      let k = 0;
+      d.groups.forEach((g, gi) => {
+        if (gi > 0) {
+          const fx = x + gapW / 2 - pitch / 2;
+          o += `<path d="M${r2(fx - 4)} 19L${r2(fx)} 9M${r2(fx + 1)} 19L${r2(fx + 5)} 9" class="muteds"/>`;
+          o += T(fx + 0.5, 34, d.gap.text, "m s", "middle");
+          x += gapW;
+        }
+        const x0 = x;
+        g.games.forEach((q) => {
+          const s = `--o:${r2((k++ / all) * 0.85)}`;
+          o += q.won ? `<circle cx="${r2(x)}" cy="14" r="${r}" class="a-dot dc-${d.pid}" style="fill:${col(d.pid)};${s}"/>`
+            : `<circle cx="${r2(x)}" cy="14" r="${r - 0.6}" class="a-dot" style="fill:none;stroke:var(--axis);stroke-width:1.2;${s}"/>`;
+          x += pitch;
+        });
+        xs.push([x0, x - pitch]);
+      });
+      d.groups.forEach((g, gi) => { o += T(xs[gi][0] - r, 50, g.text, "k b a-txt"); });
+      const w = x - pitch + r + 4;
+      return svgOpen(Math.max(w, 300), 56, `${ini(d.pid)}'s games: ` + d.groups.map((g) => g.text).join(", then ") + `, with ${d.gap.text} between`) + o + "</svg>";
+    };
+
+    // Five small slopes from one year to the next, each on its own scale.
+    CHARTS.slope_multiples = (d) => {
+      const n = d.panels.length, gap = 12, pw = Math.min(60, Math.floor((344 - (n - 1) * gap) / n)), w = n * pw + (n - 1) * gap, top = 34, ph = 70;
+      let o = "";
+      d.panels.forEach((p, i) => {
+        const x0 = i * (pw + gap), x1 = x0 + pw, ax = x0 + 6, bx = x1 - 6;
+        const sy = (v) => top + (1 - (v - p.domain[0]) / (p.domain[1] - p.domain[0])) * ph;
+        // the panel label, wrapped to the panel width
+        const words = p.label.split(" "), lines = [""];
+        for (const wd of words) { const t = lines[lines.length - 1] ? lines[lines.length - 1] + " " + wd : wd; if (tw(t, F10) > pw && lines[lines.length - 1]) lines.push(wd); else lines[lines.length - 1] = t; }
+        lines.slice(0, 2).forEach((ln, j) => (o += T(x0, 10 + j * 11, ln, (p.moving ? "k" : "m") + " s")));
+        o += lineEl(x0, top + ph + 0.5, x1, top + ph + 0.5, "hair");
+        const ya = sy(p.a), yb = sy(p.b);
+        o += `<path d="M${r2(ax)} ${r2(ya)}L${r2(bx)} ${r2(yb)}" class="a-line" pathLength="1" style="fill:none;stroke:var(${p.moving ? "--ink" : "--ink-2"});stroke-width:${p.moving ? 1.75 : 1.25}"/>`;
+        o += `<circle cx="${r2(ax)}" cy="${r2(ya)}" r="2.5" class="a-dot" style="fill:var(${p.moving ? "--ink" : "--ink-2"});--o:0"/>`;
+        o += `<circle cx="${r2(bx)}" cy="${r2(yb)}" r="2.5" class="a-dot" style="fill:var(${p.moving ? "--ink" : "--ink-2"});--o:.8"/>`;
+        const up = p.b > p.a;
+        o += T(x0, up ? ya + 14 : ya - 6, p.a_text, (p.moving ? "k" : "") + " s a-txt");
+        o += T(x1, up ? yb - 6 : yb + 14, p.b_text, (p.moving ? "k b" : "") + " s a-txt", "end");
+        if (i === 0) o += T(x0, top + ph + 13, d.from, "m s") + T(x1, top + ph + 13, d.to, "m s", "end");
+      });
+      return svgOpen(w, top + ph + 17, `${d.from} to ${d.to}: ` + d.panels.map((p) => `${p.label} ${p.a_text} to ${p.b_text}`).join("; ")) + o + "</svg>";
+    };
+
+    // One small line per player on a shared scale.
+    CHARTS.sparklines = (d) => {
+      const w = 340, lab = 28, pr = 50, rowH = 24, sw = w - lab - pr, n = d.rows.length;
+      let o = "";
+      d.rows.forEach((r, i) => {
+        const y0 = i * rowH, sy = (v) => y0 + 2 + (1 - (v - d.domain[0]) / (d.domain[1] - d.domain[0])) * (rowH - 4);
+        const sx = (k) => lab + (k / Math.max(1, d.x_max - 1)) * sw;
+        o += T(0, sy(0) + 3.5, ini(r.pid), "s");
+        o += lineEl(lab, sy(0), lab + sw, sy(0), "hair");
+        const pts = r.points.map((p, k) => [sx(k), sy(p[1])]);
+        o += playerLine(r.pid, polyD(pts), 1.5);
+        const at = (n0) => r.points.findIndex((p) => p[0] === n0);
+        for (const mk of [r.peak, r.low]) { const k = at(mk.n); if (k >= 0) o += `<circle cx="${r2(sx(k))}" cy="${r2(sy(mk.v))}" r="1.6" class="inkf a-dot" style="--o:.85"/>`; }
+        o += T(w, sy(0) + 3.5, r.final_text, "k a-txt", "end");
+      });
+      return svgOpen(w, n * rowH + 2, "Wins above expected over each player's own games: " + d.rows.map((r) => `${ini(r.pid)} ${r.final_text}`).join(", ")) + o + "</svg>";
+    };
+
+    // Before and after, each row on its own scale.
+    CHARTS.dumbbells = (d) => {
+      const w = 340, lab = 120, pr = 44, rowH = 28;
+      let o = "";
+      (d.rows || []).forEach((r, i) => {
+        const y = i * rowH + 16, sx = (v) => lab + ((v - r.domain[0]) / (r.domain[1] - r.domain[0])) * (w - lab - pr);
+        o += T(0, y + 4, r.label, "s");
+        o += lineEl(sx(r.a), y, sx(r.b), y, "axisl a-txt", ` style="stroke-width:1.5"`);
+        o += `<circle cx="${r2(sx(r.a))}" cy="${y}" r="3" class="inkf a-dot" style="--o:0"/><circle cx="${r2(sx(r.b))}" cy="${y}" r="3" class="inkf a-dot" style="--o:.6"/>`;
+        o += T(sx(r.a), y - 7, r.a_text || String(r.a), "m s a-txt", "middle") + T(sx(r.b), y - 7, r.b_text || String(r.b), "k s a-txt", "middle");
+      });
+      return svgOpen(w, (d.rows || []).length * rowH + 8, (d.rows || []).map((r) => `${r.label}: ${r.a_text || r.a} to ${r.b_text || r.b}`).join("; ")) + o + "</svg>";
+    };
+
+    // ---------- the backbone ----------
+    // live: the window that pans under a fixed cursor. overview: the whole history at the column width.
+    function Backbone(svg, mode, pre) {
+      const isLive = mode === "live";
+      const B = { svg };
+      const NS = "http://www.w3.org/2000/svg";
+      let W, Hh, uPx, leftPad, floorY, plotTop, plotH, mwY, lbY, monY, pan, clipR, linesG, gridG, labG, ylabG, ring, spanR, mwRow, lbRow, rowLabs, eraNames = [], timed = [];
+      const players = {};
+      const xU = (u) => leftPad + u * uPx;
+
+      B.build = function () {
+        W = svg.clientWidth; Hh = svg.clientHeight;
+        if (!W || !Hh) return false;
+        leftPad = isLive ? 30 : 26;
+        uPx = isLive ? clamp(W / PAC.window_u, 22, 40) : (W - leftPad - 54) / U;
+        // Live: the two ribbons sit under the floor and are named at their live end, right of the cursor.
+        // Overview: each ribbon has its name on its own line above it, so nothing covers the ribbons.
+        plotTop = isLive ? 34 : 22; floorY = Hh - (isLive ? 52 : 72); plotH = floorY - plotTop - 2;
+        if (isLive) { mwY = floorY + 10; lbY = mwY + 10; } else { mwY = floorY + 21; lbY = mwY + 21; }
+        monY = lbY + 21;
+        const o = [];
+        // patterns for ties and for a holder who sat out
+        let defs = `<defs><clipPath id="${pre}clip" clipPathUnits="userSpaceOnUse"><rect id="${pre}clipR" x="-2000" y="-10" width="0" height="${Hh + 20}"/></clipPath>`;
+        for (const p of PIDS) defs += `<pattern id="${pre}hz-${p}" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="4" height="4" style="fill:var(--page)"/><rect width="2" height="4" style="fill:${col(p)}"/></pattern>`;
+        const ties = [...new Set(H.crowns.mw.filter((x) => Array.isArray(x)).map((x) => x.join("-")))];
+        for (const t of ties) {
+          const ps = t.split("-"), sw = 3;
+          defs += `<pattern id="${pre}tie-${t}" width="${sw * ps.length}" height="${sw * ps.length}" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">` + ps.map((p, k) => `<rect x="${k * sw}" width="${sw}" height="${sw * ps.length}" style="fill:${col(p)}"/>`).join("") + `</pattern>`;
+        }
+        o.push(defs + "</defs>");
+        o.push(`<g id="${pre}grid"></g>`);
+        o.push(`<g id="${pre}pan">`);
+        // future: faint month ticks only
+        if (isLive) for (const m of H.months) o.push(`<line class="ftick" x1="${r2(xU(m.u))}" x2="${r2(xU(m.u))}" y1="${monY - 9}" y2="${monY + 1}"/>`);
+        o.push(`<g ${isLive ? `clip-path="url(#${pre}clip)"` : ""}>`);
+        // span shading sits under everything else
+        o.push(`<rect id="${pre}span" class="span" x="0" y="0" width="0" height="${lbY + 6}" opacity="0"/>`);
+        // era rules
+        E.forEach((e, k) => { if (k > 0) { const x = Math.round(xU(e.u0)) + 0.5; o.push(`<line class="erarule" x1="${x}" x2="${x}" y1="${isLive ? 4 : 2}" y2="${isLive ? lbY + 6 : floorY + 3}"/>`); } });
+        // floor, broken at each fold
+        let fx0 = xU(0);
+        for (const b of H.breaks) {
+          const xc = xU((b.u0 + b.u1) / 2);
+          o.push(`<line class="floor" x1="${r2(fx0)}" x2="${r2(xc - 3)}" y1="${floorY + 0.5}" y2="${floorY + 0.5}"/>`);
+          fx0 = xc + 3;
+          if (isLive) o.push(`<path class="fold" d="M${r2(xc - 4)} ${floorY + 5}L${r2(xc - 1)} ${floorY - 4}M${r2(xc + 1)} ${floorY + 5}L${r2(xc + 4)} ${floorY - 4}"/>`);
+        }
+        o.push(`<line class="floor" x1="${r2(fx0)}" x2="${r2(xU(U))}" y1="${floorY + 0.5}" y2="${floorY + 0.5}"/>`);
+        // months
+        for (const m of H.months) {
+          const x = xU(m.u);
+          if (isLive) {
+            o.push(`<line class="ptick" x1="${r2(x)}" x2="${r2(x)}" y1="${monY - 9}" y2="${monY + 1}"/>`);
+          } else if (m.y) {
+            o.push(`<line class="ptick" x1="${r2(x)}" x2="${r2(x)}" y1="${monY - 9}" y2="${monY + 1}"/>`);
+            o.push(`<text class="yr" x="${r2(x + 3)}" y="${monY}">${m.y}</text>`);
+          }
+        }
+        // ribbons
+        const runs = (keyOf) => { const out = []; for (let i = 0; i < N; i++) { const k = keyOf(i); if (out.length && out[out.length - 1].k === k) out[out.length - 1].j = i; else out.push({ k, i, j: i }); } return out; };
+        const x0Of = (i) => xU(G[i].u - 0.5), x1Of = (j) => (j + 1 < N ? xU(G[j + 1].u - 0.5) : xU(G[j].u + 0.5));
+        let mw = `<g id="${pre}mw">`;
+        for (const r of runs((i) => { const v = H.crowns.mw[i]; return Array.isArray(v) ? "tie-" + v.join("-") : v; })) {
+          const fill = r.k.startsWith("tie-") ? `url(#${pre}${r.k})` : col(r.k);
+          mw += `<rect x="${r2(x0Of(r.i))}" y="${mwY}" width="${r2(x1Of(r.j) - x0Of(r.i))}" height="5" style="fill:${fill}"/>`;
+        }
+        o.push(mw + "</g>");
+        let lb = `<g id="${pre}lb">`;
+        for (const r of runs((i) => { const v = H.crowns.lb[i]; return v ? v + (H.crowns.lbp[i] ? "" : "~") : ""; })) {
+          if (!r.k) continue;
+          const p = r.k.replace("~", ""), fill = r.k.endsWith("~") ? `url(#${pre}hz-${p})` : col(p);
+          lb += `<rect x="${r2(x0Of(r.i))}" y="${lbY}" width="${r2(x1Of(r.j) - x0Of(r.i))}" height="5" style="fill:${fill}"/>`;
+        }
+        o.push(lb + "</g>");
+        // beat ticks at the top
+        if (isLive) for (const st of STOPS) { const x = r2(xU(tauOfN(st.n) - 0.5)); o.push(`<line class="btick" x1="${x}" x2="${x}" y1="${plotTop - 12}" y2="${plotTop - 8}"/>`); }
+        // floor dots
+        for (const g of G) {
+          const x = r2(xU(g.u)), r = isLive ? 2.5 : clamp(uPx * 0.36, 1.1, 2.5);
+          o.push(P[g.w] ? `<circle cx="${x}" cy="${floorY}" r="${r}" class="dc-${g.w}" style="fill:${col(g.w)}"/>` : `<circle cx="${x}" cy="${floorY}" r="${r - 0.6}" class="guestdot"/>`);
+        }
+        // race lines
+        const kY = plotH / (isLive ? 10 : D_FINAL);
+        o.push(`<g id="${pre}lines" transform="translate(${leftPad} ${floorY}) scale(${r2(uPx)} ${-kY})">`);
+        for (const p of PIDS) {
+          if (!CURVES[p]) continue;
+          const d = curvePath(CURVES[p]);
+          o.push(`<g id="${pre}g-${p}" style="--lw:1.5px" opacity=".8"><path class="cs cs-${p}" d="${d}" vector-effect="non-scaling-stroke"/><path class="rl" d="${d}" style="stroke:${col(p)}" vector-effect="non-scaling-stroke"/></g>`);
+        }
+        o.push(`</g>`);
+        o.push(`</g>`); // end clipped
+        if (isLive) o.push(`<circle id="${pre}ring" class="ring" cx="0" cy="${floorY}" r="4.6" opacity="0"/>`);
+        // Era names, month names, break lengths and the leaderboard's "starts at game 10": unclipped, each shown once
+        // the cursor reaches it and hidden once its left edge would be cut off, never drawn in part.
+        E.forEach((e, k) => o.push(`<text class="eraname" id="${pre}en-${k}" x="${r2(xU(e.u0) + 6)}" y="${isLive ? 15 : 13}"${isLive ? ' visibility="hidden"' : ""}>${esc(e.name)}</text>`));
+        const rowW = (s) => tw(s, F105) + 0.84 * s.length; // uppercase, 0.08em tracking
+        const noteF = "italic 400 12px Newsreader, Georgia, serif";
+        const timedSpec = [];
+        let ovSmall = false; // a narrow overview sets its ribbon names smaller so "starts at game 10" fits beside them
+        if (isLive) {
+          // The month row also carries the break lengths, centred under each fold. Month names come first: one that
+          // would run into the name before it moves right. A break length goes in only where it clears every month
+          // name and the break before it; otherwise it is left out (the masthead names it while the cursor crosses).
+          const mons = H.months.map((m, k) => ({ k, m, x: xU(m.u) + 3, w: tw(m.m, F105) + (m.y ? 4 + tw(String(m.y), "600 13px Newsreader, Georgia, serif") : 0), u: m.u }));
+          let edge = -Infinity;
+          for (const it of mons) {
+            if (it.x < edge + 8) it.x = edge + 8;
+            edge = it.x + it.w;
+            o.push(`<g id="${pre}mo-${it.k}" visibility="hidden"><text class="mon" x="${r2(it.x)}" y="${monY}">${it.m.m}</text>${it.m.y ? `<text class="yr" x="${r2(it.x + tw(it.m.m, F105) + 4)}" y="${monY}">${it.m.y}</text>` : ""}</g>`);
+            timedSpec.push({ id: `${pre}mo-${it.k}`, u: it.u, x0: it.x });
+          }
+          let fedge = -Infinity;
+          H.breaks.forEach((b, k) => {
+            const t = `${b.days} days`, w = tw(t, F10), x = xU((b.u0 + b.u1) / 2) - w / 2;
+            if (x < fedge + 8 || mons.some((q) => x < q.x + q.w + 10 && x + w + 10 > q.x)) return;
+            fedge = x + w;
+            o.push(`<text class="folddays" id="${pre}fd-${k}" x="${r2(x)}" y="${monY}" visibility="hidden">${t}</text>`);
+            timedSpec.push({ id: `${pre}fd-${k}`, u: b.u0 + 0.05, x0: x });
+          });
+          if (firstLb > 0) {
+            const xe = x0Of(firstLb) - 6, w = tw(M.labels.lb_before, noteF);
+            o.push(`<text class="lbnote" id="${pre}lbnote" x="${r2(xe)}" y="${lbY + 5}" text-anchor="end" visibility="hidden">${esc(M.labels.lb_before)}</text>`);
+            timedSpec.push({ id: `${pre}lbnote`, u: G[firstLb].u - 0.5, x0: xe - w });
+          }
+        } else if (firstLb > 0) {
+          // after the row's name on its own line, or else in the empty stretch of the row if it fits there clear of
+          // the y labels; at a narrow width neither fits, and games 1 to 9 are then only a few px wide anyway
+          const xe = x0Of(firstLb) - 6, w = tw(M.labels.lb_before, noteF), xa = leftPad + rowW(M.labels.lb_row) + 10;
+          const wS = tw(M.labels.lb_before, "italic 400 11px Newsreader, Georgia, serif"), xaS = leftPad + (tw(M.labels.lb_row, "400 9.5px Inter, system-ui, sans-serif") + 0.76 * M.labels.lb_row.length) + 8;
+          if (xa + w <= W - 2) o.push(`<text class="lbnote" x="${r2(xa)}" y="${lbY - 4}">${esc(M.labels.lb_before)}</text>`);
+          else if (xe - w >= leftPad) o.push(`<text class="lbnote" x="${r2(xe)}" y="${lbY + 5}" text-anchor="end">${esc(M.labels.lb_before)}</text>`);
+          else if (xaS + wS <= W - 2) { ovSmall = true; o.push(`<text class="lbnote" x="${r2(xaS)}" y="${lbY - 4}" style="font-size:11px">${esc(M.labels.lb_before)}</text>`); }
+        }
+        o.push(`</g>`); // end pan
+        // pinned labels
+        o.push(`<g id="${pre}ylabs"></g><g id="${pre}labs"></g>`);
+        // ribbon names: live, just right of the cursor (moved per frame); overview, on their own line above each ribbon
+        const rx = isLive ? 0 : leftPad, my = isLive ? mwY + 6.1 : mwY - 4, ly = isLive ? lbY + 6.1 : lbY - 4;
+        o.push(`<g id="${pre}rowlabs"${isLive ? ' class="live"' : ovSmall ? ' class="small"' : ""}><text class="rlab" x="${rx}" y="${r2(my)}">${esc(M.labels.mw_row)}</text><text class="rlab" x="${rx}" y="${r2(ly)}">${esc(M.labels.lb_row)}</text></g>`);
+        svg.setAttribute("viewBox", `0 0 ${W} ${Hh}`);
+        svg.classList.add("bb");
+        svg.innerHTML = o.join("");
+        pan = svg.querySelector(`#${pre}pan`); clipR = svg.querySelector(`#${pre}clipR`); linesG = svg.querySelector(`#${pre}lines`);
+        gridG = svg.querySelector(`#${pre}grid`); labG = svg.querySelector(`#${pre}labs`); ring = svg.querySelector(`#${pre}ring`);
+        spanR = svg.querySelector(`#${pre}span`); mwRow = svg.querySelector(`#${pre}mw`); lbRow = svg.querySelector(`#${pre}lb`);
+        eraNames = E.map((e, k) => ({ el: svg.querySelector(`#${pre}en-${k}`), x0: xU(e.u0) + 6, w: tw(e.name, "italic 400 15px Newsreader, Georgia, serif"), shown: null, now: null, x: null }));
+        ylabG = svg.querySelector(`#${pre}ylabs`);
+        timed = timedSpec.map((q) => ({ el: svg.querySelector("#" + q.id), u: q.u, x0: q.x0, on: null }));
+        rowLabs = svg.querySelector(`#${pre}rowlabs`); B.lastRX = null;
+        for (const p of PIDS) players[p] = { g: svg.querySelector(`#${pre}g-${p}`), op: null, lw: null, lab: null, shown: null, txt: null };
+        // line-end labels
+        let lh = "";
+        for (const p of PIDS) {
+          if (!CURVES[p]) continue;
+          lh += `<g id="${pre}lab-${p}" display="none"><line class="lead"/><circle class="enddot dc-${p}" r="3" style="fill:${col(p)}"/><circle class="labdot dc-${p}" r="3.5" style="fill:${col(p)}"/><text class="elab">${esc(ini(p))} <tspan class="n"></tspan></text></g>`;
+        }
+        labG.innerHTML = lh;
+        for (const p of PIDS) {
+          const g = svg.querySelector(`#${pre}lab-${p}`);
+          if (g) players[p].lab = { g, lead: g.querySelector("line"), end: g.querySelector(".enddot"), dot: g.querySelector(".labdot"), text: g.querySelector("text"), n: g.querySelector("tspan") };
+        }
+        B.lastD = null; B.lastCX = null;
+        if (!isLive) B.drawStatic();
+        return true;
+      };
+
+      function setGrid(Dv, x2) {
+        let s = "";
+        const yOf = (v) => floorY - (v * plotH) / Dv;
+        for (let v = 5; v <= Dv + 0.001; v += 5) {
+          const y = yOf(v);
+          if (y < plotTop - 6) break;
+          s += `<line class="grid" x1="0" x2="${r2(x2)}" y1="${r2(y) + 0.5}" y2="${r2(y) + 0.5}"/>`;
+        }
+        gridG.innerHTML = s;
+        let t = "";
+        for (let v = 5; v <= Dv + 0.001; v += 5) {
+          const y = yOf(v);
+          if (y < plotTop - 6) break;
+          const lbl = String(v);
+          t += `<rect class="plate" x="0" y="${r2(y - 6)}" width="${r2(tw(lbl, F105) + 7)}" height="12"/><text class="ylab" x="2" y="${r2(y + 4)}">${lbl}</text>`;
+        }
+        ylabG.innerHTML = t;
+      }
+
+      // Place the labels at the line ends: dodge vertically, 12 px apart, with a leader when moved.
+      function placeLabels(cx, tau, Dv, ci) {
+        const items = [];
+        for (const p of PIDS) {
+          const pl = players[p];
+          if (!pl.lab) continue;
+          const c = CURVES[p];
+          const on = tau > c.xs[0] + 1e-6;
+          if (on !== pl.shown) { pl.lab.g.setAttribute("display", on ? "inline" : "none"); pl.shown = on; }
+          if (!on) continue;
+          const v = curveAt(c, tau), y = floorY - (v * plotH) / Dv;
+          const cnt = ci >= 0 ? raceAt(p, ci) : 0;
+          items.push({ p, y, y0: y, cnt: cnt == null ? 0 : cnt });
+        }
+        items.sort((a, b) => a.y - b.y || b.cnt - a.cnt || PIDS.indexOf(a.p) - PIDS.indexOf(b.p));
+        const gap = 12, maxY = floorY - 4;
+        for (let i = 1; i < items.length; i++) items[i].y = Math.max(items[i].y, items[i - 1].y + gap);
+        if (items.length && items[items.length - 1].y > maxY) {
+          items[items.length - 1].y = maxY;
+          for (let i = items.length - 2; i >= 0; i--) items[i].y = Math.min(items[i].y, items[i + 1].y - gap);
+        }
+        for (const it of items) {
+          const L2 = players[it.p].lab, lx = cx + 13;
+          L2.end.setAttribute("cx", r2(cx)); L2.end.setAttribute("cy", r2(it.y0));
+          L2.dot.setAttribute("cx", r2(lx)); L2.dot.setAttribute("cy", r2(it.y));
+          L2.text.setAttribute("x", r2(lx + 7)); L2.text.setAttribute("y", r2(it.y + 4));
+          const moved = Math.abs(it.y - it.y0) > 1.5;
+          if (moved) { L2.lead.setAttribute("x1", r2(cx + 3)); L2.lead.setAttribute("y1", r2(it.y0)); L2.lead.setAttribute("x2", r2(lx - 4)); L2.lead.setAttribute("y2", r2(it.y)); }
+          L2.lead.setAttribute("visibility", moved ? "visible" : "hidden");
+          const txt = String(it.cnt);
+          if (players[it.p].txt !== txt) { L2.n.textContent = txt; players[it.p].txt = txt; }
+        }
+      }
+
+      B.drawStatic = function () {
+        const Dv = D_FINAL, x2 = xU(U);
+        setGrid(Dv, x2);
+        linesG.setAttribute("transform", `translate(${leftPad} ${floorY}) scale(${r2(uPx)} ${-(plotH / Dv)})`);
+        placeLabels(x2, U, Dv, N - 1);
+        // era names where they fit, else the chapter number
+        eraNames.forEach((e, k) => {
+          const next = k + 1 < E.length ? xU(E[k + 1].u0) : xU(U) + 40;
+          if (e.x0 + e.w > next - 6) e.el.textContent = ROMAN(k + 1), e.el.setAttribute("class", "eranum"), e.el.setAttribute("y", 12);
+        });
+      };
+
+      // Per frame. tau: the time cursor; Dv: the y range; focus: {weights, beats}.
+      B.update = function (tau, Dv, fz) {
+        const xT = xU(tau), tx = Math.min(0, W * PAC.cursor_at - xT), cx = xT + tx;
+        pan.setAttribute("transform", `translate(${r2(tx)} 0)`);
+        clipR.setAttribute("width", r2(xT + 2000));
+        if (Dv !== B.lastD) {
+          linesG.setAttribute("transform", `translate(${leftPad} ${floorY}) scale(${r2(uPx)} ${-(plotH / Dv).toFixed(4)})`);
+          setGrid(Dv, cx);
+          B.lastD = Dv; B.lastCX = cx;
+        } else if (Math.abs(cx - B.lastCX) > 0.25) {
+          for (const ln of gridG.children) ln.setAttribute("x2", r2(cx));
+          B.lastCX = cx;
+        }
+        for (const q of timed) { const on = q.u <= tau + 1e-6 && q.x0 + tx >= 0; if (on !== q.on) { q.el.setAttribute("visibility", on ? "visible" : "hidden"); q.on = on; } }
+        // the ribbon names ride just right of the ribbons' live end
+        const rxl = r2(cx + 10);
+        if (rxl !== B.lastRX) { rowLabs.setAttribute("transform", `translate(${rxl} 0)`); B.lastRX = rxl; }
+        const ci = lastCentre(tau);
+        placeLabels(cx, tau, Dv, ci);
+        // focus on lines and labels
+        for (const p of PIDS) {
+          const pl = players[p];
+          if (!pl.g) continue;
+          let op = 0.8, lw = 1.5;
+          for (const { k, w } of fz.weights) {
+            const f = BEATS[k].focus;
+            if (!f || !f.length) continue;
+            const inF = f.includes(p);
+            op += w * ((inF ? 1 : 0.25) - 0.8);
+            if (inF) lw += w * 0.5;
+          }
+          op = r2(op); lw = r2(lw);
+          if (op !== pl.op) { pl.g.setAttribute("opacity", op); if (pl.lab) pl.lab.g.setAttribute("opacity", Math.min(1, op + 0.2)); pl.op = op; }
+          if (lw !== pl.lw) { pl.g.style.setProperty("--lw", lw + "px"); pl.lw = lw; }
+        }
+        // the ring, the span and the ribbon emphasis
+        let rk = null, rw = 0, sk = null, sw = 0, ew = 0;
+        for (const { k, w } of fz.weights) {
+          if (w > rw) { rk = k; }
+          rw = Math.max(rw, w);
+          if (BEATS[k].span && w > sw) { sk = k; sw = w; }
+          if (BEATS[k].emphasis === "lb") ew = Math.max(ew, w);
+        }
+        const rsum = fz.weights.reduce((a, q) => a + q.w, 0);
+        if (rk != null) { ring.setAttribute("cx", r2(xU(byN(BEATS[rk].n).u))); }
+        ring.setAttribute("opacity", r2(rk != null ? clamp(rsum, 0, 1) : 0));
+        if (sk != null) { const s = BEATS[sk].span, a = xU(byN(s[0]).u - 0.5), b = xU(byN(s[1]).u + 0.5); spanR.setAttribute("x", r2(a)); spanR.setAttribute("width", r2(b - a)); }
+        spanR.setAttribute("opacity", r2(sk != null ? sw : 0));
+        mwRow.setAttribute("opacity", r2(1 - 0.6 * ew));
+        // one era name: the current era's, at its rule, or held at the left edge once the rule has slid off
+        const ce = eraOfTau(tau), left = -tx + 6;
+        eraNames.forEach((e, k) => {
+          const shown = k === ce && E[k].u0 <= tau + 1e-6;
+          if (shown !== e.shown) { e.el.setAttribute("visibility", shown ? "visible" : "hidden"); e.shown = shown; }
+          if (!shown) return;
+          const x = r2(Math.max(e.x0, left));
+          if (x !== e.x) { e.el.setAttribute("x", x); e.x = x; }
+          if (e.now !== true) { e.el.setAttribute("class", "eraname now"); e.now = true; }
+        });
+        B.cx = cx; B.tx = tx;
+      };
+      B.windowU = () => ({ a: clamp((-B.tx - leftPad) / uPx, 0, U), b: clamp((W - B.tx - leftPad) / uPx, 0, U) });
+      return B;
+    }
+
+    // ---------- the minimap ----------
+    const mm = $("mm"), mmSvg = $("mmSvg");
+    const MM = { w: 0 };
+    function buildMini() {
+      const w = mm.clientWidth;
+      MM.w = w;
+      if (!w) return;
+      const xm = (u) => (u / U) * w;
+      const o = [`<defs><clipPath id="mmclip"><rect id="mmclipR" x="-2" y="0" width="0" height="24"/></clipPath></defs>`];
+      E.forEach((e, k) => { if (k > 0) o.push(`<line x1="${r2(xm(e.u0))}" x2="${r2(xm(e.u0))}" y1="0" y2="24" style="stroke:var(--rule-soft);stroke-width:1"/>`); });
+      let fut = "", past = "";
+      for (const g of G) {
+        const x = r2(xm(g.u) - 1);
+        fut += `<rect x="${x}" y="8" width="2" height="13" style="fill:var(--axis)"/>`;
+        past += `<rect x="${x}" y="8" width="2" height="13" style="fill:${P[g.w] ? col(g.w) : "var(--muted)"}"/>`;
+      }
+      o.push(fut, `<g clip-path="url(#mmclip)">${past}</g>`);
+      for (const st of STOPS) o.push(`<circle cx="${r2(xm(tauOfN(st.n) - 0.5))}" cy="3" r="1.5" style="fill:var(--ink)"/>`);
+      o.push(`<rect id="mmbr" x="0" y="0.75" width="0" height="22.5" rx="1.5" style="fill:none;stroke:var(--ink);stroke-width:1.5"/>`);
+      mmSvg.setAttribute("viewBox", `0 0 ${w} 24`);
+      mmSvg.innerHTML = o.join("");
+      MM.clip = $("mmclipR"); MM.br = $("mmbr");
+    }
+    function updateMini(tau, win) {
+      if (!MM.w) return;
+      const xm = (u) => (u / U) * MM.w;
+      MM.clip.setAttribute("width", r2(xm(tau) + 2));
+      const a = xm(win.a), b = xm(win.b);
+      MM.br.setAttribute("x", r2(a - 1)); MM.br.setAttribute("width", r2(Math.max(4, b - a + 2)));
+    }
+
+    // ---------- layout state ----------
+    let L = null, band = null, raf = 0, view = null, lastShown = new Set(), activeCard = null;
+    const mast = { era: null, when: null, cur: null };
+    // The y range grows in steps of 5. Each step eases over 400 px of quiet scroll that ends before the game that
+    // needs it begins, and never inside a beat's hold or the slow-down into it, so the scale is still while a card is
+    // read. (The line that triggers a step is still inside the old range, so finishing early is always safe.)
+    const DSTEPS = [], D_PX = 400;
+    function computeDsteps() {
+      DSTEPS.length = 0;
+      const busy = L.table.segs.filter((s) => s.type === "hold" || s.type === "in").map((s) => [s.s0, s.s0 + s.len]);
+      let cur = 10, prevEnd = 0;
+      for (let i = 0; i < N; i++) {
+        const d = Dfor(maxWinsAfter[i]);
+        if (d <= cur) continue;
+        let e = localForTau(G[i].u - 0.5);
+        for (let j = busy.length - 1; j >= 0; j--) { const [a, b] = busy[j]; if (a < e && b > e - D_PX) e = a; }
+        const s = Math.min(e, Math.max(prevEnd, e - D_PX)), len = Math.max(1, e - s);
+        DSTEPS.push({ s, len, from: cur, to: d });
+        prevEnd = s + len; cur = d;
+      }
+    }
+    function Dat(local) {
+      let D = 10;
+      for (const st of DSTEPS) { if (local < st.s) break; D = st.from + (st.to - st.from) * smooth(clamp((local - st.s) / st.len, 0, 1)); }
+      return r2(D);
+    }
+
+    function layout(keep) {
+      const vh = stage.clientHeight || window.innerHeight;
+      const table = buildTable(vh);
+      L = { vh, table, trackTop: 0 };
+      track.style.height = Math.round(table.total + vh) + "px";
+      L.trackTop = track.getBoundingClientRect().top + window.scrollY;
+      computeDsteps();
+      if (!band) band = Backbone($("bandSvg"), "live", "L-");
+      band.build();
+      buildMini();
+      fitCards();
+      if (keep) restore(keep);
+    }
+    // A card that would run into the backbone gets a smaller size.
+    function fitCards() {
+      for (const a of articles) {
+        if (a.parentNode !== zone) continue;
+        const room = zone.clientHeight - a.offsetTop - 14;
+        a.classList.remove("tight", "tighter");
+        const svg = a.querySelector("figure svg.ch");
+        if (svg) svg.style.width = "";
+        if (a.offsetHeight > room) a.classList.add("tight");
+        if (a.offsetHeight > room) { a.classList.remove("tight"); a.classList.add("tighter"); }
+        // a chart stacked under the text shrinks to the height that is left
+        if (a.offsetHeight > room && svg && svg.getBoundingClientRect().top > a.querySelector(".text").getBoundingClientRect().bottom - 1) {
+          const r = svg.getBoundingClientRect(), s = Math.max(0.5, (r.height - (a.offsetHeight - room)) / r.height);
+          svg.style.width = Math.round(r.width * s) + "px";
+        }
+      }
+    }
+    function position() {
+      if (!L) return null;
+      const st = stateAt(window.scrollY - L.trackTop);
+      const sg = st.seg >= 0 && st.seg < L.table.segs.length ? L.table.segs[st.seg] : null;
+      if (sg && sg.type === "hold") return { beat: sg.beat, p: (st.local - sg.s0) / sg.len };
+      return { tau: st.tau, before: st.local <= 0 ? st.local : null };
+    }
+    function restore(pos) {
+      let local;
+      if (pos.beat != null) { const h = BEATS[pos.beat]._hold; local = h.s0 + pos.p * h.len; }
+      else if (pos.before != null) local = pos.before;
+      else local = localForTau(pos.tau);
+      window.scrollTo(0, L.trackTop + local);
+    }
+
+    // ---------- per-frame ----------
+    function beatState(st) {
+      const out = { cards: [], weights: [] };
+      const S = L.table.segs;
+      if (st.seg < 0 || st.seg >= S.length) return out;
+      const sg = S[st.seg];
+      if (sg.type !== "hold") return out;
+      // Fixed-length fades in px: in over the first FADE px of the hold, out over the last FADE px; the chart draws
+      // over DRAW px; in between, nothing moves.
+      const len = sg.len, k = sg.beat, into = st.local - sg.s0, left = sg.s0 + len - st.local;
+      let op = 1, dy = 0;
+      if (into < FADE) { const q = clamp(into / FADE, 0, 1); op = q; dy = 14 * (1 - easeOut(q)); }
+      else if (left < FADE) { const q = 1 - clamp(left / FADE, 0, 1); op = 1 - q; dy = -10 * easeIn(q); }
+      out.cards.push({ k, op, dy, kc: clamp((into - DRAW[0]) / (DRAW[1] - DRAW[0]), 0, 1), p: into / len, held: into >= FADE && left >= FADE });
+      if (!sg.first && into < XF) { const w = 0.5 + (0.5 * into) / XF; out.weights.push({ k, w }, { k: S[st.seg - 1].beat, w: 1 - w }); }
+      else if (!sg.last && left < XF) { const w = 0.5 + (0.5 * left) / XF; out.weights.push({ k, w }, { k: S[st.seg + 1].beat, w: 1 - w }); }
+      else {
+        const wi = sg.first && into < FADE ? smooth(clamp(into / FADE, 0, 1)) : 1, wo = sg.last && left < FADE ? smooth(clamp(left / FADE, 0, 1)) : 1;
+        out.weights.push({ k, w: Math.min(wi, wo) });
+      }
+      return out;
+    }
+    let perf = { n: 0, sum: 0, max: 0, list: [] };
+    function frame() {
+      raf = 0;
+      if (view !== "journey" || !L) return;
+      const t0 = performance.now();
+      const local = window.scrollY - L.trackTop;
+      const st = stateAt(local);
+      const bs = beatState(st);
+      band.update(st.tau, Dat(local), bs);
+      updateMini(st.tau, band.windowU());
+      updateMast(st);
+      updateCards(bs);
+      updateHash(st, bs);
+      const dt = performance.now() - t0;
+      perf.n++; perf.sum += dt; perf.max = Math.max(perf.max, dt); if (perf.list.length < 4000) perf.list.push(dt);
+    }
+    const kick = () => { if (!raf) raf = requestAnimationFrame(frame); };
+
+    function updateCards(bs) {
+      const now = new Set();
+      for (const c of bs.cards) {
+        const a = articles[c.k];
+        now.add(c.k);
+        if (!lastShown.has(c.k)) a.classList.add("on");
+        a.style.opacity = r2(c.op);
+        a.style.transform = c.dy ? `translateY(${r2(c.dy)}px)` : "none";
+        if (a._fig === undefined) a._fig = a.querySelector(".fig");
+        if (a._fig) { const kk = r2(c.kc); if (a._k !== kk) { a._fig.style.setProperty("--k", kk); a._k = kk; } }
+      }
+      for (const k of lastShown) if (!now.has(k)) { const a = articles[k]; a.classList.remove("on"); a.style.opacity = 0; }
+      lastShown = now;
+      activeCard = bs.cards.length ? bs.cards[0] : null;
+    }
+
+    function updateMast(st) {
+      const ci = curGame(st.tau);
+      const e = ci < 0 ? 0 : G[ci].era;
+      if (e !== mast.era) {
+        $("eraKick").textContent = `Chapter ${ROMAN(e + 1)} of ${ROMAN(E.length)}`;
+        $("eraName").textContent = E[e].name;
+        mast.era = e;
+        for (const li of $("chapList").children) li.classList.toggle("cur", +li.dataset.e === e);
+      }
+      let when;
+      const sg = st.seg >= 0 && st.seg < L.table.segs.length ? L.table.segs[st.seg] : null;
+      const pc = sg && sg.type === "lin" && sg.piece.kind === "fold" ? sg.piece : (sg && sg.type === "out" ? PIECES.find((q) => q.kind === "fold" && st.tau > q.t0 + 1e-6 && st.tau < q.t1 - 1e-6) : null);
+      if (st.local <= 0 || ci < 0) when = `${fPlain(G[0].d)} · game 1<span class="of"> of ${N}</span>`;
+      else if (pc) {
+        const q = clamp((st.tau - pc.t0) / (pc.t1 - pc.t0), 0, 1), d = addDays(pc.from, Math.max(1, Math.min(pc.days - 1, Math.round(q * pc.days))));
+        // the gap is the difference between the two game dates, so it is named as such, not as days without a game
+        when = `${fDay(d)} · <b>${pc.days} days between games</b>`;
+      } else { const a = dp(G[ci].d); when = `<span class="wd">${DAY[a.w]} </span>${a.d} ${MON[a.m]} ${a.y} · <b>game ${ci + 1}<span class="of"> of ${N}</span></b>`; }
+      if (when !== mast.when) { $("when").innerHTML = when; mast.when = when; }
+      const cur = Math.max(1, ci + 1);
+      if (cur !== mast.cur) {
+        mm.setAttribute("aria-valuenow", cur);
+        mm.setAttribute("aria-valuetext", `Game ${cur} of ${N}, ${fDay(G[cur - 1].d)}`);
+        mast.cur = cur;
+      }
+      const nb = nextBeat(st.local), pbt = prevBeat(st.local);
+      $("nextB").disabled = nb == null; $("prevB").disabled = pbt == null;
+    }
+
+    // ---------- hash ----------
+    let hashWant = null, hashTimer = 0;
+    function setHashNow(h) {
+      const cur = location.hash.slice(1);
+      if (cur === (h || "")) return;
+      history.replaceState(history.state, "", location.pathname + location.search + (h ? "#" + h : ""));
+    }
+    function updateHash(st, bs) {
+      let want = "";
+      if (bs.cards.length && bs.cards[0].held) want = BEATS[bs.cards[0].k].id;
+      else if (bs.cards.length) want = hashWant == null ? "" : hashWant; // in a fade, keep what is there
+      if (want === hashWant) return;
+      hashWant = want;
+      clearTimeout(hashTimer);
+      hashTimer = setTimeout(() => setHashNow(hashWant), 250);
+    }
+
+    // ---------- jumping ----------
+    function nextBeat(local) {
+      const S = L.table.segs;
+      for (let k = 0; k < BEATS.length; k++) if (holdMid(k) > local + 2) return k;
+      return null;
+    }
+    function prevBeat(local) {
+      for (let k = BEATS.length - 1; k >= 0; k--) if (holdMid(k) < local - 2) return k;
+      return null;
+    }
+    // While a smooth jump is still travelling, the next ‹ or › counts from where it is going, not from where the page
+    // happens to be, so quick presses step through several beats. Cleared on arrival, on the reader's own wheel or
+    // touch, or after a second and a half.
+    let pending = null;
+    function fromLocal() {
+      const cur = window.scrollY - L.trackTop;
+      if (pending && performance.now() - pending.t < 1500 && Math.abs(cur - pending.local) > 2) return pending.local;
+      pending = null;
+      return cur;
+    }
+    const dropPending = () => { pending = null; };
+    window.addEventListener("wheel", dropPending, { passive: true });
+    window.addEventListener("touchstart", dropPending, { passive: true });
+    function jumpLocal(local, opts) {
+      opts = opts || {};
+      const top = Math.round(L.trackTop + local), dist = Math.abs(top - window.scrollY);
+      pending = null;
+      if (opts.instant) window.scrollTo(0, top);
+      else if (!reduceMQ.matches && dist <= 2 * L.vh) { window.scrollTo({ top, behavior: "smooth" }); pending = { local: top - L.trackTop, t: performance.now() }; }
+      else {
+        window.scrollTo(0, top);
+        stage.classList.add("blink");
+        requestAnimationFrame(() => requestAnimationFrame(() => stage.classList.remove("blink")));
+      }
+      if (opts.say) { live.textContent = ""; setTimeout(() => (live.textContent = opts.say), 30); }
+      kick();
+    }
+    const sayBeat = (k) => `${BEATS[k].kicker}. ${tokText(BEATS[k].headline)}`;
+    function goBeat(k, opts) {
+      if (view === "list") return listGo(k, opts);
+      jumpLocal(holdMid(k), { ...opts, say: sayBeat(k) });
+    }
+    function goGame(n, opts) {
+      if (view === "list") { const k = BEATS.findIndex((b) => b.n >= n); return listGo(k < 0 ? BEATS.length - 1 : k, opts); }
+      const t = localForGame(n);
+      jumpLocal(t.local, { ...opts, say: t.beat != null ? sayBeat(t.beat) : `Game ${n}, ${fDay(byN(n).d)}` });
+    }
+    function listGo(k, opts) {
+      const a = articles[k];
+      a.scrollIntoView({ block: "start", behavior: opts && !opts.instant && !reduceMQ.matches ? "smooth" : "auto" });
+      if (opts && opts.say !== false) { live.textContent = ""; setTimeout(() => (live.textContent = sayBeat(k)), 30); }
+    }
+    function fromHash(initial) {
+      const h = decodeURIComponent(location.hash.slice(1));
+      if (!h) return false;
+      if (beatIdx.has(h)) { goBeat(beatIdx.get(h), { instant: initial, say: initial ? false : undefined }); return true; }
+      if (gIdx.has(h)) { goGame(gIdx.get(h) + 1, { instant: initial }); return true; }
+      return false;
+    }
+    $("nextB").addEventListener("click", () => { const k = nextBeat(fromLocal()); if (k != null) goBeat(k, {}); });
+    $("prevB").addEventListener("click", () => { const k = prevBeat(fromLocal()); if (k != null) goBeat(k, {}); });
+
+    // chapters
+    $("chapList").innerHTML = E.map((e, k) => `<li data-e="${k}"><a href="#${esc(e.first)}" data-n="${e.from}"><span class="cr">${ROMAN(k + 1)}</span><span class="cn">${esc(e.name)}</span><span class="cd">${esc(gamesWord(e.from, e.to))} · ${esc(fRange(e.start, e.end))}</span></a></li>`).join("");
+    const chapters = $("chapters");
+    $("chapList").addEventListener("click", (ev) => {
+      const a = ev.target.closest("a"); if (!a) return;
+      ev.preventDefault();
+      chapters.open = false;
+      goGame(+a.dataset.n, {});
+    });
+    document.addEventListener("click", (ev) => { if (chapters.open && !chapters.contains(ev.target)) chapters.open = false; });
+    chapters.addEventListener("keydown", (ev) => { if (ev.key === "Escape" && chapters.open) { chapters.open = false; chapters.querySelector("summary").focus(); } });
+
+    // minimap: click to jump, and a slider for the keyboard
+    mm.addEventListener("click", (ev) => {
+      const r = mm.getBoundingClientRect(), u = clamp(((ev.clientX - r.left) / r.width) * U, 0, U);
+      let gi = G.findIndex((g) => u >= g.u - 0.5 && u <= g.u + 0.5);
+      if (gi >= 0 && BEATS.some((b) => b.n === gi + 1)) return goGame(gi + 1, {});
+      const local = localForTau(u);
+      jumpLocal(local, { say: gi >= 0 ? `Game ${gi + 1}, ${fDay(G[gi].d)}` : undefined });
+    });
+    mm.addEventListener("keydown", (ev) => {
+      const cur = mast.cur || 1, e = G[cur - 1].era;
+      let n = null;
+      if (ev.key === "ArrowRight" || ev.key === "ArrowUp") n = Math.min(N, cur + 1);
+      else if (ev.key === "ArrowLeft" || ev.key === "ArrowDown") n = Math.max(1, cur - 1);
+      else if (ev.key === "PageDown") n = e + 1 < E.length ? E[e + 1].from : N;
+      else if (ev.key === "PageUp") n = cur > E[e].from ? E[e].from : e > 0 ? E[e - 1].from : 1;
+      else if (ev.key === "Home") n = 1;
+      else if (ev.key === "End") n = N;
+      if (n == null) return;
+      ev.preventDefault();
+      const t = localForGame(n);
+      jumpLocal(t.local, { instant: true, say: t.beat != null ? sayBeat(t.beat) : `Game ${n}, ${fDay(byN(n).d)}` });
+    });
+
+    // ---------- the list view ----------
+    let ov = null;
+    function buildList() {
+      const body = $("listBody");
+      body.innerHTML = "";
+      E.forEach((e, k) => {
+        const sec = document.createElement("section");
+        sec.className = "era";
+        sec.innerHTML = `<header class="era-h"><span class="ek">Chapter ${ROMAN(k + 1)} · ${esc(gamesWord(e.from, e.to))} · ${esc(fRange(e.start, e.end))}</span><h2>${esc(e.name)}</h2></header>`;
+        BEATS.forEach((b, j) => { if (b.era === k) sec.appendChild(articles[j]); });
+        body.appendChild(sec);
+      });
+      $("ovCap").textContent = `${M.labels.asof}. The race of career wins, one line per player; each game's winner as a dot on the floor; the two crowns underneath.`;
+    }
+    function setView(v, keepBeat) {
+      view = v;
+      $("howto").textContent = HOWTO[v];
+      document.body.classList.toggle("listview", v === "list");
+      $("list").hidden = v !== "list";
+      $("toList").hidden = v === "list";
+      $("toJourney").hidden = v !== "list" || reduceMQ.matches || window.innerWidth < 640;
+      if (v === "list") {
+        buildList();
+        for (const a of articles) { a.classList.remove("on", "tight", "tighter"); a.style.opacity = ""; a.style.transform = ""; a.id = a.dataset.id; const f = a.querySelector(".fig"); if (f) f.style.removeProperty("--k"); a._k = null; }
+        lastShown = new Set();
+        if (!ov) ov = Backbone($("ovSvg"), "overview", "O-");
+        ov.build();
+      } else {
+        for (const a of articles) { a.removeAttribute("id"); a.style.opacity = 0; a.style.transform = ""; a._k = null; zone.appendChild(a); }
+        $("listBody").innerHTML = "";
+        layout(null);
+      }
+      if (keepBeat != null) goBeat(keepBeat, { instant: true, say: false });
+      kick();
+    }
+    const storedView = () => { try { return localStorage.getItem("history.v2.view"); } catch (e) { return null; } };
+    const storeView = (v) => { try { localStorage.setItem("history.v2.view", v); } catch (e) {} };
+    const wantList = () => reduceMQ.matches || window.innerWidth < 640 || storedView() === "list";
+    function currentBeatForSwitch() {
+      if (view === "journey" && L) {
+        const bs = beatState(stateAt(window.scrollY - L.trackTop));
+        if (bs.cards.length) return bs.cards[0].k;
+        const k = nextBeat(window.scrollY - L.trackTop);
+        return window.scrollY < L.trackTop ? null : k;
+      }
+      if (view === "list") {
+        let best = null;
+        for (const a of articles) { const r = a.getBoundingClientRect(); if (r.bottom > 80) { best = +a.dataset.k; break; } }
+        return window.scrollY < $("list").offsetTop - 40 ? null : best;
+      }
+      return null;
+    }
+    const goList = (ev) => { ev.preventDefault(); storeView("list"); const k = currentBeatForSwitch(); setView("list", k); };
+    $("toList").addEventListener("click", goList);
+    $("toList2").addEventListener("click", goList);
+    $("toJourney").addEventListener("click", (ev) => { ev.preventDefault(); storeView("journey"); const k = currentBeatForSwitch(); setView("journey", k); });
+
+    // ---------- intro, coda and method ----------
+    const first = G[0], last = G[N - 1];
+    $("lede").textContent = `Every game Catan Night has recorded, ${N} of them from ${fPlain(first.d)} to ${fPlain(last.d)}, as one slow timeline: the milestones, the turns in the standings, and what changed in the way the group plays.`;
+    const HOWTO = {
+      journey: `Scroll, and time moves forward, slowing to a stop at each of the ${BEATS.length} beats. Underneath runs the race of career wins, one line per player; the dots along its floor are the winners, game by game, and the two ribbons below them show who held most wins and who was leaderboard #1. The arrows at the top right step from beat to beat, and the strip at the bottom jumps anywhere.`,
+      list: `The ${BEATS.length} beats follow in order, chapter by chapter. The chart below is the race of career wins, one line per player; the dots along its floor are the winners, game by game, and the two ribbons below them show who held most wins and who was leaderboard #1.`,
+    };
+    const keySvg = (w, h, inner) => `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">${inner}</svg>`;
+    $("key").innerHTML = [
+      `<span>${keySvg(28, 14, `<path d="M1 12C9 12 10 3 18 3S24 3 27 3" style="fill:none;stroke:var(--ink-2);stroke-width:1.5"/>`)}Career wins</span>`,
+      `<span>${keySvg(26, 14, `<line x1="0" x2="26" y1="7.5" y2="7.5" style="stroke:var(--axis)"/><circle cx="7" cy="7.5" r="2.5" style="fill:var(--ink-2)"/><circle cx="19" cy="7.5" r="1.9" style="fill:var(--page);stroke:var(--muted);stroke-width:1.2"/>`)}A game's winner (hollow: a guest)</span>`,
+      `<span>${keySvg(26, 14, `<rect y="2" width="26" height="5" style="fill:var(--ink-2)"/><rect y="9" width="26" height="5" style="fill:url(#keyhatch)"/><defs><pattern id="keyhatch" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="4" height="4" style="fill:var(--page)"/><rect width="2" height="4" style="fill:var(--ink-2)"/></pattern></defs>`)}${esc(M.labels.mw)}; ${esc(M.labels.lb)}, hatched while the holder sat out</span>`,
+      `<span>${keySvg(22, 14, `<line x1="0" x2="7" y1="9.5" y2="9.5" style="stroke:var(--axis)"/><line x1="15" x2="22" y1="9.5" y2="9.5" style="stroke:var(--axis)"/><path d="M7 14L10 5M12 14L15 5" style="stroke:var(--muted);fill:none"/>`)}A break of more than ${M.axis.break_days} days, folded</span>`,
+    ].join("");
+
+    $("codaH").textContent = M.labels.asof;
+    $("codaSum").textContent = `${N} games over ${M.nights} nights, from ${fPlain(first.d)} to ${fPlain(last.d)}, told in ${BEATS.length} beats across ${E.length} chapters. Every figure in the text was computed from the group's game records; sentences that look back from today say so.`;
+    $("index").innerHTML = E.map((e, k) => {
+      const items = BEATS.map((b, j) => [b, j]).filter(([b]) => b.era === k);
+      if (!items.length) return "";
+      return `<section><h3>${esc(e.name)}<small>${esc(gamesWord(e.from, e.to))}</small></h3><ol>` + items.map(([b]) => `<li><span>${esc(b.kicker.split(" · ")[0])}</span><a href="#${esc(b.id)}" data-beat="${esc(b.id)}">${esc(tokText(b.headline))}</a></li>`).join("") + "</ol></section>";
+    }).join("");
+    $("index").addEventListener("click", (ev) => {
+      const a = ev.target.closest("a[data-beat]"); if (!a) return;
+      ev.preventDefault();
+      const k = beatIdx.get(a.dataset.beat);
+      goBeat(k, {});
+      if (view === "list") setHashNow(a.dataset.beat);
+    });
+
+    (function method() {
+      const ax = M.axis, longest = H.breaks.reduce((a, b) => (b.days > a.days ? b : a), H.breaks[0]);
+      const formula = (s) => esc(String(s).replace(/\*/g, "×"));
+      const charts = BEATS.filter((b) => b.chart).length, chanceBeat = BEATS.find((b) => b.chart && b.chart.type === "chance_line");
+      $("methodBody").innerHTML = `<dl class="mkey">
+        <dt>Time</dt><dd>One axis for the whole history, in units of one game. Games on the same night sit side by side; nights at most ${ax.break_days} days apart are ${ax.night_gap_u} of a unit apart; a longer break folds into ${formula(ax.break_u)} units, drawn as two slanted marks on the floor, with its length on the month row below them where there is room (${H.breaks.length} breaks, the longest ${longest.days} days). A break's length is the number of days between the two game dates. The calendar is not to scale.</dd>
+        <dt>Pace</dt><dd>Scrolling moves a cursor along that axis: ${PAC.px_game} px of scroll per game, ${PAC.px_night} px across a short gap between nights, and ${formula(PAC.px_break)} px across a folded break. Before each beat the cursor slows over its last game (${PAC.ease_px} px, easing out), then stands still while the beat is read: for the height of the window plus ${FADE} px at each end, in which the card fades in and out. The card is fully legible for a whole window height, so one press of Space or Page Down never carries a beat past unread; its chart draws in between ${DRAW[0]} and ${DRAW[1]} px into the stop, as the card arrives. Time then picks up again over the next unit. Beats less than ${PAC.merge_u} units apart share one slow-down. Everything on screen is a function of the scroll position, so scrolling back plays it in reverse.</dd>
+        <dt>The race</dt><dd>Career wins after every game, one line per registered player, starting at 0 at the player's first game and running level while the player sits out. The steps are joined with a monotone curve, so a win rises over the width of its game and the line never overshoots. The window is about ${PAC.window_u} units wide; the cursor stops at ${Math.round(PAC.cursor_at * 100)}% of the width and the history slides under it, with nothing drawn to its right but month ticks and the names of the two ribbons. The scale grows in steps of 5 wins, always at least 2 wins above the leader; each step is taken in quiet scroll before the game that needs it, never while a beat is on screen. At the cursor each line is labelled with the player's count.</dd>
+        <dt>The floor</dt><dd>One dot per game in the winner's colour; a guest's win is a hollow grey dot.</dd>
+        <dt>${esc(M.labels.mw)}</dt><dd>The player with the most career wins after each game, striped in each colour when two or more are tied.</dd>
+        <dt>Leaderboard #1</dt><dd>The player with the most wins above expected after each game, among players with ${CROWN_MIN} or more games, ties broken by average share of the points. It starts at game ${firstLb + 1}, and it is hatched in games its holder did not play. Expected wins are the sum of 1 divided by the number of seats over the games a player played; wins above expected are wins minus that. The 95% luck band is the central 95% of what wins above expected would be if every game were a 1 in n draw, n being the seats at the table.</dd>
+        <dt>Beats</dt><dd>${BEATS.length} short pieces of writing, ${charts} with a chart made for them. Each is placed at the game as of which it is true. Words like "yet", "so far" and "the first" are worked out on the games up to that point only; any sentence that reaches past it begins "${esc(M.labels.asof)}" or "Looking back from game ${ASOF.n}". A chart that uses later games says so under it.</dd>
+        <dt>Definitions</dt><dd>Dice luck is the resource cards a seat's dice paid out minus what its buildings should have earned on average. At one table, the luckiest and the worst dice are ranked by those cards; a record across games compares winners relative to what their dice should have paid, since games differ in length. Only robber moves and trades made by people at the table count. The leader on the board is the person with the most visible points, read at the moment of the robber move or the trade. For the robber, when several opponents are level at the top each counts as the leader, and the random rate is the share of the hexes the robber could have gone to that touch one of them. For trades, only trades made while one player led alone count, and a random pair of partners would include the leader 2 times in n, n being the people at the table. A winner "ahead before the last turn" led on the board for good before the final turn; "won on the last turn" was level or behind and won on it; "won by a reveal" was decided by hidden VP cards. A three-seat game is counted by seats at the table. ${chanceBeat ? `The win chance in game ${chanceBeat.n} comes from the site's model, fitted on all ${ASOF.n} games; it counts the dev cards in each hand but cannot see what they are. ` : ""}The closeness index is the site's own.</dd>
+        <dt>Colours</dt><dd>Each player keeps one colour throughout. A colour too close to the page (under ${CASE_MIN}:1 contrast) gets a thin darker edge so it stays visible; which colours get it is worked out from the theme in use.</dd>
+        <dt>Names</dt><dd>Players appear by initials; anyone without an account is "guest".</dd>
+      </dl>`;
+    })();
+
+    // ---------- start ----------
+    updateCasing();
+    new MutationObserver(updateCasing).observe(root, { attributes: true, attributeFilter: ["data-theme"] });
+    window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", updateCasing);
+    renderCharts();
+    for (const a of articles) zone.appendChild(a);
+    window.addEventListener("scroll", kick, { passive: true });
+    let rzRaf = 0, lastW = window.innerWidth, lastH = window.innerHeight;
+    window.addEventListener("resize", () => {
+      cancelAnimationFrame(rzRaf);
+      rzRaf = requestAnimationFrame(() => {
+        const wl = wantList();
+        if (wl && view !== "list") { setView("list", currentBeatForSwitch()); return; }
+        if (!wl && view === "list" && storedView() !== "list") { setView("journey", currentBeatForSwitch()); return; }
+        $("toJourney").hidden = view !== "list" || reduceMQ.matches || window.innerWidth < 640;
+        if (view === "journey") { const keep = position(); layout(keep); kick(); }
+        else if (ov) ov.build();
+        lastW = window.innerWidth; lastH = window.innerHeight;
+      });
+    });
+    reduceMQ.addEventListener("change", () => { setView(wantList() ? "list" : "journey", currentBeatForSwitch()); });
+    window.addEventListener("hashchange", () => fromHash(false));
+
+    setView(wantList() ? "list" : "journey", null);
+    if (!fromHash(true)) kick();
+    const fontsReady = Promise.race([document.fonts ? document.fonts.ready : Promise.resolve(), new Promise((r) => setTimeout(r, 2500))]);
+    fontsReady.then(() => {
+      renderCharts();
+      if (view === "journey") { const keep = position(); layout(keep); }
+      else if (ov) ov.build();
+      kick();
+    });
+
+    window.HistoryPage = {
+      get L() { return L; }, get view() { return view; }, stateAt, localForTau, holdMid, BEATS, perf: () => perf, resetPerf: () => (perf = { n: 0, sum: 0, max: 0, list: [] }),
+      goBeat, goGame, articles, band: () => band, setView, buildTable,
+    };
+  })();
+  </script>
+</body>
+</html>

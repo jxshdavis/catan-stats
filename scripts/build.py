@@ -16,6 +16,7 @@ import argparse
 import json
 import math
 import shutil
+import subprocess
 import sys
 from collections import defaultdict
 from datetime import date, datetime, timezone
@@ -867,6 +868,41 @@ def add_recaps(stats, data_dir, write):
         print(f"recaps: {len(stats['recaps'])} of {len(facts)} games have one" + (f", {left} without" if left else ""))
 
 
+HISTORY_SCRIPT = Path(__file__).resolve().parent / "history.py"
+
+
+def add_history(data_dir, out_dir, script=HISTORY_SCRIPT):
+    """Write data/history.js for the History tab (history.html) by running scripts/history.py on the stats just
+    written. It needs the hand-named eras in data/history_eras.json, so a data folder without them (the test
+    fixtures) skips it. A failure never stops the build: the tab keeps the last good copy, which every good run
+    saves to data/history.js and which is committed with the data. Returns "built", "kept", "missing" or "skipped"."""
+    if not (data_dir / "history_eras.json").exists():
+        return "skipped"
+    snapshot, out = data_dir / "history.js", out_dir / "data" / "history.js"
+    tmp = out_dir / "data" / "history.tmp.js"
+    r = subprocess.run([sys.executable, str(script), "--data", str(data_dir),
+                        "--stats", str(out_dir / "data" / "stats.json"), "--out", str(tmp)],
+                       capture_output=True, text=True)
+    if r.returncode == 0 and tmp.exists():
+        tmp.replace(out)
+        text = out.read_text(encoding="utf-8")
+        if not snapshot.exists() or snapshot.read_text(encoding="utf-8") != text:
+            snapshot.write_text(text, encoding="utf-8")
+        for line in r.stdout.splitlines():  # the script's own summary lines; the rest is for running it by hand
+            if line.startswith("history:"):
+                print(line, file=sys.stderr if line.startswith("history: warning") else sys.stdout)
+        return "built"
+    tmp.unlink(missing_ok=True)
+    why = (r.stderr.strip() or r.stdout.strip() or f"exit code {r.returncode}").splitlines()[-12:]
+    print("warning: history: not rebuilt. " + " | ".join(why), file=sys.stderr)
+    if snapshot.exists():
+        shutil.copyfile(snapshot, out)
+        print("warning: history: the History tab shows its last good copy, data/history.js", file=sys.stderr)
+        return "kept"
+    print("warning: history: no saved copy either, so the History tab says it has no data", file=sys.stderr)
+    return "missing"
+
+
 def build(check_only=False, data_dir=DATA, out_dir=DIST, write_recaps=False):
     try:
         players_doc = load_json(data_dir / "players.json")
@@ -910,6 +946,7 @@ def build(check_only=False, data_dir=DATA, out_dir=DIST, write_recaps=False):
     (out_dir / "data" / "stats.js").write_text(
         "window.CATAN_STATS = " + json.dumps(stats, separators=(",", ":")) + ";\n", encoding="utf-8")
     (out_dir / ".nojekyll").write_text("")
+    add_history(data_dir, out_dir)
     print(f"built {out_dir.name}/ from {n} games")
     return 0
 

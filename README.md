@@ -173,6 +173,17 @@ Each game page opens with a headline and a few sentences about how the game went
 
 All of it is computed in `scripts/build.py` and written to `dist/data/stats.json`. The front end in `site/` only renders that file.
 
+## History
+
+The History tab (`site/history.html`) is the group's story as one long scroll: the race for most wins runs along the bottom, and 32 beats (milestones, special games, changes at the top, and a few pieces of analysis) stop the scroll where they happened. Phones and reduced motion get the same story as a list.
+
+- `scripts/history.py` writes its data. `build.py` runs it on every build, after the stats, and serves the result as `dist/data/history.js`. It takes about 2 seconds.
+- Every number in a beat is computed from the data, as of the beat's game. Each beat checks the facts its words rest on. Sentences about today start "As of game N" or "Looking back from game N" and are recomputed on every build.
+- Eras are named by hand in `data/history_eras.json` (a name and the id of its first game). New games join the last era until you add one.
+- The set of beats is written in `scripts/history.py`. New games move the race, the eras and the closing beats, but a new milestone gets no beat of its own until someone writes one.
+- If a beat's facts stop being true (a game added out of date order can change who led when), that beat is left out and the build prints `history: warning: ...`. If the whole script fails, the build still finishes, prints `warning: history: not rebuilt`, and the tab keeps the last good copy, `data/history.js`. Every good build refreshes that copy; commit it with the games.
+- `python scripts/history.py -v` (after a build) prints every beat's text.
+
 ## Project layout
 
 ```
@@ -181,6 +192,7 @@ scripts/build.py validation, stats, ranking; builds dist/
 scripts/fetch_twosheep.py   (local only, not in the repo) pulls game summaries and replay files into raw/
 scripts/twosheep_replay.py  (local only, not in the repo) replays each game into raw/twosheep/replay_stats/
 scripts/import_twosheep.py  turns them into games.json and replays.json entries
+scripts/history.py          the History tab's data (run by build.py)
 tests/           unittest suite and synthetic fixtures
 site/            index.html, styles.css, app.js, charts.js (no build step, no dependencies)
 .github/         workflow that builds and deploys to Pages

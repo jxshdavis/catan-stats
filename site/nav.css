@@ -10,7 +10,8 @@
 .topbar-in { display: flex; align-items: center; gap: 4px; border-bottom: 1px solid var(--ink); }
 .topbar .nav { flex: 1 1 auto; min-width: 0; border-bottom: 0; justify-content: flex-start; }
 @media (min-width: 1000px) { .topbar .nav { justify-content: safe center; } }
-.topbar .nav a { padding: 6px 7px; letter-spacing: .075em; }
+.topbar .nav { gap: 0 4px; }
+.topbar .nav a { padding: 6px 6px; letter-spacing: .05em; }  /* 11 tabs and the tools fit in one row at full width */
 .nav .nav-sep { flex: none; width: 1px; height: 14px; background: var(--axis); margin: 0 4px; }
 .tools { flex: none; display: flex; align-items: center; gap: 2px; }
 .tool-btn { display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 8px; border: 0; background: transparent;
@@ -172,3 +173,24 @@ details.part > h3.part-h { margin-top: 6px; }
 .model-desc .panel { margin-top: 10px; max-width: 860px; }
 .model-desc td .sub { max-width: 64ch; font-weight: 400; }
 details.tv > .model-desc { margin: 0 0 12px; }
+
+/* ---- Games tab: the book view. One headline per game, set like an almanac column. ---- */
+.games-view { margin-top: 14px; }
+.games-view .book-order-k { margin-left: 14px; }
+.book { max-width: 680px; margin-top: 8px; }
+.book-month { font-family: var(--serif); font-weight: 500; font-size: 15px; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--ink-2); margin: 40px 0 0; padding-bottom: 8px; border-bottom: 1px solid var(--ink);
+  display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.book-month .sub { font-family: var(--font); font-size: 12px; letter-spacing: .06em; color: var(--muted); }
+.book-list { list-style: none; margin: 0; padding: 0; }
+.book-entry { padding: 18px 0 20px; border-bottom: 1px solid var(--hair); }
+.book-list .book-entry:last-child { border-bottom: 0; }
+.book-no { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted);
+  font-variant-numeric: lining-nums tabular-nums; }
+.book-head { font-family: var(--serif); font-weight: 500; font-size: clamp(22px, 3.4vw, 28px); line-height: 1.18;
+  letter-spacing: -0.01em; margin: 4px 0 8px; text-wrap: balance; }
+.book-head a { color: var(--ink); text-decoration: none; }
+.book-head a:hover { text-decoration: underline; text-decoration-color: var(--axis); text-underline-offset: 4px; }
+.book-meta { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 16px; font-size: 14px; color: var(--ink-2); }
+.book-meta .order { font-size: 14px; gap: 2px 12px; }
+.book-meta .who { gap: 6px; }
