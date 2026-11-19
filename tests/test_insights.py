@@ -163,5 +163,61 @@ class DiceTest(unittest.TestCase):
         self.assertEqual(out["sevens"], 60)
 
 
+def dice_games(n_games):
+    """ana wins every game where ana's dice pay at or above par and none below; ben's dice are always exactly par
+    and ben wins the rest. guest-1 and bot-1 always run cold and never win."""
+    games, replays = [], {}
+    for k in range(n_games):
+        cold = k % 2 == 1
+        winner = "ben" if cold else "ana"
+        gid = f"g{k:03d}"
+        seats = ["ana", "ben", "guest-1", "bot-1"]
+        games.append({"id": gid, "date": "2026-01-01", "winner": winner,
+                      "players": [{"player": p, "seat": i + 1, "vp": 10 if p == winner else 6} for i, p in enumerate(seats)]})
+        replays[gid] = {"players": {
+            "ana": {"resources_from_dice": 40 if cold else 50, "expected_from_dice": 45.0},
+            "ben": {"resources_from_dice": 45, "expected_from_dice": 45.0},
+            "guest-1": {"resources_from_dice": 30, "expected_from_dice": 45.0},
+            "bot-1": {"resources_from_dice": 30, "expected_from_dice": 45.0}}}
+    return games, replays
+
+
+class ColdDiceTest(unittest.TestCase):
+    def test_counts_and_typical(self):
+        games, reps = dice_games(20)
+        a = insights.cold_dice(games, reps, ["ana", "ben", "cal"], build.is_anon, 10)["players"]["ana"]
+        self.assertEqual((a["cold"]["games"], a["cold"]["wins"]), (10, 0))
+        self.assertEqual((a["par"]["games"], a["par"]["wins"]), (10, 10))
+        # Everyone else on cold dice (guest and bot, 40 seats) never won, so a cold game is typically won 0 times;
+        # everyone else at or above par (ben, 20 seats at 4 players) won 10 of 20.
+        self.assertEqual(a["cold"]["typical"], 0)
+        self.assertEqual(a["par"]["typical"], 5)
+        self.assertEqual((a["cold"]["lo"], a["cold"]["hi"]), (0, 0))
+        self.assertLess(a["par"]["hi"], 10)  # ten par wins is beyond what luck covers around 5
+        self.assertEqual([g["cold"] for g in a["games"][:3]], [False, True, False])
+        self.assertAlmostEqual(a["games"][1]["pct"], round(-5 / 45, 4))
+
+    def test_exactly_par_is_not_cold_and_guards(self):
+        games, reps = dice_games(20)
+        out = insights.cold_dice(games, reps, ["ana", "ben", "cal"], build.is_anon, 10)["players"]
+        b = out["ben"]
+        self.assertEqual(b["cold"]["games"], 0)  # dice exactly at expectation count as par
+        self.assertIsNone(b["cold"]["rate"])
+        self.assertEqual((b["cold"]["typical"], b["cold"]["lo"], b["cold"]["hi"]), (0, 0, 0))
+        self.assertNotIn("cal", out)  # never played
+        self.assertEqual(insights.cold_dice(games[:9], reps, ["ana"], build.is_anon, 10)["players"], {})
+
+    def test_guests_and_bots_are_never_listed(self):
+        games, reps = dice_games(20)
+        out = insights.cold_dice(games, reps, ["ana", "ben", "guest-1", "bot-1"], build.is_anon, 10)["players"]
+        self.assertEqual(sorted(out), ["ana", "ben"])
+
+    def test_win_band(self):
+        self.assertEqual(insights.win_band([]), (0, 0))
+        self.assertEqual(insights.win_band([1.0] * 4), (4, 4))
+        lo, hi = insights.win_band([0.5] * 20)  # Binomial(20, 0.5): central 95% is 6 to 14
+        self.assertEqual((lo, hi), (6, 14))
+
+
 if __name__ == "__main__":
     unittest.main()

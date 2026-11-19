@@ -116,3 +116,29 @@
 .info-b p { margin: 0 0 6px; }
 .info-b p:last-child { margin-bottom: 0; }
 .with-info { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+
+/* Winning on cold dice (colddice.js): a strip of game dots per player, the History tab's par strip for everyone.
+   A filled dot is a win in the player's color, a ring is a loss. */
+.cd-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 0 32px; margin-top: 14px; border-top: 1px solid var(--ink); }
+.cd-card { min-width: 0; padding: 14px 0 16px; border-bottom: 1px solid var(--hair); }
+.cd-row { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; margin-top: 10px; font-size: 13px; color: var(--ink-2); }
+.cd-n { white-space: nowrap; }
+.cd-n b { color: var(--ink); font-weight: 650; }
+.cd-dots { display: flex; flex-wrap: wrap; align-items: center; gap: 3px; min-height: 10px; margin-top: 5px; }
+/* A loss is a ring; a win is a bigger filled dot with an edge pulled toward the ink, so even the palest
+   player color reads as filled. */
+.cd-dot { flex: none; display: block; box-sizing: border-box; width: 8px; height: 8px; margin: 1px; border-radius: 50%;
+  border: 1.5px solid var(--muted); }
+.cd-dot.won { width: 10px; height: 10px; margin: 0; background: var(--c); border-color: color-mix(in oklab, var(--c) 65%, var(--ink)); }
+.cd-dot:hover { outline: 2px solid var(--ink); outline-offset: 1px; }
+@media (pointer: coarse) {
+  .cd-dots { gap: 5px; }
+  .cd-dot { width: 12px; height: 12px; margin: 2px; }
+  .cd-dot.won { width: 16px; height: 16px; margin: 0; }
+}
+.cd-foot { margin: 12px 0 0; font-size: 13px; color: var(--ink-2); }
+.cd-foot b { color: var(--ink); font-weight: 650; }
+@media (prefers-reduced-motion: no-preference) {
+  .cd-dot { animation: cd-in .4s ease-out both; animation-delay: calc(var(--o, 0) * 600ms); }
+}
+@keyframes cd-in { from { opacity: 0; transform: scale(.4); } }

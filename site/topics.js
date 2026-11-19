@@ -192,6 +192,28 @@
         return { tag: "desc", head: `Everyone's dice land within ${Math.max(1, Math.ceil(dev * 100 - 1e-9))}% of expected`,
           text: `${hi.name} ran hottest at ${c.num(hi.replay.dice_ratio, 2)}× expected and ${lo.name} coldest at ${c.num(lo.replay.dice_ratio, 2)}×.` };
       } },
+    { topic: "luck", src: "findings", match: "Winning on cold dice", id: "cold-dice", title: "Winning on cold dice",
+      q: "Who wins on cold dice?", rel: ["luck/actual", "luck/above-luck"],
+      answer(c) {
+        const cd = ins(c).cold_dice, CD = window.ColdDice;
+        if (!cd || !has(cd.players) || !CD) return null;
+        const order = CD.ranked(c, cd).filter((p) => cd.players[p].cold.games > 0);
+        if (!order.length) return null;
+        const top = CD.coldEdge(cd.players[order[0]]);
+        const lead = order.filter((p) => CD.coldEdge(cd.players[p]) > top - 1e-9);
+        const each = (p) => { const r = cd.players[p].cold; return `${nm(c, p)} won ${r.wins} of ${r.games} against ${c.num(r.typical, 1)} typical`; };
+        const out = [];
+        for (const p of CD.ranked(c, cd)) for (const [k, label] of [["par", "with good dice"], ["cold", "on cold dice"]]) {
+          const r = cd.players[p][k];
+          if (!r.games || (r.wins >= r.lo && r.wins <= r.hi)) continue;
+          out.push(`${nm(c, p)} won ${r.wins > r.hi ? "more" : "fewer"} than luck explains ${label}: ${r.wins} of ${r.games} against ${c.num(r.typical, 1)} typical.`);
+        }
+        const gloss = "On dice below par (fewer cards than their buildings should average)";
+        return { tag: "explore",
+          head: top > 0 ? `${join(lead.map((p) => nm(c, p)))} ${lead.length > 1 ? "do" : "does"} best on cold dice` : "Nobody beats the table on cold dice",
+          text: (top > 0 ? `${gloss}, ${join(lead.map(each))}.` : `${gloss}, ${nm(c, lead[0])} came closest: ${each(lead[0]).replace(/^\S+ /, "")}.`)
+            + " " + (out.length ? out.join(" ") : "Everyone's wins are within the range luck covers.") };
+      } },
     { topic: "luck", src: "findings", match: "Does early luck snowball?", id: "snowball", title: "Does early luck snowball?", fold: 1,
       q: "Does early luck snowball?", rel: ["openings/dots", "luck/who"],
       subs: [{ match: "Wins above luck", id: "above-luck", q: "Who wins more than their dice explain?",

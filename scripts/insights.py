@@ -688,6 +688,81 @@ def table_markers(games, replays, pids, min_games, ranks_of):
 
 
 # ---------------------------------------------------------------------------
+# Winning on cold dice (exploratory: asked after the History tab's "needed good dice" beat)
+# ---------------------------------------------------------------------------
+
+def win_band(ps, level=statlib.LEVEL):
+    """The range of win counts luck alone covers: the central `level` of the Poisson-binomial distribution of
+    wins when game i is won with probability ps[i]. Returns (lo, hi) as whole wins."""
+    dist = [1.0]
+    for p in ps:
+        nxt = [0.0] * (len(dist) + 1)
+        for k, q in enumerate(dist):
+            nxt[k] += q * (1 - p)
+            nxt[k + 1] += q * p
+        dist = nxt
+    tail = (1 - level) / 2
+    acc, lo, hi = 0.0, None, None
+    for k, q in enumerate(dist):
+        acc += q
+        if lo is None and acc >= tail - 1e-12:
+            lo = k
+        if hi is None and acc >= 1 - tail - 1e-12:
+            hi = k
+    return lo, hi
+
+
+def cold_dice(games, replays, pids, is_anon, min_games):
+    """Per player, every decoded game in order with whether they won and whether their dice paid below par:
+    fewer cards from dice than their settlements and cities would produce with average rolls (the same expected
+    count as "Dice luck: actual against expected"). For games on cold dice and games at or above par separately:
+    wins, and the typical number of wins, which gives each game the win rate everyone else in these games had on
+    the same kind of dice at the same table size (guests and bots included, this player left out). The band is the
+    range of wins luck alone covers 95% of the time around that typical number. Group members (never guests or
+    bots) with min_games or more."""
+    seats = []
+    for g in games:
+        sts = (replays.get(g["id"]) or {}).get("players") or {}
+        for r in g["players"]:
+            st = sts.get(r["player"])
+            if not st or not st.get("expected_from_dice"):
+                continue
+            luck = st["resources_from_dice"] - st["expected_from_dice"]
+            seats.append({"pid": r["player"], "id": g["id"], "n": len(g["players"]), "won": g["winner"] == r["player"],
+                          "cold": luck < 0, "pct": r4(luck / st["expected_from_dice"])})
+    out = {}
+    for pid in pids:
+        if is_anon(pid):
+            continue
+        rows = [s for s in seats if s["pid"] == pid]
+        if len(rows) < min_games:
+            continue
+        cell, pooled = defaultdict(lambda: [0, 0]), defaultdict(lambda: [0, 0])
+        for s in seats:
+            if s["pid"] != pid:
+                for c in (cell[(s["n"], s["cold"])], pooled[s["cold"]]):
+                    c[0] += s["won"]
+                    c[1] += 1
+
+        def chance(s):
+            for w, k in (cell[(s["n"], s["cold"])], pooled[s["cold"]]):
+                if k:
+                    return w / k
+            return 1 / s["n"]
+
+        def part(rs):
+            ps = [chance(r) for r in rs]
+            lo, hi = win_band(ps)
+            w = sum(r["won"] for r in rs)
+            return {"games": len(rs), "wins": w, "rate": r4(w / len(rs)) if rs else None,
+                    "typical": r3(sum(ps)), "lo": lo, "hi": hi}
+
+        out[pid] = {"cold": part([r for r in rows if r["cold"]]), "par": part([r for r in rows if not r["cold"]]),
+                    "games": [{k: r[k] for k in ("id", "won", "cold", "pct")} for r in rows]}
+    return {"players": out, "min_games": min_games}
+
+
+# ---------------------------------------------------------------------------
 # One view
 # ---------------------------------------------------------------------------
 
@@ -714,5 +789,6 @@ def view_insights(games, replays, pids, is_anon, ranks_of, all_view=None, fast=F
     out["steal_share"] = steal_share(units, pids, G["player_rows"], B=B)
     out["win_recipe"] = win_recipe(games, pids, 10, B=B)
     out["dice_calibration"] = dice_calibration(games)
+    out["cold_dice"] = cold_dice(games, replays, pids, is_anon, G["player_rows"])
     out["markers"] = table_markers(games, replays, pids, G["player_rows"], ranks_of)
     return out
