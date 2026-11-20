@@ -612,6 +612,12 @@
    "headline": "DH rallies from 6 down despite the coldest dice",
    "recap": "DH won it on the final turn with a settlement, reaching 14 and finishing 2 clear of JD and ND, who tied for second on 12. It was a comeback from as many as 6 VP down, and DH did it with the coldest dice at the table, collecting 81 cards from rolls against 89 expected. The groundwork came on turn 37, when a settlement and an island bonus made a 3 VP swing, and DH finally took the lead 11 to 10 on turn 69. ND spent 42% of the game alone in front and came away with a share of second place. MS had the best opening at 19 dots and finished 4th.",
    "model": "claude-opus-5-5"
+  },
+  "2026-11-19-a": {
+   "hash": "1a238bdd22f9cd00",
+   "headline": "JD Strikes Late, Takes Game 103 by 2",
+   "recap": "JD won with 14 VP to LD's 12, taking the lead on turn 72 and closing it out on turn 82 with a city. Until then the lead changed hands 6 times, with AT holding it longest and winning Longest Road back from ND along the way. LD had just gone ahead 10 to 9 on turn 70 when JD answered with a settlement, an island bonus and a city in one turn, a 4 VP swing that made it 11 to 10. Having the best opening at the table did not make it an easy ride: JD was robbed of 6 cards, more than anyone, and discarded 13 to sevens. JD spent only 13% of the game in the lead, which turned out to be the right 13%.",
+   "model": "claude-opus-5-5"
   }
  }
 }
