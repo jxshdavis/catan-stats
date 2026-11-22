@@ -87,7 +87,8 @@
       const all = opts.series.flatMap((s) => s.points);
       if (!all.length) return;
       const narrow = W < 520;
-      const labels = opts.directLabels !== false && !narrow && opts.series.length <= 6;
+      // directLabels: true labels any number of lines; left unset, only up to 6.
+      const labels = !narrow && (opts.directLabels === true || (opts.directLabels !== false && opts.series.length <= 6));
       const H = opts.height || 280;
       const m = { t: 12, r: labels ? 110 : 14, b: 34, l: 40 };
       const iw = W - m.l - m.r, ih = H - m.t - m.b;
@@ -115,22 +116,26 @@
           opts.xTickLabel ? opts.xTickLabel(t) : t;
       }
       const ordered = [...opts.series].sort((a, b) => (a.id === opts.highlight) - (b.id === opts.highlight));
+      // Each line sits in its own group tagged with data-sid, so a caller can bring one forward with CSS.
+      // A point with carry: true only extends the line (a value held flat); it gets no dot and no tooltip row.
       for (const s of ordered) {
         const dim = opts.highlight && s.id !== opts.highlight;
         const color = dim ? "var(--axis)" : s.color;
         const pts = s.points;
+        const g = svgEl("g", { class: "ser", "data-sid": s.id }, svg);
         if (s.band && pts.length > 1) {
           const up = pts.map((p) => `${X(p.x)},${Y(p.hi)}`).join(" L");
           const dn = [...pts].reverse().map((p) => `${X(p.x)},${Y(p.lo)}`).join(" L");
-          svgEl("path", { d: `M${up} L${dn}Z`, fill: s.color, "fill-opacity": 0.14 }, svg);
+          svgEl("path", { d: `M${up} L${dn}Z`, fill: s.color, "fill-opacity": 0.14 }, g);
         }
         if (pts.length > 1) {
           svgEl("path", { d: "M" + pts.map((p) => `${X(p.x)},${Y(p.y)}`).join(" L"), fill: "none",
-            stroke: color, "stroke-width": 2, "stroke-linejoin": "round", "stroke-linecap": "round" }, svg);
+            stroke: color, "stroke-width": 2, "stroke-linejoin": "round", "stroke-linecap": "round" }, g);
         }
-        if (pts.length <= 40 || pts.length === 1) {
-          for (const p of pts) {
-            svgEl("circle", { cx: X(p.x), cy: Y(p.y), r: 4, fill: color, stroke: "var(--surface)", "stroke-width": 2 }, svg);
+        const real = pts.filter((p) => !p.carry);
+        if (real.length <= 40 || real.length === 1) {
+          for (const p of real) {
+            svgEl("circle", { cx: X(p.x), cy: Y(p.y), r: 4, fill: color, stroke: "var(--surface)", "stroke-width": 2 }, g);
           }
         }
       }
@@ -147,7 +152,7 @@
         if (over > 0) ends.forEach((e) => (e.y -= over));
         for (const e of ends) {
           const dim = opts.highlight && e.s.id !== opts.highlight;
-          const t = svgEl("text", { x: m.l + iw + 10, y: e.y + 4, class: "lbl" }, svg);
+          const t = svgEl("text", { x: m.l + iw + 10, y: e.y + 4, class: "lbl", "data-sid": e.s.id }, svg);
           t.textContent = e.s.name;
           if (dim) t.setAttribute("style", "fill: var(--muted); font-weight: 400");
         }
@@ -163,7 +168,7 @@
         const x = xs[cur];
         cross.setAttribute("x1", X(x)); cross.setAttribute("x2", X(x));
         cross.setAttribute("visibility", "visible");
-        const rows = opts.series.map((s) => ({ s, p: s.points.find((p) => p.x === x) }))
+        const rows = opts.series.map((s) => ({ s, p: s.points.find((p) => p.x === x && !p.carry) }))
           .filter((r) => r.p).sort((a, b) => b.p.y - a.p.y);
         const head = opts.xLabel ? opts.xLabel(x, rows[0] && rows[0].p) : `x = ${x}`;
         const body = rows.map((r) => `<div class="row"><span class="hex" style="--c:${r.s.color}"></span>${esc(r.s.name)} <b>${r.p.tip || r.p.y}</b></div>`).join("");
@@ -255,7 +260,7 @@
 
   const MINUS = "−";
   const fin = (v) => v !== null && v !== undefined && Number.isFinite(+v);
-  const signed = (x, d = 1) => (x > 0 ? "+" : x < 0 ? MINUS : "") + Math.abs(x).toFixed(d);
+  const signed = (x, d = 1) => { const a = Math.abs(x).toFixed(d); return (+a === 0 ? "" : x > 0 ? "+" : MINUS) + a; };
   const fmt2 = (x) => (fin(x) ? (x < 0 ? MINUS : "") + Math.abs(x).toFixed(2) : "n/a");
   const tickText = (t) => (t < 0 ? MINUS : "") + +Math.abs(t).toFixed(6);
   // Plain text from an HTML label, for aria-labels. Parsed in an inert document so nothing loads or runs.

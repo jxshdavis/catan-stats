@@ -106,7 +106,7 @@ a:hover { text-decoration-color: currentColor; }
   text-transform: uppercase; letter-spacing: .08em; padding-bottom: 10px; border-bottom: 1px solid var(--ink); }
 .brand { display: block; font-family: var(--serif); font-weight: 500; color: var(--ink); text-decoration: none; line-height: 1;
   font-size: clamp(40px, 6vw, 56px); margin: 16px 0 10px; letter-spacing: -0.02em; }
-.is-home .brand { font-size: clamp(54px, 10vw, 100px); margin: 24px 0 12px; }
+.is-home .brand { font-size: clamp(50px, 8vw, 80px); margin: 18px 0 10px; }
 .mast-kicker, .mast-lead { display: none; }
 .is-home .mast-kicker:not(:empty), .is-home .mast-lead:not(:empty) { display: block; }
 .mast-kicker { margin: 0 0 6px; font-size: 11.5px; font-weight: 650; letter-spacing: .14em; text-transform: uppercase; color: var(--ink); }
@@ -178,6 +178,26 @@ tbody tr:hover td { background: var(--wash); }
 .board td.rank { width: 1%; color: var(--muted); font-variant-numeric: tabular-nums; font-weight: 600; }
 .board td.score { font-family: var(--serif); font-weight: 500; font-size: 24px; letter-spacing: -0.02em; }
 .board .range { width: 160px; min-width: 120px; }
+/* Headings that explain themselves on hover or focus. */
+.board th[data-tip] { cursor: help; text-decoration: underline dotted var(--axis); text-underline-offset: 4px; }
+.board td[data-tip] { cursor: default; }
+
+/* Home page: get the table onto the first screen. */
+.is-home main.wrap { padding-top: 28px; }
+@media (min-width: 720px) {
+  /* Game type and table size share one line when there is no scenario row. */
+  .is-home main > .filter:not(:has(.chips.sub)) { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 32px; margin-top: 16px; }
+  .is-home main > .filter:not(:has(.chips.sub)) .chips.size { margin-top: 0; }
+  .is-home main > .filter .note { flex-basis: 100%; }
+}
+
+/* Trend chart: pointing at a name brings its line forward. */
+.focus-legend li { cursor: default; border-radius: 2px; }
+.focus-legend li.on { color: var(--ink); font-weight: 600; }
+svg.focusing .ser { opacity: .12; transition: opacity .12s; }
+svg.focusing .ser.on { opacity: 1; }
+svg.focusing text.lbl:not(.on) { opacity: .35; }
+svg text.lbl[data-sid] { cursor: default; }
 .range svg { display: block; width: 100%; height: 18px; overflow: visible; }
 
 /* Tiles on the player page */
@@ -361,7 +381,7 @@ h4 { font-size: 14px; font-weight: 650; margin: 0 0 6px; color: var(--ink-2); }
 @keyframes flicker { 0%, 100% { transform: scale(1, 1) skewX(0deg); } 30% { transform: scale(.96, 1.06) skewX(-2deg); } 60% { transform: scale(1.03, .97) skewX(2deg); } }
 @keyframes flicker-in { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(.85); } }
 
-.hot-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(165px, 1fr)); gap: 10px; }
+.hot-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
 .hot-card { display: block; padding: 12px 2px; border-top: 1px solid var(--ink); color: var(--ink); text-decoration: none; }
 .hot-card:hover { background: var(--wash); }
 .hot-card.fire { border-top: 3px solid #e8622c; }

@@ -9,6 +9,8 @@
   const Pages = (window.Pages = window.Pages || {});
   const Hooks = (window.Hooks = window.Hooks || {});
   const hookList = (page) => Hooks[page] || [];
+  // Front page extras (site/home.js). The page still works without them.
+  const Home = window.Home || { tonight: () => "", middle: () => "", awards: () => "", records: () => "", draw: () => {} };
   // What a page or hook gets to work with: the current view and the shared helpers.
   const ctx = () => ({ main, ROOT, S, P, VIEW, who, color, info, esc, num, pct, signed, fmtSigned, ord, fmtDate,
     tableView, filterBar, gameLabel, mk, guardNote, Charts: window.Charts, M });
@@ -31,7 +33,8 @@
   };
   const fmtDate = (iso, opts) => new Date(iso + "T12:00:00").toLocaleDateString("en-US",
     opts || { month: "short", day: "numeric", year: "numeric" });
-  const signed = (x, d = 1) => (x > 0 ? "+" : x < 0 ? "−" : "") + Math.abs(x).toFixed(d);
+  // A value that rounds to zero gets no sign, so a tiny negative never shows as "−0.0".
+  const signed = (x, d = 1) => { const a = Math.abs(x).toFixed(d); return (+a === 0 ? "" : x > 0 ? "+" : "−") + a; };
   const isGuest = (pid) => String(pid).startsWith("guest-");
   // A flame for anyone on fire.
   const FLAME = `<svg class="flame" viewBox="0 0 16 20" aria-hidden="true"><path class="flame-out" d="M8 .5c1 4 6 6 6 11.5 0 4.4-2.7 7.5-6 7.5S2 16.4 2 12c0-3 1.9-5 3-7 .5 2.4 1.5 3.4 2.5 3.4C7 5.5 7.4 2.6 8 .5z"/><path class="flame-in" d="M8 8.8c1 2 3 3.4 3 6 0 2.4-1.3 3.9-3 3.9S5 17.4 5 15.3c0-2 1.5-3 2-4.5.3 1.2.8 1.7 1.3 1.7-.3-1.2-.5-2.4-.3-3.7z"/></svg>`;
@@ -125,7 +128,7 @@
     const delta = typeof win.above_expected === "number"
       ? `<span class="lead-delta" title="Wins above expected from this game">▲ +${num(win.above_expected, 1)}</span>` : "";
     const winner = `${who(g.winner)}${delta}`;
-    const when = `game ${g.number} on ${fmtDate(g.date, { month: "long", day: "numeric" })}`;
+    const when = `<a href="#/game/${encodeURIComponent(g.id)}">game ${g.number}</a> on ${fmtDate(g.date, { month: "long", day: "numeric" })}`;
     const score = `${win.vp} to ${top2}`;
     const tl = ((ROOT.timelines || {})[g.id] || {}).vp || {};
     let deficit = 0;
@@ -315,7 +318,7 @@
     };
     const sinceLast = `since the last game (${fmtDate(latestGame.date)})`;
     const fireTag = (p) => (onFire(p.id) ? `<span class="fire-tag" title="On fire: ${fmtSigned(p.recent.above, 1)} wins above expected over their last ${S.ranking.recent_games} games">${FLAME}</span>` : "");
-    const rows = ranked.map((p) => `<tr${onFire(p.id) ? ' class="hot"' : ""}>
+    const rowHtml = (p) => `<tr${onFire(p.id) ? ' class="hot"' : ""}>
         <td class="rank">${p.leaderboard_rank}${S.games.length > 1 ? move(p.leaderboard_rank, p.rank_prev, sinceLast) : ""}</td>
         <td><span class="name-cell">${who(p.id)}${fireTag(p)}</span></td>
         <td class="num score">${fmtSigned(p.above_expected, 1)}</td>
@@ -323,20 +326,72 @@
         <td class="num">${p.wins}</td>
         <td class="num hide-sm">${num(p.expected_wins)}</td>
         <td class="num hide-sm">${p.games}</td>
-        <td class="num">${pct(p.win_rate)}<div class="sub hide-sm">${pct(p.win_rate_ci[0])} to ${pct(p.win_rate_ci[1])}</div></td>
+        <td class="num" data-tip="${esc(`<b>${esc(p.name)}: ${pct(p.win_rate)}</b><br>${p.wins} of ${p.games} games. 95% interval ${pct(p.win_rate_ci[0])} to ${pct(p.win_rate_ci[1])}`)}">${pct(p.win_rate)}</td>
         <td class="num hide-sm">${num(p.avg_vp)}</td>
         <td class="num hide-sm">${pct(p.beat_rate)}</td>
-      </tr>`).join("");
+      </tr>`;
+    const rows = ranked.map(rowHtml).join("");
 
-    const latest = S.games[0];
     const RG = S.ranking.recent_games;
-    const cards = ranked.filter((p) => p.recent).slice().sort((a, b) =>
-      (b.recent.active - a.recent.active) || (b.recent.above - a.recent.above) || (a.leaderboard_rank - b.leaderboard_rank));
+    // Players who sat out the group's last RG games get a line under the cards instead of a faded card.
+    const withForm = ranked.filter((p) => p.recent);
+    const cards = withForm.filter((p) => p.recent.active).sort((a, b) =>
+      (b.recent.above - a.recent.above) || (a.leaderboard_rank - b.leaderboard_rank));
+    const idle = withForm.filter((p) => !p.recent.active);
+    const lastPlayed = (p) => p.recent.games[p.recent.games.length - 1].date;
+    const idleLine = idle.length ? `<p class="note">Not in the group's last ${RG} games: ${idle.map((p) =>
+      `${who(p.id)} <span class="sub">(last played ${fmtDate(lastPlayed(p))})</span>`).join(", ")}.</p>` : "";
+    // Column headers explain themselves on hover or focus, so the note under the table can stay short.
+    // A heading with a sort key is a button: the first click puts the best first, the next one reverses it.
+    const SORT = {
+      rank: { f: (p) => p.leaderboard_rank, desc: false }, name: { f: (p) => p.name.toLowerCase(), desc: false },
+      above: { f: (p) => p.above_expected, desc: true }, wins: { f: (p) => p.wins, desc: true },
+      expected: { f: (p) => p.expected_wins, desc: true }, games: { f: (p) => p.games, desc: true },
+      winrate: { f: (p) => p.win_rate, desc: true }, vp: { f: (p) => p.avg_vp, desc: true }, beat: { f: (p) => p.beat_rate, desc: true },
+    };
+    const th = (label, tip, cls = "", k = null) => k
+      ? `<th${cls ? ` class="${cls}"` : ""} data-k="${k}" aria-sort="${k === "rank" ? "ascending" : "none"}"${tip ? ` data-tip="${esc(tip)}"` : ""}><button type="button" class="sort-btn">${label}</button></th>`
+      : `<th${cls ? ` class="${cls}"` : ""} data-tip="${esc(tip)}" tabindex="0">${label}</th>`;
+    const head = [
+      th("#", `<b>Place</b><br>Arrows show the change since the last game (${fmtDate(latestGame.date)}).`, "", "rank"),
+      th("Player", "", "", "name"),
+      th("Above expected", "<b>Wins above expected</b><br>Wins minus expected wins. Ties go to the higher share of the table's VP.", "num", "above"),
+      th("Against luck", "<b>Against luck</b><br>The gray band is where luck alone would put a player 95% of the time. The dot is where they are, the line is zero.", "hide-sm"),
+      th("Wins", "<b>Wins</b>", "num", "wins"),
+      th("Expected", "<b>Expected wins</b><br>What chance alone would give: 1 divided by the number of players, added up over every game played.", "num hide-sm", "expected"),
+      th("Games", "<b>Games played</b>", "num hide-sm", "games"),
+      th("Win rate", "<b>Win rate</b><br>Share of games won. Hover a value for its 95% interval.", "num", "winrate"),
+      th("Avg VP", "<b>Average final VP</b>", "num hide-sm", "vp"),
+      th("Beat rate", "<b>Beat rate</b><br>Share of opponents a player finished ahead of.", "num hide-sm", "beat"),
+    ].join("");
+    // Plain-text standings for the group chat.
+    const standingsText = () => {
+      const g = latestGame, ps = g.players.slice().sort((a, b) => a.rank - b.rank);
+      const nm = (pid) => (P[pid] ? P[pid].name : "a guest");
+      const lines = [`Catan Night standings after game ${g.number} (${fmtDate(g.date)})${VIEW !== "all" ? `, ${viewLabel(VIEW)}` : ""}`, ""];
+      for (const p of ranked) {
+        const d = p.rank_prev === null || p.rank_prev === undefined ? 0 : p.rank_prev - p.leaderboard_rank;
+        lines.push(`${p.leaderboard_rank}. ${p.name}  ${fmtSigned(p.above_expected, 1)}  (${p.wins} ${p.wins === 1 ? "win" : "wins"} in ${p.games})`
+          + `${d ? `  ${d > 0 ? "▲" : "▼"}${Math.abs(d)}` : ""}${onFire(p.id) ? "  🔥" : ""}`);
+      }
+      lines.push("", `Last game: ${nm(g.winner)} won game ${g.number}, ${ps[0].vp} to ${ps[1] ? ps[1].vp : "?"}.`, location.origin + location.pathname);
+      return lines.join("\n");
+    };
+    const copyText = async (text) => {
+      try { await navigator.clipboard.writeText(text); return true; } catch (e) { /* fall back below */ }
+      const ta = document.createElement("textarea");
+      ta.value = text; ta.setAttribute("readonly", ""); ta.style.cssText = "position:fixed;opacity:0";
+      document.body.appendChild(ta); ta.select();
+      let ok = false;
+      try { ok = document.execCommand("copy"); } catch (e) { ok = false; }
+      ta.remove();
+      return ok;
+    };
     const formDots = (p) => p.recent.games.map((h) => `<span class="fdot${h.won ? " w" : ""}" style="--c:${color(p.id)}" title="${fmtDate(h.date)}: ${h.won ? "won" : "lost"} (${signed(h.delta, 2)})"></span>`).join("");
     const card = (p) => {
       const r = p.recent, fire = r.on_fire;
       const d = p.rank_recent_ago === null || p.rank_recent_ago === undefined ? null : p.rank_recent_ago - p.leaderboard_rank;
-      const rankLine = S.games.length <= RG ? "" : d === null ? `New on the board` : d ? `<span class="${d > 0 ? "up" : "down"}">${d > 0 ? "▲" : "▼"} ${Math.abs(d)} ${Math.abs(d) === 1 ? "place" : "places"}</span> in the last ${RG} games` : `Holding ${ord(p.leaderboard_rank)}`;
+      const rankLine = S.games.length <= RG ? "" : d === null ? `New on the board` : d ? `<span class="${d > 0 ? "up" : "down"}">${d > 0 ? "▲" : "▼"} ${Math.abs(d)} ${Math.abs(d) === 1 ? "place" : "places"}</span> to ${ord(p.leaderboard_rank)}` : `Holding ${ord(p.leaderboard_rank)}`;
       return `<a class="hot-card${fire ? " fire" : ""}${r.active ? "" : " idle"}" href="#/player/${encodeURIComponent(p.id)}">
         <div class="hot-top">${who(p.id, false)}${fire ? `<span class="fire-badge">${FLAME}On fire</span>` : r.streak >= 2 ? `<span class="streak">${r.streak} wins in a row</span>` : ""}</div>
         <div class="form" role="img" aria-label="Last ${r.games.length} games: ${r.games.map((h) => (h.won ? "won" : "lost")).join(", ")}">${formDots(p)}</div>
@@ -346,27 +401,31 @@
     };
     main.innerHTML = `
       <h1>Leaderboard</h1>
-      <p class="lede">${s.games} ${s.games === 1 ? "game" : "games"} played ${s.first_date === s.last_date ? "on " + fmtDate(s.first_date) : "from " + fmtDate(s.first_date) + " to " + fmtDate(s.last_date)}.
-        Ranked by wins above expected: a win counts 1, and every game counts your fair share of wins against you, 1 divided by the number of players. <a href="#/about">How the ranking works</a></p>
+      <p class="lede">${s.games} ${s.games === 1 ? "game" : "games"} ${s.first_date === s.last_date ? "on " + fmtDate(s.first_date) : "since " + fmtDate(s.first_date, { month: "long", year: "numeric" })}, ranked by wins above expected. <a href="#/about">How the ranking works</a></p>
       ${filterBar()}
       <section class="block panel">
         <div class="table-wrap"><table class="board">
-          <thead><tr>
-            <th>#</th><th>Player</th><th class="num">Above expected</th>
-            <th class="hide-sm">Against luck</th>
-            <th class="num">Wins</th><th class="num hide-sm">Expected</th><th class="num hide-sm">Games</th><th class="num">Win rate</th>
-            <th class="num hide-sm">Avg VP</th><th class="num hide-sm">Beat rate</th>
-          </tr></thead>
+          <thead><tr>${head}</tr></thead>
           <tbody>${rows}</tbody>
         </table></div>
       </section>
-      <p class="note">Arrows show how each place changed since the last game (${fmtDate(latest.date)}). Expected is the number of wins chance alone would give. The gray band in each strip is the range luck alone covers 95% of the time. ${outside.length ? `${outside.map((p) => `${esc(p.name)} (${p.above_expected > 0 ? "above" : "below"})`).join(", ")} ${outside.length === 1 ? "is" : "are"} outside it so far.` : "Nobody is outside it yet, so the order could still be luck."} Ties go to the higher share of the table's VP. Win rate shows a 95% interval underneath. Beat rate is the share of opponents a player finished ahead of.</p>
+      <div class="board-foot">
+        <p class="note">${outside.length ? `${outside.map((p) => `${esc(p.name)} (${p.above_expected > 0 ? "above" : "below"})`).join(", ")} ${outside.length === 1 ? "is" : "are"} outside the range luck alone covers so far.` : "Every dot is still inside its gray band, so the order could still be luck."} Hover a column heading to see what it means, click one to sort.</p>
+        <button type="button" class="pill-btn" id="copy-standings"><svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><rect x="5" y="5" width="9" height="9" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M11 3.5V3a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h.5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg><span>Copy standings</span></button>
+      </div>
 
-      ${cards.length ? `<section class="block">
+      ${Home.tonight()}
+
+      ${cards.length || idle.length ? `<section class="block">
         <h2>Last ${RG} games</h2>
         <p class="note">Each player's own last ${RG} games, newest on the right, with wins above expected over just those games. On fire means at least ${num(S.ranking.fire_above, 0)} full win above expected across them. Places moved count the group's last ${RG} games.</p>
-        <div class="hot-grid">${cards.map(card).join("")}</div>
+        ${cards.length ? `<div class="hot-grid">${cards.map(card).join("")}</div>` : ""}
+        ${idleLine}
       </section>` : ""}
+
+      ${Home.middle(ctx())}
+      ${Home.awards(ctx())}
+      ${Home.records(ctx())}
 
       ${answersTeaser()}
 
@@ -377,36 +436,79 @@
       </section>
 
       <section class="block">
-        <h2>Latest game</h2>
-        <p class="note">${fmtDate(latest.date)}: ${who(latest.winner)} won with ${latest.players[0].vp} VP${latest.turns ? ` in ${latest.turns} turns` : ""}. <a href="#/game/${encodeURIComponent(latest.id)}">See the full game</a></p>
-      </section>
-
-      <section class="block">
         <h2>Game days</h2>
         <p class="note">Each square is a day, colored by who won. A day with more than one game is split by winner, wider for more wins. Click a day to see its games.</p>
         <div class="panel">${calendarHtml(S.games)}</div>
       </section>`;
 
-    const series = ranked.map((p) => ({
-      id: p.id, name: p.name, color: color(p.id),
-      points: [{ x: 0, y: 0, tip: num(0, 2) }]
-        .concat(p.standing_history.map((h) => ({ x: h.index, y: h.above_expected, tip: fmtSigned(h.above_expected, 2) }))),
-    }));
+    Home.draw(ctx());
+    const board = main.querySelector("table.board");
+    let sortK = "rank", sortDir = 1; // 1: the column's natural order, -1: reversed
+    board.tHead.addEventListener("click", (e) => {
+      const b = e.target.closest("button.sort-btn");
+      if (!b) return;
+      const k = b.closest("th").dataset.k, spec = SORT[k];
+      if (k === sortK) sortDir = -sortDir; else { sortK = k; sortDir = 1; }
+      const cmp = (x, y) => {
+        const a = spec.f(x), c2 = spec.f(y);
+        const base = (a < c2 ? -1 : a > c2 ? 1 : 0) * (spec.desc ? -1 : 1) * sortDir;
+        return base || x.leaderboard_rank - y.leaderboard_rank;
+      };
+      board.tBodies[0].innerHTML = ranked.slice().sort(cmp).map(rowHtml).join("");
+      const ascending = spec.desc ? sortDir === -1 : sortDir === 1;
+      board.querySelectorAll("th[data-k]").forEach((h) => h.setAttribute("aria-sort", h.dataset.k === sortK ? (ascending ? "ascending" : "descending") : "none"));
+    });
+    const copyBtn = document.getElementById("copy-standings");
+    copyBtn.addEventListener("click", async () => {
+      const ok = await copyText(standingsText());
+      const label = copyBtn.querySelector("span");
+      label.textContent = ok ? "Copied" : "Couldn't copy";
+      copyBtn.classList.toggle("done", ok);
+      clearTimeout(copyBtn._t);
+      copyBtn._t = setTimeout(() => { label.textContent = "Copy standings"; copyBtn.classList.remove("done"); }, 2000);
+    });
+
+    // A player's total only moves when they play, so each line is carried flat to the latest game. That puts
+    // every name at the right edge where it can be labelled; the carried point gets no dot and no tooltip row.
+    const lastX = Math.max(...ranked.flatMap((p) => p.standing_history.map((h) => h.index)));
+    const series = ranked.map((p) => {
+      const points = [{ x: 0, y: 0, tip: num(0, 2) }]
+        .concat(p.standing_history.map((h) => ({ x: h.index, y: h.above_expected, tip: fmtSigned(h.above_expected, 2) })));
+      const end = points[points.length - 1];
+      if (end.x < lastX) points.push({ x: lastX, y: end.y, carry: true });
+      return { id: p.id, name: p.name, color: color(p.id), points };
+    });
     scrollCalendars();
     const legend = document.getElementById("trend-legend");
-    legend.innerHTML = `<ul class="legend">${ranked.map((p) => `<li><span class="sw" style="--c:${color(p.id)}"></span>${esc(p.name)}</li>`).join("")}</ul>`;
+    legend.innerHTML = `<ul class="legend focus-legend">${ranked.map((p) => `<li data-sid="${esc(p.id)}" tabindex="0"><span class="sw" style="--c:${color(p.id)}"></span>${esc(p.name)}</li>`).join("")}</ul>`;
     legend.style.paddingBottom = "0";
     const gi = gamesByIndex();
-    lineChart(document.getElementById("trend"), {
-      series, yRef: 0, highlight: hlIn(ranked), ariaLabel: "Wins above expected for each player after every game",
+    const trend = document.getElementById("trend");
+    lineChart(trend, {
+      series, yRef: 0, highlight: hlIn(ranked), directLabels: true, ariaLabel: "Wins above expected for each player after every game",
       xLabel: (x) => (x === 0 ? "<b>Start</b>" : `<b>${esc(gameLabel(gi[x]))}</b>`),
       xTickLabel: (x) => (x === 0 ? "start" : x),
     });
-    const xs = [...new Set(series.flatMap((s) => s.points.map((p) => p.x)))].sort((a, b) => a - b);
+    // Pointing at a name in the legend or at a line's end label brings that line forward and fades the rest.
+    const focusLine = (sid) => {
+      const svg = trend.querySelector("svg");
+      if (!svg) return;
+      svg.classList.toggle("focusing", !!sid);
+      svg.querySelectorAll("[data-sid]").forEach((el) => el.classList.toggle("on", el.dataset.sid === sid));
+      legend.querySelectorAll("[data-sid]").forEach((el) => el.classList.toggle("on", el.dataset.sid === sid));
+    };
+    const sidOf = (e) => { const el = e.target.closest && e.target.closest("[data-sid]"); return el ? el.dataset.sid : null; };
+    for (const box of [legend, trend]) {
+      box.addEventListener("pointerover", (e) => { const sid = sidOf(e); if (sid) focusLine(sid); });
+      box.addEventListener("pointerout", (e) => { if (sidOf(e)) focusLine(null); });
+      box.addEventListener("focusin", (e) => { const sid = sidOf(e); if (sid) focusLine(sid); });
+      box.addEventListener("focusout", () => focusLine(null));
+    }
+    const xs = [...new Set(series.flatMap((s) => s.points.filter((p) => !p.carry).map((p) => p.x)))].sort((a, b) => a - b);
     document.getElementById("trend-table").innerHTML = tableView(
       [{ label: "Game" }].concat(ranked.map((p) => ({ label: esc(p.name), num: true }))),
       xs.map((x) => [x === 0 ? "Start" : esc(gameLabel(gi[x]))].concat(series.map((s) => {
-        const pt = s.points.find((p) => p.x === x); return pt ? num(pt.y) : "";
+        const pt = s.points.find((p) => p.x === x && !p.carry); return pt ? num(pt.y) : "";
       }))));
   }
 
