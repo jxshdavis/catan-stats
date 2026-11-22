@@ -142,3 +142,14 @@
   .cd-dot { animation: cd-in .4s ease-out both; animation-delay: calc(var(--o, 0) * 600ms); }
 }
 @keyframes cd-in { from { opacity: 0; transform: scale(.4); } }
+
+/* ---- Histogram with one marked bin (closeness parts on the game page) ---- */
+.chart .mh-bar { fill: color-mix(in oklab, var(--data) 65%, var(--surface)); }
+.chart .mh-bar.on { fill: var(--ink); }
+.chart g.mh-g:hover .mh-bar, .chart g.mh-g:focus-visible .mh-bar { opacity: .8; }
+.chart .mh-lbl { fill: var(--ink); }
+.chart .mh-closer { font-size: 11px; }
+.cl-hists { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 6px 28px; margin-top: 18px; }
+.cl-hist h3 { font-family: var(--font); font-size: 13px; font-weight: 600; margin: 0; color: var(--ink); }
+.cl-hist .chart { padding: 6px 0 0; }
+.cl-hist .cl-cap { font-size: 12px; color: var(--ink-2); margin: 2px 0 0; }

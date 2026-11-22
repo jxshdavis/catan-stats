@@ -152,6 +152,59 @@ class ClosenessTest(unittest.TestCase):
         self.assertIn("g0", tier)
         self.assertTrue(out["games"]["g7"]["one_sided_tier"])
         self.assertGreater(out["games"]["g0"]["index"], out["games"]["g7"]["index"])
+        self.assertEqual(out["parts"], "ABC")  # no threat chances: three parts
+        self.assertNotIn("pD", out["games"]["g0"])
+
+
+def four_seat_race(k):
+    """Four seats with the same VP race in every game (ana pulls ahead late), so only contention differs."""
+    rows = [{"ana": 2, "ben": 2, "cat": 2, "dan": 2}, {"ana": 4, "ben": 3, "cat": 3, "dan": 3},
+            {"ana": 7, "ben": 6, "cat": 6, "dan": 6}, {"ana": 9, "ben": 7, "cat": 7, "dan": 7},
+            {"ana": 10, "ben": 7, "cat": 7, "dan": 7}]
+    g, tl = race_game(rows)
+    return dict(g, id=f"g{k}"), tl
+
+
+class ContentionTest(unittest.TestCase):
+    def test_effective_number(self):
+        self.assertAlmostEqual(insights.contention([1, 0, 0]), 1)
+        self.assertAlmostEqual(insights.contention([0.5, 0.5, 0, 0]), 2)
+        self.assertAlmostEqual(insights.contention([0.25] * 4), 4)
+        self.assertAlmostEqual(insights.contention([0.7, 0.1, 0.1, 0.1]), 1 / 0.52)
+        self.assertIsNone(insights.contention([0, 0]))
+
+    def test_window_matches_the_gap(self):
+        g, tl = four_seat_race(0)
+        # Turn ends 1..4; t = 4 is the winner's final turn and t = 1 is before anyone has half of 10,
+        # so only t = 2 and t = 3 count: a two-way race (2) then an even four-way race (4).
+        th = {"turn": [1, 2, 3, 4], "p": [[1, .5, .25, 1], [0, .5, .25, 0], [0, 0, .25, 0], [0, 0, .25, 0]]}
+        parts = insights.closeness_parts(g, tl, th)
+        self.assertAlmostEqual(parts["D"], 3)
+        self.assertIsNone(insights.closeness_parts(g, tl)["D"])
+
+    def test_planted_four_way_is_closer(self):
+        games, tls, th = [], {}, {}
+        for k in range(8):  # g0 an even four-way race, g7 one sure winner; the VP race is the same in all
+            g, tl = four_seat_race(k)
+            games.append(g)
+            tls[g["id"]] = tl
+            a = 1 - 0.75 * (7 - k) / 7  # ana's chance: 0.25 in g0 up to 1 in g7
+            rest = (1 - a) / 3
+            th[g["id"]] = {"turn": [2, 3], "p": [[a, a], [rest, rest], [rest, rest], [rest, rest]]}
+        out = insights.closeness_on(games, tls, lambda g: 4, th)
+        self.assertEqual(out["parts"], "ABCD")
+        r = out["games"]
+        self.assertAlmostEqual(r["g0"]["D"], 4)
+        self.assertAlmostEqual(r["g7"]["D"], 1)
+        self.assertEqual(r["g0"]["rank"], 1)
+        self.assertEqual(r["g7"]["rank"], 8)
+        self.assertTrue(r["g0"]["closest_tier"])
+        self.assertTrue(r["g7"]["one_sided_tier"])
+        # One game without threat chances: every game falls back to the three parts, all tied.
+        del th["g3"]
+        out = insights.closeness_on(games, tls, lambda g: 4, th)
+        self.assertEqual(out["parts"], "ABC")
+        self.assertEqual(len({x["index"] for x in out["games"].values()}), 1)
 
 
 class DiceTest(unittest.TestCase):

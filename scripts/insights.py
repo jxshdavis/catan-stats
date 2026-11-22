@@ -55,8 +55,15 @@ def vp_by_roll(timeline):
     return out
 
 
-def closeness_parts(game, timeline):
-    """The three closeness parts for one game, all ending at s-, the end_turn before the winner's final turn.
+def contention(probs):
+    """Effective number of players in contention from one state's win chances: 1 / sum p^2.
+    1 is one certain winner, 2 an even two-way race, n an even n-way race."""
+    total = sum(p * p for p in probs)
+    return 1 / total if total > 0 else None
+
+
+def closeness_parts(game, timeline, threat=None):
+    """The closeness parts for one game, all ending at s-, the end_turn before the winner's final turn.
 
     With one roll per turn, the state after roll index t's end_turn is the dense value at t, and the
     winner's final turn is roll T, so s- is t = T - 1.
@@ -64,6 +71,10 @@ def closeness_parts(game, timeline):
       B' = changes of the strict sole leader over end_turn snapshots 0..s-, divided by (G - 2).
            A tie leaves the last sole leader in place, so only a new sole leader counts as a change.
       C  = mean over snapshots from the first one where anyone has at least G/2, to s-, of (top - second) / (G - 2).
+      D  = mean of contention() over the threat index's turn ends in the same window as C (the latest one
+           at or before s- when none falls in it). `threat` is the game's row of threat.timelines: "turn"
+           is the timeline index of each turn end and "p" each seat's out-of-fold win chance there.
+           None without it.
     """
     V = vp_by_roll(timeline)
     pids = list(V)
@@ -84,18 +95,27 @@ def closeness_parts(game, timeline):
                 changes += 1
             last = leader
     gaps = []
-    started = False
+    start = None
     for t in range(s + 1):
         vals = sorted((V[p][t] for p in pids), reverse=True)
-        if not started and vals[0] >= G / 2:
-            started = True
-        if started:
+        if start is None and vals[0] >= G / 2:
+            start = t
+        if start is not None:
             gaps.append((vals[0] - vals[1]) / (G - 2))
     if not gaps:  # nobody reached half the target before the final turn: use s- alone
         vals = sorted((V[p][s] for p in pids), reverse=True)
         gaps = [(vals[0] - vals[1]) / (G - 2)]
+        start = s
+    D = None
+    if threat and threat.get("turn"):
+        ks = [k for k, t in enumerate(threat["turn"]) if start <= t <= s]
+        if not ks:
+            ks = [k for k, t in enumerate(threat["turn"]) if t <= s][-1:]
+        cs = [contention([seat[k] for seat in threat["p"]]) for k in ks]
+        cs = [c for c in cs if c is not None]
+        D = sum(cs) / len(cs) if cs else None
     return {"A": A, "A_within2": within2, "lead_changes": changes, "B": changes / (G - 2), "C": sum(gaps) / len(gaps),
-            "s_minus": s, "target": G}
+            "D": D, "s_minus": s, "target": G}
 
 
 def pct_ranks(values, higher_is_closer):
@@ -118,41 +138,49 @@ def board_timeline(ev):
     return {"turn": list(range(len(rows))), "vp": {pid: [r[i] for r in rows] for i, pid in enumerate(ev["seats"])}}
 
 
-def closeness(games, replays, n_seats, events=None):
+def closeness(games, replays, n_seats, events=None, threat=None):
     """Closeness on board VP when the per-action logs exist, with the true-VP (hindsight) version under
-    "hindsight"; on true VP alone otherwise."""
+    "hindsight"; on true VP alone otherwise. `threat` is threat.timelines (the win chances behind D)."""
     if events and all(g["id"] in events for g in games if g["id"] in replays):
-        out = closeness_on(games, {g["id"]: board_timeline(events[g["id"]]) for g in games if g["id"] in events}, n_seats)
+        out = closeness_on(games, {g["id"]: board_timeline(events[g["id"]]) for g in games if g["id"] in events}, n_seats,
+                           threat)
         if out:
             out["series"] = "board VP: what everyone could see"
-            out["hindsight"] = closeness_on(games, {gid: r["timeline"] for gid, r in replays.items()}, n_seats)
+            out["hindsight"] = closeness_on(games, {gid: r["timeline"] for gid, r in replays.items()}, n_seats, threat)
         return out
-    return closeness_on(games, {gid: r["timeline"] for gid, r in replays.items()}, n_seats)
+    return closeness_on(games, {gid: r["timeline"] for gid, r in replays.items()}, n_seats, threat)
 
 
-def closeness_on(games, timelines, n_seats):
-    """Closeness index I = 100 x mean of the three part percentiles (equal weights, frozen), plus the
-    tier of games in the top quartile under all four composites: all three parts, and each pair of parts.
+def _part_pcts(rows, keys):
+    """Each part's percentile, oriented so 1 is the closest game."""
+    get = {
+        # A with the within-2 tiebreak: fewer VP needed is closer; more opponents within 2 breaks ties.
+        "A": lambda rs: pct_ranks([-r["A"] + r["A_within2"] / 100 for r in rs], True),
+        "B": lambda rs: pct_ranks([r["B"] for r in rs], True),
+        "C": lambda rs: pct_ranks([r["C"] for r in rs], False),
+        "D": lambda rs: pct_ranks([r["D"] for r in rs], True),
+    }
+    return {k: get[k](rows) for k in keys}
+
+
+def closeness_on(games, timelines, n_seats, threat=None):
+    """Closeness index I = 100 x mean of the part percentiles (equal weights, frozen), plus the tier of games
+    in the top quartile under every composite: all parts, and each set that leaves one part out. The parts are
+    A, B, C and D (contention) when every game has threat-index win chances, else A, B and C.
     A ties are broken by the number of opponents within 2 VP. Percentiles use every decoded game."""
     rows = []
     for g in games:
         tl = timelines.get(g["id"])
         if not tl:
             continue
-        parts = closeness_parts(g, tl)
+        parts = closeness_parts(g, tl, (threat or {}).get(g["id"]))
         rows.append({"game": g["id"], "n_seats": n_seats(g), **parts})
     if len(rows) < 4:
         return None
-    # A with the within-2 tiebreak: fewer VP needed is closer; more opponents within 2 breaks ties.
-    pA = pct_ranks([-r["A"] + r["A_within2"] / 100 for r in rows], True)
-    pB = pct_ranks([r["B"] for r in rows], True)
-    pC = pct_ranks([r["C"] for r in rows], False)
-    comps = {
-        "all": [(a + b + c) / 3 for a, b, c in zip(pA, pB, pC)],
-        "no_A": [(b + c) / 2 for b, c in zip(pB, pC)],
-        "no_B": [(a + c) / 2 for a, c in zip(pA, pC)],
-        "no_C": [(a + b) / 2 for a, b in zip(pA, pB)],
-    }
+    keys = "ABCD" if all(r["D"] is not None for r in rows) else "ABC"
+    pc = _part_pcts(rows, keys)
+    mean = lambda ks: [sum(pc[k][i] for k in ks) / len(ks) for i in range(len(rows))]
+    comps = {"all": mean(keys), **{f"no_{k}": mean([x for x in keys if x != k]) for k in keys}}
     ranks = {}
     for k, vals in comps.items():
         order = sorted(range(len(rows)), key=lambda i: -vals[i])
@@ -164,21 +192,20 @@ def closeness_on(games, timelines, n_seats):
     q = math.ceil(n / 4)
     for i, r in enumerate(rows):
         rk = [ranks[k][i] for k in comps]
-        r.update({"pA": r3(pA[i]), "pB": r3(pB[i]), "pC": r3(pC[i]), "index": round(100 * comps["all"][i], 1),
+        r.update({**{f"p{k}": r3(pc[k][i]) for k in keys}, "index": round(100 * comps["all"][i], 1),
                   "rank": ranks["all"][i], "rank_min": min(rk), "rank_max": max(rk),
                   "closest_tier": max(rk) <= q, "one_sided_tier": min(rk) > n - q,
-                  "B": r3(r["B"]), "C": r3(r["C"])})
-    # Seat-class view: percentiles within 3p, 4p and 5-6p, since more seats make the max over opponents closer.
+                  "B": r3(r["B"]), "C": r3(r["C"]), "D": r3(r["D"])})
+    # Seat-class view: percentiles within 3p, 4p and 5-6p, since more seats make the max over opponents closer
+    # and allow more contention.
     for cls in ("3", "4", "5-6"):
         sub = [r for r in rows if (str(r["n_seats"]) if r["n_seats"] < 5 else "5-6") == cls]
         if len(sub) < 4:
             continue
-        a = pct_ranks([-r["A"] + r["A_within2"] / 100 for r in sub], True)
-        b = pct_ranks([r["B"] for r in sub], True)
-        c = pct_ranks([r["C"] for r in sub], False)
-        for r, x, y, z in zip(sub, a, b, c):
-            r["index_in_class"] = round(100 * (x + y + z) / 3, 1)
-    return {"games": {r.pop("game"): r for r in rows}, "n": n, "tier_size": q,
+        sp = _part_pcts(sub, keys)
+        for i, r in enumerate(sub):
+            r["index_in_class"] = round(100 * sum(sp[k][i] for k in keys) / len(keys), 1)
+    return {"games": {r.pop("game"): r for r in rows}, "n": n, "tier_size": q, "parts": keys,
             "series": "true VP (hindsight): includes VP cards nobody could see"}
 
 

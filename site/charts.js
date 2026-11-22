@@ -528,6 +528,56 @@
     });
   }
 
+  // ---- 4b. Histogram with one marked bin ---------------------------------------
+  // Where one item sits among all of them. opts: { bins: [{count, label (text), tip (html)}], mark (bin index),
+  //   markLabel, discrete (labels under bin centres) | edges: [n + 1 numbers] (labels on bin edges),
+  //   closer: "left" | "right" (which end is closer, drawn as an arrow note), height, ariaLabel }
+  function markHist(container, opts) {
+    responsive(container, (W) => {
+      const bins = opts.bins || [];
+      if (!bins.length) return;
+      const H = opts.height || 120;
+      const m = { t: 24, r: 4, b: 36, l: 4 };
+      const iw = W - m.l - m.r, ih = H - m.t - m.b;
+      const n = bins.length, slot = iw / n;
+      const maxC = Math.max(1, ...bins.map((b) => b.count));
+      const Y = (c) => m.t + ih - (c / maxC) * ih;
+      const svg = svgEl("svg", { width: W, height: H, viewBox: `0 0 ${W} ${H}`, role: "img",
+        "aria-label": opts.ariaLabel || "Histogram" }, container);
+      bins.forEach((b, i) => {
+        const x = m.l + slot * i, on = i === opts.mark;
+        const g = svgEl("g", { tabindex: 0, role: "img", "aria-label": plain(b.tip || `${b.label}: ${b.count}`), class: "mh-g" }, svg);
+        svgEl("rect", { x, y: m.t - 18, width: slot, height: ih + 18, fill: "transparent" }, g);
+        if (b.count > 0) svgEl("path", { d: barPath(x + 1, Y(b.count), Math.max(1, slot - 2), Y(0) - Y(b.count), 3),
+          class: on ? "mh-bar on" : "mh-bar" }, g);
+        hoverTip(g, b.tip || `<b>${esc(b.label)}</b><br>${b.count}`);
+      });
+      if (opts.mark != null && bins[opts.mark]) {
+        // The label sits above the tallest bar, so it never runs into a neighbour; a hairline leads down to the bar.
+        const cx = m.l + slot * opts.mark + slot / 2, top = Y(bins[opts.mark].count);
+        const lab = opts.markLabel || "this game";
+        const anchor = cx < 40 ? "start" : cx > W - 40 ? "end" : "middle";
+        svgEl("text", { x: anchor === "start" ? m.l : anchor === "end" ? W - m.r : cx, y: m.t - 8, "text-anchor": anchor, class: "lbl mh-lbl" }, svg).textContent = lab;
+        if (top - (m.t - 4) > 3) svgEl("line", { x1: cx, x2: cx, y1: m.t - 4, y2: top - 2, stroke: "var(--ink)", "stroke-width": 1 }, svg);
+      }
+      svgEl("line", { x1: m.l, x2: m.l + iw, y1: Y(0), y2: Y(0), stroke: "var(--axis)", "stroke-width": 1 }, svg);
+      // Tick labels, thinned to at least 26px apart; the marked bin's own label is kept when it fits.
+      const ticks = opts.edges
+        ? opts.edges.map((v, i) => ({ x: m.l + slot * i, t: tickText(v), i }))
+        : bins.map((b, i) => ({ x: m.l + slot * i + slot / 2, t: b.label, i }));
+      const step = Math.max(1, Math.ceil(26 / slot));
+      ticks.filter((t) => t.i % step === 0).forEach((t) => {
+        const anchor = t.x <= m.l + 2 ? "start" : t.x >= W - m.r - 2 ? "end" : "middle";
+        svgEl("text", { x: t.x, y: m.t + ih + 14, "text-anchor": anchor }, svg).textContent = t.t;
+      });
+      if (opts.closer) {
+        const right = opts.closer === "right";
+        svgEl("text", { x: right ? W - m.r : m.l, y: H - 4, "text-anchor": right ? "end" : "start", class: "mh-closer" }, svg)
+          .textContent = right ? "closer →" : "← closer";
+      }
+    });
+  }
+
   // ---- 5. Step chart with event markers and bands -----------------------------
   // opts: { series: [{id, name, color, points: [{x, y, tip?}]}],
   //         markers: [{x, label, seriesId?, kind: "star" | "rule"}],
@@ -982,7 +1032,7 @@
 
   window.Charts = {
     lineChart, barChart, Tip, svgEl, esc, niceTicks,
-    forestPlot, coefPlot, statTile, nullBars, stepChart, heatMatrix, funnelPlot,
+    forestPlot, coefPlot, statTile, nullBars, markHist, stepChart, heatMatrix, funnelPlot,
     levelRate, rateSeries, arrow, markerLegend, infoButton, bindInfo,
   };
 })();

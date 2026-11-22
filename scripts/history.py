@@ -507,7 +507,7 @@ def distinct_run(end):
 # ---------------------------------------------------------------------------------------------------------
 TLS = {g["id"]: insights.board_timeline(EV[g["id"]]) for g in games if g["id"] in EV}
 _close = {}
-full = insights.closeness_on(games, TLS, lambda g: len(g["players"]))
+full = insights.closeness_on(games, TLS, lambda g: len(g["players"]), TH)
 assert all(full["games"][k]["index"] == S["closeness"]["games"][k]["index"] for k in full["games"]), \
     "closeness replica differs"
 
@@ -515,7 +515,7 @@ assert all(full["games"][k]["index"] == S["closeness"]["games"][k]["index"] for 
 def close_on(k):
     """[(index, game number)] over the first k games, closest first."""
     if k not in _close:
-        out = insights.closeness_on(games[:k], TLS, lambda g: len(g["players"]))
+        out = insights.closeness_on(games[:k], TLS, lambda g: len(g["players"]), TH)
         _close[k] = sorted(((v["index"], num[i]) for i, v in out["games"].items()), key=lambda t: (-t[0], t[1]))
     return _close[k]
 

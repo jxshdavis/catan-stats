@@ -1,7 +1,8 @@
 /* Catan Night front end. Renders dist/data/stats.json; computes nothing heavy. */
 (function () {
   "use strict";
-  const { lineChart, barChart, Tip, esc, forestPlot, coefPlot, nullBars, arrow, markerLegend, infoButton } = window.Charts;
+  const { lineChart, barChart, Tip, esc, forestPlot, coefPlot, nullBars, markHist, arrow, markerLegend, infoButton } = window.Charts;
+  const fin = (v) => v !== null && v !== undefined && Number.isFinite(+v);
   const M = window.METHODS || {};
   // Pages and page sections added by other scripts (site/network.js, site/classes.js, ...).
   // window.Pages[path] = {render(ctx)}; window.Hooks[page] = [{html(ctx, arg) -> string, draw(ctx, arg)}].
@@ -818,6 +819,7 @@
       </nav>`;
     hooksDraw("game", g);
     hooksDraw("game-race", g);
+    drawClosenessHists(g);
     if (g.dice) diceChart(document.getElementById("dice-game"), g.dice, "Dice roll counts for this game, with expected counts");
     if (tl && !raceHooked(g)) {
       const series = g.players.map((r) => ({
@@ -885,13 +887,80 @@
     const n = ROOT.closeness.n;
     const head = r.closest_tier ? "In our closest tier" : r.one_sided_tier ? "Among our most one-sided games"
       : `Closeness rank ${r.rank_min === r.rank_max ? r.rank_min : `${r.rank_min} to ${r.rank_max}`} of ${n}`;
+    const parts = closenessParts(r);
+    const all = Object.values(ROOT.closeness.games);
+    const median = (xs) => { const s = [...xs].sort((a, b) => a - b), k = s.length >> 1; return s.length % 2 ? s[k] : (s[k - 1] + s[k]) / 2; };
+    const hists = parts.length ? `
+        <div class="cl-hists">${parts.map((p) => `<div class="cl-hist">
+          <h3>${p.title}</h3>
+          <div class="chart" id="cl-h-${p.key}"></div>
+          ${fin(r["p" + p.key]) ? `<p class="cl-cap">Closer than ${num(100 * r["p" + p.key], 0)}% of games on this part</p>` : ""}
+        </div>`).join("")}</div>
+        <p class="note">Each chart counts all ${n} decoded games; the dark bar is this game. Ranks adjust lead changes and the lead for the VP target; the charts show the plain numbers. A tie counts as half closer.</p>
+        ${tableView([{ label: "Part" }, { label: "This game", num: true }, { label: "Median game", num: true }, { label: "Closer than", num: true }],
+          parts.map((p) => [p.title, p.fmt(p.val(r)), p.fmt(median(all.map(p.val).filter(fin))), fin(r["p" + p.key]) ? `${num(100 * r["p" + p.key], 0)}%` : ""]),
+          "Show as table")}` : "";
+    const size = r.n_seats < 5 ? `${r.n_seats} player games` : "5 and 6 player games";
+    const inClass = r.index_in_class != null ? `. Among ${size}: ${num(r.index_in_class, 0)}` : "";
     return `<section class="block">
         <h2>How close was it? ${info("closeness", "Closeness index")}</h2>
-        <div class="tiles"><div class="tile"><div class="v">${num(r.index, 0)}</div><div class="k">${head}</div><div class="s">Closeness index out of 100, on ${ROOT.closeness.hindsight ? "board VP" : "true VP (hindsight)"}</div></div>
+        <div class="tiles"><div class="tile"><div class="v">${num(r.index, 0)}</div><div class="k">${head}</div><div class="s">Closeness index out of 100, on ${ROOT.closeness.hindsight ? "board VP" : "true VP (hindsight)"}${inClass}</div></div>
           <div class="tile"><div class="v">${r.A} VP</div><div class="k">Runner-up still needed</div><div class="s">before the winner's final turn</div></div>
           <div class="tile"><div class="v">${r.lead_changes}</div><div class="k">Lead changes</div><div class="s">new sole leader, before the final turn</div></div>
-          <div class="tile"><div class="v">${num(r.C * (r.target - 2), 1)} VP</div><div class="k">Average lead</div><div class="s">from when anyone reached half the target</div></div></div>
+          <div class="tile"><div class="v">${num(r.C * (r.target - 2), 1)} VP</div><div class="k">Average lead</div><div class="s">from when anyone reached half the target</div></div>
+          ${r.D != null ? `<div class="tile"><div class="v">${num(r.D, 1)}</div><div class="k">Players in contention</div><div class="s">on average, from each player's chance of winning</div></div>` : ""}</div>
+        ${hists}
       </section>`;
+  }
+
+  // The closeness parts as the game page shows them: plain units, and which end of the scale is closer.
+  function closenessParts(r) {
+    const vp = (v) => `${num(v, 1)} VP`;
+    const out = [
+      { key: "A", title: "Runner-up still needed", val: (x) => x.A, discrete: true, closer: "left", fmt: (v) => `${num(v, v % 1 ? 1 : 0)} VP`, unit: (v) => `${v} VP` },
+      { key: "B", title: "Lead changes", val: (x) => x.lead_changes, discrete: true, closer: "right", fmt: (v) => num(v, v % 1 ? 1 : 0),
+        unit: (v) => `${v} lead ${v === 1 ? "change" : "changes"}` },
+      { key: "C", title: "Average lead", val: (x) => x.C * (x.target - 2), width: 0.5, closer: "left", fmt: vp, unit: (a, b) => `${num(a, 1)} to ${num(b, 1)} VP` },
+    ];
+    if (fin(r.D)) out.push({ key: "D", title: "Players in contention", val: (x) => x.D, width: 0.25, closer: "right", fmt: (v) => num(v, 1),
+      unit: (a, b) => `${num(a, 2)} to ${num(b, 2)} in contention` });
+    return out;
+  }
+
+  function drawClosenessHists(g) {
+    const r = ((ROOT.closeness || {}).games || {})[g.id];
+    if (!r) return;
+    const all = Object.values(ROOT.closeness.games);
+    const games = (k) => `${k} ${k === 1 ? "game" : "games"}`;
+    for (const p of closenessParts(r)) {
+      const el = document.getElementById(`cl-h-${p.key}`);
+      const vals = all.map(p.val).filter(fin), mine = p.val(r);
+      if (!el || !vals.length || !fin(mine)) continue;
+      let bins, mark, edges = null;
+      if (p.discrete) {
+        const lo = Math.min(...vals), hi = Math.max(...vals);
+        bins = [];
+        for (let v = lo; v <= hi; v++) {
+          const k = vals.filter((x) => x === v).length;
+          bins.push({ count: k, label: String(v), tip: `<b>${esc(p.unit(v))}</b><br>${games(k)}${v === mine ? "<br>Includes this game" : ""}` });
+        }
+        mark = mine - lo;
+      } else {
+        const w = p.width, idx = (v) => Math.floor(v / w + 1e-9);
+        const i0 = idx(Math.min(...vals)), i1 = idx(Math.max(...vals));
+        bins = [];
+        edges = [];
+        for (let i = i0; i <= i1; i++) {
+          const k = vals.filter((x) => idx(x) === i).length;
+          bins.push({ count: k, label: "", tip: `<b>${esc(p.unit(i * w, (i + 1) * w))}</b><br>${games(k)}${idx(mine) === i ? "<br>Includes this game" : ""}` });
+          edges.push(+(i * w).toFixed(4));
+        }
+        edges.push(+((i1 + 1) * w).toFixed(4));
+        mark = idx(mine) - i0;
+      }
+      markHist(el, { bins, mark, edges, discrete: p.discrete, closer: p.closer, height: 128,
+        ariaLabel: `${p.title} across all ${vals.length} decoded games. This game: ${p.fmt(mine)}.` });
+    }
   }
 
   // Game-centered dice luck from the momentum module: cards per game against the rest of the table.
@@ -1172,7 +1241,7 @@
     return `<svg class="spark" viewBox="0 0 100 24" preserveAspectRatio="none" aria-hidden="true"><polyline points="${pts}" fill="none" style="stroke:var(--data)" stroke-width="1.5" vector-effect="non-scaling-stroke"/></svg>`;
   }
   function closenessChips(r) {
-    return `<span class="chipline"><span class="mini">runner-up needed ${r.A} VP</span><span class="mini">${r.lead_changes} lead ${r.lead_changes === 1 ? "change" : "changes"}</span><span class="mini">avg lead ${num(r.C * (r.target - 2), 1)} VP</span></span>`;
+    return `<span class="chipline"><span class="mini">runner-up needed ${r.A} VP</span><span class="mini">${r.lead_changes} lead ${r.lead_changes === 1 ? "change" : "changes"}</span><span class="mini">avg lead ${num(r.C * (r.target - 2), 1)} VP</span>${r.D != null ? `<span class="mini">${num(r.D, 1)} in contention</span>` : ""}</span>`;
   }
   function closestSection(cl0) {
     const board = !!cl0.hindsight;
@@ -1193,10 +1262,10 @@
     }).join("")}</tbody></table></div>`;
     return `<section class="block">
         <h2>Closest games ${info("closeness", "Closeness index")}</h2>
-        <p class="note"><b>How to read:</b> each dot is a game, placed by its closeness index (0 to 100) from how far back the runner-up was, how often the lead changed and how big the lead usually was. Right is closer; blue dots are the closest tier, red the most one-sided. Click a dot to open the game. ${board ? "Measured on board VP, what everyone could see; hidden VP cards are left out." : "<b>Hindsight</b> for now: this uses true VP, including VP cards nobody could see."} Ranks are among all ${cl.n} decoded games and don't change with the filter.</p>
+        <p class="note"><b>How to read:</b> each dot is a game, placed by its closeness index (0 to 100) from how far back the runner-up was, how often the lead changed, how big the lead usually was${cl.parts === "ABCD" ? " and how many players were in contention" : ""}. Right is closer; blue dots are the closest tier, red the most one-sided. Click a dot to open the game. ${board ? "Measured on board VP, what everyone could see; hidden VP cards are left out." : "<b>Hindsight</b> for now: this uses true VP, including VP cards nobody could see."} Ranks are among all ${cl.n} decoded games and don't change with the filter.</p>
         <div class="panel"><div class="chart">${strip}</div></div>
         <h3 style="margin-top:20px">The closest tier</h3>
-        <p class="note">Games that land in the top quarter however the three parts are weighed. Rank is out of every decoded game, shown as a range because it moves with the weighting. The sparkline is the leader's margin through the game: flat and low means a tight race.</p>
+        <p class="note">Games that land in the top quarter however the parts are weighed. Rank is out of every decoded game, shown as a range because it moves with the weighting. The sparkline is the leader's margin through the game: flat and low means a tight race.</p>
         ${tier.length ? table(tier) : `<p class="empty">No game in this view is in the closest tier.</p>`}
         <h3 style="margin-top:20px">The most one-sided</h3>
         ${lop.length ? table(lop) : `<p class="empty">No game in this view is in the one-sided tier.</p>`}

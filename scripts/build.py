@@ -823,8 +823,10 @@ def compute_views(players_doc, games_doc, name_mode="usernames", replays_doc=Non
         "player_names": name_mode,
         "views": views,
         # Closeness percentiles always use every decoded game, so a game's tile never changes with the filter.
+        # Contention, its fourth part, reads the threat index's turn-by-turn win chances.
         "closeness": insights.closeness(games, replays, lambda g: len(g["players"]),
-                                        (events_doc or {}).get("games")),
+                                        (events_doc or {}).get("games"),
+                                        (module_out.get("threat") or {}).get("timelines")),
         **module_out,
         # Shared by every view, so stored once: per-game replay numbers and turn-by-turn timelines.
         "game_replays": {gid: {pid: replay_row(st) for pid, st in r["players"].items()} for gid, r in replays.items()},
