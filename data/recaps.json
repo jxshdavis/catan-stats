@@ -618,6 +618,12 @@
    "headline": "JD Strikes Late, Takes Game 103 by 2",
    "recap": "JD won with 14 VP to LD's 12, taking the lead on turn 72 and closing it out on turn 82 with a city. Until then the lead changed hands 6 times, with AT holding it longest and winning Longest Road back from ND along the way. LD had just gone ahead 10 to 9 on turn 70 when JD answered with a settlement, an island bonus and a city in one turn, a 4 VP swing that made it 11 to 10. Having the best opening at the table did not make it an easy ride: JD was robbed of 6 cards, more than anyone, and discarded 13 to sevens. JD spent only 13% of the game in the lead, which turned out to be the right 13%.",
    "model": "claude-opus-5-5"
+  },
+  "2026-11-24-a": {
+   "hash": "5bd3d4185ad33baf",
+   "headline": "ND Shrugs Off MS Surge, Wins by 4",
+   "recap": "ND reached 14 with a city on turn 84, finishing 4 clear of MS after leading for 55% of the game. It was not a straight line: on turn 58 MS took Longest Road from ND and the lead with it, 9 to 5. ND answered on turn 76 with a city, a settlement and an island bonus in a single turn, a 4 VP swing that put ND back in front 11 to 9. ND won despite losing the most cards to the robber at 7, while MS and LD each discarded 12 cards to 7s. JD had the roughest night, starting from the weakest opening at 15 dots and getting 14 fewer cards from the dice than expected.",
+   "model": "claude-opus-5-5"
   }
  }
 }
