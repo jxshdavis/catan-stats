@@ -624,6 +624,12 @@
    "headline": "ND Shrugs Off MS Surge, Wins by 4",
    "recap": "ND reached 14 with a city on turn 84, finishing 4 clear of MS after leading for 55% of the game. It was not a straight line: on turn 58 MS took Longest Road from ND and the lead with it, 9 to 5. ND answered on turn 76 with a city, a settlement and an island bonus in a single turn, a 4 VP swing that put ND back in front 11 to 9. ND won despite losing the most cards to the robber at 7, while MS and LD each discarded 12 cards to 7s. JD had the roughest night, starting from the weakest opening at 15 dots and getting 14 fewer cards from the dice than expected.",
    "model": "claude-opus-5-5"
+  },
+  "2026-11-24-b": {
+   "hash": "780b590abdc06ee8",
+   "headline": "ND Retakes Longest Road to Close Out Desert Race",
+   "recap": "ND won it on the final turn, taking Longest Road back from JD on turn 68 to finish on 14, with LD stuck on 11. The finish came fast: LD took the lead 11 to 9 on turn 63, and JD took Longest Road from ND a turn later. ND answered on turn 65 with a city, a settlement and an island bonus, a 4 VP swing, then took the road back to close it out. LD had the hottest dice at the table at +14 cards, while ND lost the most to the robber at 7 cards and still led for 59% of the game. JD held Longest Road from turn 64 to turn 68, which mostly gave ND something to take back.",
+   "model": "claude-opus-5-5"
   }
  }
 }
