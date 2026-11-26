@@ -636,6 +636,12 @@
    "headline": "JD Leads 6% of the Game, Wins It Anyway",
    "recap": "JD reached 14 with a settlement on the final turn and finished 2 clear of ND, in what ranks as the group's 2nd closest game out of 106. The lead changed hands 7 times and LD held it longest, while JD spent just 6% of the game out in front. The decisive move came on turn 67, when a settlement and an island bonus put JD ahead 12 to 10 for a 3 VP swing. ND answered by taking Longest Road back on turn 71, but it was not enough. Meanwhile DH discarded 23 cards to 7s, which is a lot of cards to give back on the way to 4th place.",
    "model": "claude-opus-5-5"
+  },
+  "2026-11-26-b": {
+   "hash": "00537c7bcd0d4b7b",
+   "headline": "ND turns weakest opening into final-turn win",
+   "recap": "ND won it 14 to 10 on the final turn with a settlement and an island bonus, after starting from the weakest opening at the table and holding the sole lead for just 2% of the game. For most of the game the lead went back and forth between LD and DH, and MS took a brief turn in front on turn 59. ND's big move came on turn 62, when Largest Army and a settlement in the same turn made a 3 VP swing. DH had the hottest dice at the table and still lost 11 cards to thieves, the most of anyone. LD led for 46% of the game from the best opening, then discarded 19 cards to 7s and finished last on 9, behind DH, JD and MS, who tied for second.",
+   "model": "claude-opus-5-5"
   }
  }
 }
