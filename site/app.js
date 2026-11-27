@@ -13,7 +13,7 @@
   const Home = window.Home || { tonight: () => "", middle: () => "", awards: () => "", records: () => "", draw: () => {} };
   // What a page or hook gets to work with: the current view and the shared helpers.
   const ctx = () => ({ main, ROOT, S, P, VIEW, who, color, info, esc, num, pct, signed, fmtSigned, ord, fmtDate,
-    tableView, filterBar, gameLabel, mk, guardNote, Charts: window.Charts, M });
+    tableView, filterBar, gameLabel, mk, guardNote, tagKey, tagHtml, layoutWithRail, Charts: window.Charts, M });
   const hooksHtml = (page, arg) => hookList(page).map((h) => (h.html ? h.html(ctx(), arg) || "" : "")).join("");
   const hooksDraw = (page, arg) => hookList(page).forEach((h) => h.draw && h.draw(ctx(), arg));
   const main = document.getElementById("main");
@@ -1744,6 +1744,7 @@
     add("Leaderboard", "Page", "#/", "home ranking", true);
     add("Questions", "Page", "#/questions", "findings answers index", true);
     for (const t of TP.TOPICS) add(t.title, "Topic", "#/" + t.key, t.lede, true);
+    add("Dev cards", "Page", "#/devcards", "development knight victory point monopoly largest army", true);
     add("Players", "Page", "#/players", "head to head", true);
     add("Head to head", "Players", "#/players/h2h", "matrix");
     add("Games", "Page", "#/games", "list dice", true);
@@ -1829,7 +1830,7 @@
     if (TP.REDIRECTS[page]) { location.replace(`#/${TP.REDIRECTS[page]}${query ? "?" + query : ""}`); return; }
     const topic = TP.topic(page);
     // How many path parts pick the page; one more picks a section on it.
-    const n = topic || page === "players" ? 1 : page === "player" || page === "game" ? 2 : parts.length;
+    const n = topic || page === "players" || (Pages[page] && Pages[page].sections) ? 1 : page === "player" || page === "game" ? 2 : parts.length;
     const sec = page === "h2h" ? "h2h" : parts[n];
     const key = `${page === "h2h" ? "players" : parts.slice(0, n).join("/")}|${view}`;
     PAGE_PATH = path || "";
