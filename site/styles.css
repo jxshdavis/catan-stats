@@ -234,6 +234,7 @@ details.tv[open] summary { border-bottom: 1px solid var(--hair); }
 .tip b { font-weight: 700; }
 .tip .row { display: flex; align-items: center; gap: 6px; }
 .tip .hex { width: 9px; height: 10px; }
+.tip .why { margin-top: 2px; font-size: 12px; opacity: .88; }
 
 /* Head to head matrix */
 .matrix td, .matrix th { text-align: center; padding: 0; border: 0; }

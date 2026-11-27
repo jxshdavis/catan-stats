@@ -346,14 +346,37 @@ def model_probs(r, model):
     return probs(design(r["X"], model["scale"], r["stage"], model["staged"]), model["beta"])
 
 
+def reason(r, model):
+    """Why the top threat in state row r is ahead of the next most likely winner. Their log-odds gap,
+    log(p_top / p_next) = eta_top - eta_next, splits exactly into one part per feature: (z_top - z_next) times the
+    feature's weight at this stage (main + shift (stage - 0.5); the one weight for a constant model), z being the
+    feature over its scale. Returns (feature index, top's raw value, next seat, next's raw value) for the largest
+    part, or None when no part favours the top threat (a tie)."""
+    n = len(r["p"])
+    if n < 2:
+        return None
+    order = sorted(range(n), key=lambda i: -r["p"][i])
+    t, s = order[0], order[1]
+    k, beta, scale, c = len(FEATS), model["beta"], model["scale"], r["stage"] - STAGE_CENTER
+    parts = [(r["X"][t][f] - r["X"][s][f]) / scale[f] * (beta[f] + (beta[k + f] * c if model["staged"] else 0.0))
+             for f in range(k)]
+    f = max(range(k), key=lambda j: parts[j])
+    if parts[f] <= 1e-12:
+        return None
+    return f, r["X"][t][f], s, r["X"][s][f]
+
+
 def score_rows(d, model):
-    """Attach out-of-fold fitted and equal-weights probabilities, the top threat and ranks to every row."""
+    """Attach out-of-fold fitted and equal-weights probabilities, the top threat and ranks to every row, and at
+    turn ends the biggest reason the top threat leads (reason)."""
     gamma = model["gamma"]
     for r in d["rows"]:
         p = model_probs(r, model)
         q = softmax([gamma * z for z in z_sum(r["X"])])
         order = sorted(range(d["n"]), key=lambda i: -p[i])
         r["p"], r["p_equal"] = p, q
+        if r["kind"] == "end_turn":
+            r["why"] = reason(r, model)
         r["top"] = order[0]
         r["top_equal"] = max(range(d["n"]), key=lambda i: q[i])
         r["rank"] = [0] * d["n"]
@@ -712,10 +735,13 @@ def hidden_summary(data):
 
 
 def timelines(data):
-    """Per game: roll index and each seat's out-of-fold win probability at every turn end (game page chart)."""
+    """Per game: roll index and each seat's out-of-fold win probability at every turn end (game page chart), and
+    why: per turn end [feature index into FEATS, top threat's raw value, next seat, next seat's raw value], or None
+    (see reason)."""
     return {d["game"]: {"seats": d["seats"], "turn": [r["roll_index"] + 1 for r in d["ends"]],
                         "p": [[round(r["p"][i], 3) for r in d["ends"]] for i in range(d["n"])],
-                        "top": [r["top"] for r in d["ends"]]}
+                        "top": [r["top"] for r in d["ends"]],
+                        "why": [[w[0], r3(w[1]), w[2], r3(w[3])] if (w := r.get("why")) else None for r in d["ends"]]}
             for d in data}
 
 

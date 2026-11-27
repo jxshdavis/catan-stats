@@ -10,7 +10,8 @@
       <p><b>Stage of the game.</b> Each weight changes in a straight line with how far the game has gone: the leader's board VP as a share of the VP target (capped at 1), which everyone can see. A weight is reported at three points: early (the leader has a fifth of the points needed), middle (half) and late (four-fifths).</p>
       <p><b>Penalty.</b> With 13 signs, each with its own weight and its own change over the game, and only one winner per game, an unrestrained fit chases noise. The fit is penalized (ridge): weights, and changes in weights, are pulled toward zero and only move away from it when the games clearly back them up. How hard to pull (450 for the weights, 150 for their changes) was set on 26 Nov 2026 by checking which strength best predicted games left out of the fit, and is fixed since.</p>
       <p><b>Intervals.</b> One game gives dozens of turn ends that share a winner, so they are not independent. The 95% intervals use a sandwich estimator clustered by game, which counts each game as one piece of evidence. They show how much the penalized weights would vary from sample to sample; the weights themselves are pulled toward zero on purpose.</p>
-      <p><b>No peeking.</b> Games are split into 5 groups, and each group is scored by a model fit on the other 4. Every threat number on the site, including the badges, comes from a model that never saw that game's winner.</p>`,
+      <p><b>No peeking.</b> Games are split into 5 groups, and each group is scored by a model fit on the other 4. Every threat number on the site, including the badges, comes from a model that never saw that game's winner.</p>
+      <p><b>Why they're on top.</b> Hovering the chart on a game page names the biggest reason the top threat leads the next most likely player. Their gap in log-odds, log(p<sub>top</sub> / p<sub>next</sub>), splits exactly into one part per feature: the difference between the two in that feature (per standard deviation) times the feature's weight at that stage of the game, from the same model that scored the game. The reason shown is the largest part. Other features can pull the other way.</p>`,
     threat_check: `<p>Both versions are scored on games they were not fit on. <b>Equal weights</b> adds up each feature's z-score within the turn (so a dev card counts as much as a VP, per standard deviation), with one fitted scale. <b>Log loss</b> is the average of −log P(the eventual winner); lower is better, and chance (1/n) is the floor to beat. <b>Hit rate</b> is the share of turn ends where the top threat went on to win. The interval for the log loss gap is a 95% game-cluster bootstrap (2,000 draws). If the fitted weights only fit noise, equal weights would do as well or better out of sample.</p>
       <p><b>Constant weights</b> is the model used before 26 Nov 2026: the same signs, one weight each for the whole game, no penalty. It is still fit and scored the same way. On the games that were used to choose the new model the comparison flatters the new one a little, so the forward check counts only games played after the switch.</p>`,
     threat_players: `<p><b>Top threat.</b> Turn ends where the player had the highest win probability, against chance (each turn end 1/n). O/E above 1 means the table had more reason to fear them than their seat count alone. 95% game bootstrap interval.</p>
@@ -190,6 +191,27 @@
   });
 
   // ---- Game page ---------------------------------------------------------------------------------
+  // The chart's hover names the biggest reason the top threat leads the next most likely winner (threat.reason):
+  // the feature, then the two raw values. f(top's value, next's value, next's name, already escaped).
+  const f2 = (v) => Number(v).toFixed(2);
+  const short = (v, cap) => (cap - v >= cap ? `${cap}+` : `${cap - v}`);
+  const WHY = {
+    board_vp: (a, b, o) => `board VP, ${a} to ${o}'s ${b}`,
+    income: (a, b, o) => `dice income, ${f2(a)} cards a roll to ${o}'s ${f2(b)}`,
+    income_gold: (a, b, o) => `gold income, ${f2(a)} a roll to ${o}'s ${f2(b)}`,
+    reach: (a, b, o) => `open spots in reach, ${a} dots to ${o}'s ${b}`,
+    reach_gold: (a, b, o) => `gold in reach, ${a} dots to ${o}'s ${b}`,
+    reach_island: (a, b, o) => `an island bonus in reach, ${a} VP to ${o}'s ${b}`,
+    reach_port: (a, b, o) => `new ports in reach, ${a} to ${o}'s ${b}`,
+    port_31: (a, b, o) => `a 3:1 port, which ${o} doesn't have`,
+    port_21: (a, b, o) => `2:1 ports matching their income, ${f2(a)} to ${o}'s ${f2(b)}`,
+    dev_held: (a, b, o) => `dev cards in hand, ${a} to ${o}'s ${b}`,
+    hand: (a, b, o) => `cards in hand, ${a} to ${o}'s ${b}`,
+    road_close: (a, b, o) => (a >= 4 ? `holding Longest Road, with ${o} ${short(b, 4)} segments short`
+      : `nearer Longest Road, ${short(a, 4)} segments short to ${o}'s ${short(b, 4)}`),
+    army_close: (a, b, o) => (a >= 3 ? `holding Largest Army, with ${o} ${short(b, 3)} knights short`
+      : `nearer Largest Army, ${short(a, 3)} knights short to ${o}'s ${short(b, 3)}`),
+  };
 
   (window.Hooks.game = window.Hooks.game || []).push({
     html(ctx, g) {
@@ -197,7 +219,7 @@
       if (!tl) return null;
       return `<section class="block">
         <h2>Threat through the game ${ctx.info("threat_model", "Threat index")}</h2>
-        <p class="note"><b>How to read:</b> after every turn, each player's chance of winning judged only from what the table could see (board VP, income, ports, reach, cards and dev cards in hand, closeness to the titles). Hidden VP cards don't count, which is how a hidden threat sneaks through. The model never saw this game's result.</p>
+        <p class="note"><b>How to read:</b> after every turn, each player's chance of winning judged only from what the table could see (board VP, income, ports, reach, cards and dev cards in hand, closeness to the titles). Hidden VP cards don't count, which is how a hidden threat sneaks through. The model never saw this game's result. Hover a turn to see why the top threat is on top.</p>
         <div class="panel"><div class="chart" id="th-game"></div></div>
         <details class="tv"><summary>How the threat model works</summary>${describeModel(ctx)}</details>
       </section>`;
@@ -206,11 +228,19 @@
       const tl = (T(ctx).timelines || {})[g.id], el = document.getElementById("th-game");
       if (!tl || !el) return;
       const name = (pid) => (String(pid).startsWith("bot-") ? "Bot" : anon(pid) ? "Guest" : ctx.P[pid] ? ctx.P[pid].name : pid);
+      const esc = ctx.Charts.esc;
+      const feats = ((T(ctx).model || {}).feats) || [];
+      const kOf = new Map(tl.turn.map((t, k) => [t, k]));
       ctx.Charts.lineChart(el, {
         series: tl.seats.map((pid, i) => ({ id: pid, name: name(pid), color: anon(pid) ? "var(--muted)" : ctx.color(pid),
           points: tl.turn.map((t, k) => ({ x: t, y: Math.round(tl.p[i][k] * 100), tip: `${Math.round(tl.p[i][k] * 100)}%` })) })),
         height: 240, stepLabel: "turns", ariaLabel: "Each player's chance of winning from the visible board after every turn",
-        xLabel: (x) => `<b>After turn ${x}</b>`,
+        xLabel: (x) => {
+          const head = `<b>After turn ${x}</b>`, k = kOf.get(x), w = k === undefined || !tl.why ? null : tl.why[k];
+          if (!w || !WHY[feats[w[0]]]) return head;
+          const top = esc(name(tl.seats[tl.top[k]])), other = esc(name(tl.seats[w[2]]));
+          return `${head}<div class="why">Why ${top} is on top: ${WHY[feats[w[0]]](w[1], w[3], other)}</div>`;
+        },
       });
     },
   });

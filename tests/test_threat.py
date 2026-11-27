@@ -262,5 +262,54 @@ class Coward(unittest.TestCase):
         self.assertTrue(r["clear"])
 
 
+class Reason(unittest.TestCase):
+    """The biggest reason the top threat leads: the parts add up to the log-odds gap, and the largest one wins."""
+
+    def setUp(self):
+        rng = random.Random(3)
+        self.model = {"staged": True, "scale": [rng.uniform(0.5, 2) for _ in range(K)],
+                      "beta": [rng.uniform(-1, 1) for _ in range(2 * K)]}
+
+    def row(self, X, stage):
+        r = {"X": X, "stage": stage}
+        r["p"] = threat.model_probs(r, self.model)
+        return r
+
+    def parts(self, r, t, s):
+        c, b, sc = r["stage"] - threat.STAGE_CENTER, self.model["beta"], self.model["scale"]
+        return [(r["X"][t][f] - r["X"][s][f]) / sc[f] * (b[f] + b[K + f] * c) for f in range(K)]
+
+    def test_parts_add_up_and_largest_is_named(self):
+        rng = random.Random(7)
+        for _ in range(50):
+            r = self.row([[rng.uniform(0, 10) for _ in range(K)] for _ in range(4)], rng.random())
+            order = sorted(range(4), key=lambda i: -r["p"][i])
+            t, s = order[0], order[1]
+            parts = self.parts(r, t, s)
+            self.assertAlmostEqual(sum(parts), math.log(r["p"][t] / r["p"][s]), places=9)
+            f, a, seat, b = threat.reason(r, self.model)
+            self.assertEqual(f, max(range(K), key=lambda j: parts[j]))
+            self.assertEqual((seat, a, b), (s, r["X"][t][f], r["X"][s][f]))
+
+    def test_one_feature_apart(self):
+        X = [[1.0] * K for _ in range(3)]
+        X[2][threat.VP_COL] = 5.0  # seat 3 differs from the rest only in board VP
+        self.model["beta"][threat.VP_COL], self.model["beta"][K + threat.VP_COL] = 1.0, 0.0
+        r = self.row(X, 0.5)
+        self.assertEqual(threat.reason(r, self.model), (threat.VP_COL, 5.0, 0, 1.0))
+
+    def test_tie_has_no_reason(self):
+        r = self.row([[2.0] * K for _ in range(3)], 0.3)
+        self.assertIsNone(threat.reason(r, self.model))
+
+    def test_constant_model_ignores_shift(self):
+        self.model = {"staged": False, "scale": [1.0] * K, "beta": [0.0] * K}
+        self.model["beta"][threat.FEATS.index("hand")] = 2.0
+        X = [[0.0] * K for _ in range(2)]
+        X[1][threat.FEATS.index("hand")] = 3.0
+        r = self.row(X, 0.9)
+        self.assertEqual(threat.reason(r, self.model)[:3], (threat.FEATS.index("hand"), 3.0, 0))
+
+
 if __name__ == "__main__":
     unittest.main()
