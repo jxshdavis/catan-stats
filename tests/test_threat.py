@@ -30,17 +30,18 @@ def draw(rng, weights):
     return len(weights) - 1
 
 
-def model_data(n_games, beta, seed=0, n=4, states=1):
-    """Games as threat.fit_model sees them: turn ends with feature rows, the winner drawn from the
-    conditional logit with coefficients beta on the raw features."""
+def model_data(n_games, beta, seed=0, n=4, states=1, shift=None):
+    """Games as threat.fit_model sees them: turn ends with feature rows and a stage, the winner drawn from the
+    conditional logit with weights beta + shift (stage - 0.5) on the raw features (shift 0 when None)."""
     rng = random.Random(seed)
+    shift = shift or [0.0] * K
     out = []
     for g in range(n_games):
         ends = []
         for _ in range(states):
-            ends.append({"X": [[rng.gauss(0, 1) for _ in range(K)] for _ in range(n)]})
-        last = ends[-1]["X"]
-        win = draw(rng, [math.exp(sum(b * x for b, x in zip(beta, row))) for row in last])
+            ends.append({"X": [[rng.gauss(0, 1) for _ in range(K)] for _ in range(n)], "stage": rng.random()})
+        last, c = ends[-1]["X"], ends[-1]["stage"] - 0.5
+        win = draw(rng, [math.exp(sum((b + s * c) * x for b, s, x in zip(beta, shift, row))) for row in last])
         out.append({"game": f"g{g:03d}", "n": n, "win": win, "ends": ends})
     return out
 
@@ -105,10 +106,17 @@ class Features(unittest.TestCase):
 
 
 class Model(unittest.TestCase):
-    def test_recovers_coefficients(self):
-        beta = [0.8, 0.5, 0.0, 0.3, 0.0, -0.4, 0.2]
+    def test_stage_of(self):
+        X = [[3] + [0] * (K - 1), [7] + [0] * (K - 1), [5] + [0] * (K - 1)]
+        self.assertAlmostEqual(threat.stage_of(X, 14), 0.5)  # the leader's board VP over the target
+        X[1][F["board_vp"]] = 15
+        self.assertEqual(threat.stage_of(X, 14), 1.0)  # capped
+
+    def test_recovers_constant_coefficients(self):
+        beta = [0.8, 0.5, 0.0, 0.3, 0.0, -0.4, 0.2] + [0.0] * (K - 7)
         data = model_data(1500, beta, seed=1)
-        fit = threat.fit_model(data)
+        fit = threat.fit_model(data, staged=False)
+        self.assertEqual(len(fit["beta"]), K)
         for f, b in enumerate(beta):
             est = fit["beta"][f] / fit["scale"][f]  # back to the raw-feature scale
             self.assertAlmostEqual(est, b, delta=0.15, msg=threat.FEATS[f])
@@ -116,16 +124,66 @@ class Model(unittest.TestCase):
             self.assertLess(lo, fit["beta"][f])
             self.assertGreater(hi, fit["beta"][f])
 
+    def test_recovers_stage_shifts_without_penalty(self):
+        beta = [0.6, 0.5] + [0.0] * (K - 2)
+        shift = [0.8, -0.6] + [0.0] * (K - 2)  # board VP counts more late, income less
+        data = model_data(2000, beta, seed=5, shift=shift)
+        fit = threat.fit_model(data, ridge=(0.0, 0.0))
+        self.assertEqual(len(fit["beta"]), 2 * K)
+        for f in range(2):
+            for b, j in ((beta[f], f), (shift[f], K + f)):
+                est, se = fit["beta"][j] / fit["scale"][f], fit["se"][j] / fit["scale"][f]
+                self.assertLess(abs(est - b), 3 * se, msg=f"{threat.FEATS[f]} term {j}")
+
+    def test_penalty_shrinks(self):
+        data = model_data(300, [0.8, 0.5] + [0.0] * (K - 2), seed=6, shift=[0.8, -0.6] + [0.0] * (K - 2))
+        free = threat.fit_model(data, ridge=(0.0, 0.0))
+        pen = threat.fit_model(data)  # the site's penalties
+        self.assertEqual(pen["ridge"], [threat.RIDGE_MAIN, threat.RIDGE_STAGE])
+        for j in (0, 1, K, K + 1):
+            self.assertLess(abs(pen["beta"][j]), abs(free["beta"][j]))
+            self.assertGreater(pen["beta"][j] * free["beta"][j], 0)  # same sign
+        heavy = threat.fit_model(data, ridge=(1e7, 1e7))
+        self.assertLess(max(abs(b) for b in heavy["beta"]), 1e-3)
+
+    def test_stage_weights(self):
+        k = K
+        beta = [0.0] * (2 * k)
+        beta[0], beta[k] = 0.4, 0.5
+        V = [[0.0] * (2 * k) for _ in range(2 * k)]
+        V[0][0], V[k][k], V[0][k], V[k][0] = 0.01, 0.04, -0.005, -0.005
+        w = threat.stage_weights({"beta": beta, "cov": V}, points=[0.2, 0.5, 0.8])[0]
+        self.assertEqual([round(v, 6) for v in w["est"]], [0.25, 0.4, 0.55])  # main + shift (stage - 0.5)
+        z = threat.statlib.z_for(threat.LEVEL)
+        se = math.sqrt(0.01 + 0.09 * 0.04 + 2 * 0.3 * 0.005)  # c = -0.3: var + c^2 var + 2c cov
+        self.assertAlmostEqual(w["hi"][0] - w["est"][0], z * se)
+
     def test_cluster_intervals_widen_with_repeated_states(self):
         # Repeating one game's state 5 times adds no information: clustered SEs should stay about the same
-        # as with one state per game, while naive SEs would shrink by sqrt(5).
+        # as with one state per game, while naive SEs would shrink by sqrt(5). (Unpenalized: a fixed penalty
+        # weighs less against 5 times the strata, which would change the estimate itself.)
         beta = [0.6] + [0.0] * (K - 1)
-        one = threat.fit_model(model_data(600, beta, seed=2, states=1))
+        one = threat.fit_model(model_data(600, beta, seed=2, states=1), staged=False)
         rep = model_data(600, beta, seed=2, states=1)
         for d in rep:
             d["ends"] = d["ends"] * 5
-        five = threat.fit_model(rep)
+        five = threat.fit_model(rep, staged=False)
         self.assertAlmostEqual(five["se"][0] / one["se"][0], 1.0, delta=0.1)
+
+    def test_forward_check_uses_only_later_games(self):
+        def end(p, pc, win):
+            top = max(range(2), key=lambda i: p[i])
+            return {"roll_index": 0, "p": p, "p_equal": [0.5, 0.5], "p_constant": pc, "top": top, "top_equal": 0}
+        early = {"game": "2026-11-01-a", "n": 2, "win": 0, "rolls": 1, "ends": [end([0.9, 0.1], [0.5, 0.5], 0)]}
+        late = {"game": "2026-12-01-a", "n": 2, "win": 0, "rolls": 1, "ends": [end([0.5, 0.5], [0.8, 0.2], 0)]}
+        chk = threat.check([early, late])
+        fw = chk["forward"]
+        self.assertEqual(fw["games"], 1)
+        self.assertAlmostEqual(fw["logloss"], round(-math.log(0.5), 3))
+        self.assertAlmostEqual(fw["logloss_constant"], round(-math.log(0.8), 3))
+        self.assertAlmostEqual(fw["constant_minus_fitted"]["est"], round(math.log(0.5) - math.log(0.8), 3))
+        self.assertAlmostEqual(chk["logloss_constant"], round((-math.log(0.5) - math.log(0.8)) / 2, 3))
+        self.assertEqual(threat.check([early])["forward"]["games"], 0)
 
     def test_cross_fit_never_scores_a_game_with_its_own_fit(self):
         data = model_data(50, [0.5] * K, seed=3)

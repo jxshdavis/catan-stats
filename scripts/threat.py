@@ -22,20 +22,41 @@ Public features per seat, at every state row (after each roll and at each turn e
     road_close    4 - min(4, segments short of Longest Road): need 5, or one more than the holder; holder 4
     army_close    3 - min(3, knights short of Largest Army): need 3, or one more than the holder; holder 3
 
-Weights that change through the game were tried and left out (2026-11-15, 101 games): letting every weight
-move linearly with the leader's progress to the target, or fitting the early and late halves separately,
-gave worse out-of-fold log loss than constant weights (1.047 and 1.048 against 1.038). The slopes pointed
-the way you would expect (board VP counts for more late, income for less), so retry with more games.
+Stage: how far the game has gone, from what the table can see: the leader's board VP over the game's VP
+target, capped at 1 (stage_of). Each feature's weight moves in a straight line with it:
+    weight_f(stage) = main_f + shift_f (stage - 0.5)
+so main_f is the weight at half the target, and the site reports the weights at stages 0.2, 0.5 and 0.8.
 
 Fitted index (compute_all, all games once). One stratum per turn end (end_turn rows; the winning turn has
 none), the alternatives are the seats and the chosen one is the eventual winner: a conditional logit,
-P(i wins | state) = exp(x_i b) / sum_j exp(x_j b). Features are divided by their pooled within-state SD,
-so b is per SD. Strata from one game are dependent, so intervals use the game-cluster sandwich
-V = I^-1 (sum_g U_g U_g') I^-1 (U_g = the game's summed scores at the estimate). Equal-weights check: the
-sum of within-state z-scores, x one fitted scale. Both are cross-fitted over 5 folds of games, and every
-probability used below is the out-of-fold one, so no game is scored by a model that saw its own winner.
-The check compares out-of-fold log loss and accuracy (top threat = eventual winner) of the two versions
-and of chance (1/n), overall and by thirds of the game.
+P(i wins | state) = exp(x_i b) / sum_j exp(x_j b), with x_i = [z_i, z_i (stage - 0.5)] and z the features
+divided by their pooled within-state SD (so weights are per SD). The fit is ridge-penalized: it maximizes
+l(b) - 0.5 RIDGE_MAIN sum main_f^2 - 0.5 RIDGE_STAGE sum shift_f^2, so a weight, or a change in a weight,
+only moves away from 0 when the games clearly back it up. Strata from one game are dependent, so intervals
+use the game-cluster sandwich V = H^-1 (sum_g u_g u_g') H^-1, with H = I + diag(ridge) and u_g the game's
+summed scores at the estimate, centred over games (the penalty's gradient spread evenly over the games;
+without a penalty the scores already sum to 0). They describe the sampling spread of the penalized weights,
+which are pulled toward 0 on purpose. Equal-weights check: the sum of within-state z-scores, x one fitted
+scale. Both are cross-fitted over 5 folds of games, and every probability used below is the out-of-fold one,
+so no game is scored by a model that saw its own winner. The check compares out-of-fold log loss and accuracy
+(top threat = eventual winner) of the two versions and of chance (1/n), overall and by thirds of the game.
+
+How the stage model was chosen (2026-11-26, 107 games). The earlier test (2026-11-15, 101 games) let every
+weight move linearly with stage, or fit early and late halves separately, without a penalty, and both lost
+to constant weights out of fold (1.047 and 1.048 against 1.038). With 26 weights and about 107 winners the
+unpenalized shifts are mostly noise. With the ridge penalty, chosen by inner 5-fold CV inside each outer
+training set (nested, so the outer folds never touched the choice), the stage model scored 1.031 against
+1.044 for constant unpenalized weights: a gain of 0.014, game-bootstrap 95% -0.007 to 0.036, better in 52
+of 107 games, the gain mostly in the first third of games and in 4+ player Seafarers games. It fixes the
+constant model's overconfidence early on (calibration slope by thirds 0.72 / 0.82 / 0.98 for constant
+weights, 0.97 / 0.97 / 1.18 for the stage model, 1 = calibrated) but is too cautious late. The penalties are
+fixed at the centre of the flat region of a plain 5-fold CV over all 107 games (main 300 to 700 and stage
+70 to 200 were all within 0.001 of the best log loss) rather than retuned on every build. The same day:
+ridge alone with constant weights gained 0.003 (interval across 0); separate models for 3 player and 4+
+player games did worse (-0.047, interval -0.084 to -0.010), and partial pooling between them chose no
+difference in 4 of 5 folds; board VP as a share of the target, or -log(VP still needed), made no difference.
+Because the stage model was picked from several tried on these 107 games, the constant model is still fit
+and scored on every build, and check()["forward"] compares the two on games after FORWARD_AFTER only.
 
 The top threat in a state is the seat with the highest fitted probability. For an event (trade, robber
 move) the state is the latest row at or before the event: the roll row of that turn.
@@ -90,6 +111,11 @@ LABELS = {
     "army_close": "Closeness to Largest Army (per SD)",
 }
 ROAD_CAP, ARMY_CAP = 4, 3
+VP_COL = FEATS.index("board_vp")
+STAGE_CENTER = 0.5  # a feature's main weight is its weight at this stage
+STAGE_POINTS = [0.2, 0.5, 0.8]  # where the site reports the weights: early, middle, late
+RIDGE_MAIN, RIDGE_STAGE = 450.0, 150.0  # fixed 2026-11-26 by CV over 107 games (see the docstring)
+FORWARD_AFTER = "2026-11-26-b"  # the last game id seen when the stage model was chosen
 FOLDS = 5
 LEVEL = statlib.LEVEL
 G = statlib.GUARDS
@@ -150,17 +176,26 @@ def state_rows(ev):
     return out
 
 
+def stage_of(X, target):
+    """How far the game has gone, from what the table can see: the leader's board VP over the VP target, capped at 1."""
+    return min(1.0, max(x[VP_COL] for x in X) / target)
+
+
 def game_data(games, events):
-    """Per game with v4 state rows: seats, winner seat index, rows, and the turn-end rows the model uses."""
+    """Per game with v4 state rows: seats, winner seat index, rows (each with its stage), and the turn-end rows
+    the model uses."""
     out = []
     for g in games:
         ev = events.get(g["id"])
         if not ev or not ev.get("states") or "res_pips" not in ev["states"][0] or g["winner"] not in ev["seats"]:
             continue
         rows = state_rows(ev)
+        target = g["settings"]["vp_to_win"]
+        for r in rows:
+            r["stage"] = stage_of(r["X"], target)
         out.append({"game": g["id"], "seats": ev["seats"], "n": len(ev["seats"]), "win": ev["seats"].index(g["winner"]),
                     "rows": rows, "ends": [r for r in rows if r["kind"] == "end_turn"], "ev": ev,
-                    "rolls": len(ev["roll_log"])})
+                    "rolls": len(ev["roll_log"]), "target": target})
     return out
 
 
@@ -196,8 +231,18 @@ def z_sum(X):
     return out
 
 
-def fitted_strata(data, scale):
-    return [{"X": [[x[f] / scale[f] for f in range(len(FEATS))] for x in r["X"]],
+def design(X, scale, stage, staged=True):
+    """Model rows for one state: each feature over its scale, then (staged) the same times (stage - 0.5)."""
+    c = stage - STAGE_CENTER
+    out = []
+    for x in X:
+        z = [x[f] / scale[f] for f in range(len(FEATS))]
+        out.append(z + [v * c for v in z] if staged else z)
+    return out
+
+
+def fitted_strata(data, scale, staged=True):
+    return [{"X": design(r["X"], scale, r["stage"], staged),
              "y": [1 if i == d["win"] else 0 for i in range(d["n"])], "game": d["game"]}
             for d in data for r in d["ends"]]
 
@@ -219,7 +264,10 @@ def probs(X, beta):
 
 
 def cluster_cov(strata, fit):
-    """Game-cluster sandwich covariance for a conditional logit with one chosen alternative per stratum."""
+    """Game-cluster sandwich covariance for a conditional logit with one chosen alternative per stratum:
+    H^-1 (sum_g u_g u_g') H^-1, H the (penalized) information, u_g the game's summed scores centred over games.
+    Unpenalized, the scores already sum to 0; with a ridge penalty they sum to its gradient, and centring
+    spreads that evenly over the games (the sandwich of the penalized estimating equation)."""
     k = len(fit["beta"])
     U = defaultdict(lambda: [0.0] * k)
     for s in strata:
@@ -228,31 +276,60 @@ def cluster_cov(strata, fit):
         u = U[s["game"]]
         for f in range(k):
             u[f] += s["X"][y][f] - sum(p[i] * s["X"][i][f] for i in range(len(p)))
-    M = [[sum(u[a] * u[b] for u in U.values()) for b in range(k)] for a in range(k)]
+    mean = [sum(u[f] for u in U.values()) / len(U) for f in range(k)]
+    cen = [[u[f] - mean[f] for f in range(k)] for u in U.values()]
+    M = [[sum(u[a] * u[b] for u in cen) for b in range(k)] for a in range(k)]
     C = fit["cov"]
     CM = [[sum(C[a][c] * M[c][b] for c in range(k)) for b in range(k)] for a in range(k)]
     return [[sum(CM[a][c] * C[c][b] for c in range(k)) for b in range(k)] for a in range(k)]
 
 
-def fit_model(data):
+def fit_model(data, staged=True, ridge=None, start=None):
+    """staged: the stage model, a main weight and a stage shift per feature, ridge-penalized (ridge defaults to
+    (RIDGE_MAIN, RIDGE_STAGE)). staged=False: one constant weight per feature, unpenalized unless ridge says
+    otherwise (the model used before 2026-11-26). beta is [main..., shift...] (just main when not staged)."""
+    k = len(FEATS)
+    if ridge is None:
+        ridge = (RIDGE_MAIN, RIDGE_STAGE) if staged else (0.0, 0.0)
+    pen = [ridge[0]] * k + ([ridge[1]] * k if staged else [])
     scale = feature_scale(data)
-    st = fitted_strata(data, scale)
-    fit = statlib.cond_logit([{"X": s["X"], "y": s["y"]} for s in st], firth=False)
+    st = fitted_strata(data, scale, staged)
+    fit = statlib.cond_logit([{"X": s["X"], "y": s["y"]} for s in st], firth=False, ridge=pen, start=start)
     V = cluster_cov(st, fit)
     z = statlib.z_for(LEVEL)
-    se = [math.sqrt(V[f][f]) if V[f][f] > 0 else None for f in range(len(FEATS))]
+    se = [math.sqrt(V[f][f]) if V[f][f] > 0 else None for f in range(len(pen))]
     eq = statlib.cond_logit([{"X": s["X"], "y": s["y"]} for s in equal_strata(data)], firth=False)
-    return {"scale": scale, "beta": fit["beta"], "se": se,
+    return {"staged": staged, "ridge": list(ridge), "scale": scale, "beta": fit["beta"], "se": se, "cov": V,
             "ci": [[b - z * e, b + z * e] if e else None for b, e in zip(fit["beta"], se)],
             "gamma": eq["beta"][0], "games": len(data), "states": len(st)}
+
+
+def stage_weights(model, points=STAGE_POINTS):
+    """Each feature's weight at the given stages, main + shift (stage - 0.5), with sandwich intervals."""
+    k, b, V = len(FEATS), model["beta"], model["cov"]
+    z = statlib.z_for(LEVEL)
+    out = []
+    for f in range(k):
+        est, lo, hi = [], [], []
+        for t in points:
+            c = t - STAGE_CENTER
+            w = b[f] + c * b[k + f]
+            var = V[f][f] + c * c * V[k + f][k + f] + 2 * c * V[f][k + f]
+            se = math.sqrt(var) if var > 0 else None
+            est.append(w)
+            lo.append(w - z * se if se else None)
+            hi.append(w + z * se if se else None)
+        out.append({"est": est, "lo": lo, "hi": hi})
+    return out
 
 
 def fold_of(i):
     return i % FOLDS
 
 
-def cross_fit(data):
-    """Out-of-fold models: fold f is scored by the model fit on the other folds (games in id order)."""
+def cross_fit(data, staged=True, start=None):
+    """Out-of-fold models: fold f is scored by the model fit on the other folds (games in id order). start warm-
+    starts every fold's fit (e.g. from the all-games estimate)."""
     order = sorted(range(len(data)), key=lambda i: data[i]["game"])
     fold = {data[i]["game"]: fold_of(j) for j, i in enumerate(order)}
     models = {}
@@ -260,16 +337,20 @@ def cross_fit(data):
         train = [d for d in data if fold[d["game"]] != f]
         if len(train) < 2:
             continue
-        models[f] = fit_model(train)
+        models[f] = fit_model(train, staged=staged, start=start)
     return fold, models
+
+
+def model_probs(r, model):
+    """A model's win probabilities for the seats in state row r."""
+    return probs(design(r["X"], model["scale"], r["stage"], model["staged"]), model["beta"])
 
 
 def score_rows(d, model):
     """Attach out-of-fold fitted and equal-weights probabilities, the top threat and ranks to every row."""
-    beta, scale, gamma = model["beta"], model["scale"], model["gamma"]
+    gamma = model["gamma"]
     for r in d["rows"]:
-        X = [[x[f] / scale[f] for f in range(len(FEATS))] for x in r["X"]]
-        p = probs(X, beta)
+        p = model_probs(r, model)
         q = softmax([gamma * z for z in z_sum(r["X"])])
         order = sorted(range(d["n"]), key=lambda i: -p[i])
         r["p"], r["p_equal"] = p, q
@@ -281,41 +362,64 @@ def score_rows(d, model):
 
 
 def check(data):
-    """Out-of-fold log loss and accuracy at turn ends, fitted vs equal weights vs chance, overall and by
-    thirds of the game (turn end's roll index over the game's rolls), with game-bootstrap intervals for the
-    log loss differences."""
+    """Out-of-fold log loss and accuracy at turn ends: the fitted (stage) model against equal weights, the
+    constant-weight model it replaced (rows' "p_constant") and chance, overall and by thirds of the game (turn
+    end's roll index over the game's rolls), with game-bootstrap intervals for the log loss differences.
+    "forward" repeats fitted vs constant on games after FORWARD_AFTER only, which played no part in choosing
+    the stage model; the all-games comparison does not have that protection."""
+    def ll(rows, key):
+        return sum(-math.log(max(r[key], 1e-12)) for r in rows) / len(rows)
+
     def summary(rows):
         n = len(rows)
         if not n:
             return None
-        return {"states": n,
-                "logloss": r3(sum(-math.log(max(r[0], 1e-12)) for r in rows) / n),
-                "logloss_equal": r3(sum(-math.log(max(r[1], 1e-12)) for r in rows) / n),
-                "logloss_chance": r3(sum(math.log(r[2]) for r in rows) / n),
-                "acc": r3(sum(r[3] for r in rows) / n), "acc_equal": r3(sum(r[4] for r in rows) / n),
-                "acc_chance": r3(sum(1 / r[2] for r in rows) / n), "agree": r3(sum(r[5] for r in rows) / n)}
-    per_game, thirds = [], [[], [], []]
+        out = {"states": n, "logloss": r3(ll(rows, "p")), "logloss_equal": r3(ll(rows, "pe")),
+               "logloss_chance": r3(sum(math.log(r["n"]) for r in rows) / n),
+               "acc": r3(sum(r["hit"] for r in rows) / n), "acc_equal": r3(sum(r["hit_e"] for r in rows) / n),
+               "acc_chance": r3(sum(1 / r["n"] for r in rows) / n), "agree": r3(sum(r["agree"] for r in rows) / n)}
+        if all(r["pc"] is not None for r in rows):
+            out["logloss_constant"] = r3(ll(rows, "pc"))
+            out["acc_constant"] = r3(sum(r["hit_c"] for r in rows) / n)
+        return out
+
+    def gap(per_game, key, seed):
+        """Log loss of `key` minus the fitted model's, per turn end, with a game bootstrap (above 0: fitted is
+        better)."""
+        def diff(sample):
+            rows = [r for g in sample for r in g]
+            return sum(math.log(max(r["p"], 1e-12)) - math.log(max(r[key], 1e-12)) for r in rows) / len(rows) if rows else None
+        est = diff(per_game)
+        if est is None:
+            return None
+        if len(per_game) < 2:
+            return {"est": r3(est), "lo": None, "hi": None}
+        boots = [b for b in statlib.cluster_bootstrap(per_game, diff, B=statlib.B_DESCRIPTIVE, seed=seed) if b is not None]
+        a = (1 - LEVEL) / 2
+        return {"est": r3(est), "lo": r3(statlib.quantile(boots, a)), "hi": r3(statlib.quantile(boots, 1 - a))}
+
+    per_game, thirds, ids = [], [[], [], []], []
     for d in data:
         rows = []
         for r in d["ends"]:
             t = min(2, int(3 * (r["roll_index"] + 1) / (d["rolls"] + 1)))
-            row = (r["p"][d["win"]], r["p_equal"][d["win"]], d["n"], r["top"] == d["win"],
-                   r["top_equal"] == d["win"], r["top"] == r["top_equal"])
+            pc = r.get("p_constant")
+            row = {"p": r["p"][d["win"]], "pe": r["p_equal"][d["win"]], "pc": pc[d["win"]] if pc else None,
+                   "n": d["n"], "hit": r["top"] == d["win"], "hit_e": r["top_equal"] == d["win"],
+                   "hit_c": bool(pc) and max(range(d["n"]), key=lambda i: pc[i]) == d["win"],
+                   "agree": r["top"] == r["top_equal"]}
             rows.append(row)
             thirds[t].append(row)
         per_game.append(rows)
-    flat = [r for g in per_game for r in g]
-
-    def diff(sample):
-        rows = [r for g in sample for r in g]
-        # log loss of equal weights minus log loss of the fitted model (above 0: fitted calls the winner better)
-        return sum(math.log(max(r[0], 1e-12)) - math.log(max(r[1], 1e-12)) for r in rows) / len(rows) if rows else None
-    boots = [b for b in statlib.cluster_bootstrap(per_game, diff, B=statlib.B_DESCRIPTIVE, seed=11) if b is not None]
-    a = (1 - LEVEL) / 2
-    out = summary(flat)
-    out["equal_minus_fitted"] = {"est": r3(diff(per_game)), "lo": r3(statlib.quantile(boots, a)),
-                                 "hi": r3(statlib.quantile(boots, 1 - a))}
+        ids.append(d["game"])
+    out = summary([r for g in per_game for r in g])
+    out["equal_minus_fitted"] = gap(per_game, "pe", 11)
     out["thirds"] = [summary(t) for t in thirds]
+    if "logloss_constant" in out:
+        out["constant_minus_fitted"] = gap(per_game, "pc", 12)
+        fwd = [g for g, i in zip(per_game, ids) if i > FORWARD_AFTER and g]
+        out["forward"] = {"after": FORWARD_AFTER, "games": len(fwd), **(summary([r for g in fwd for r in g]) or {}),
+                          "constant_minus_fitted": gap(fwd, "pc", 13)}
     return out
 
 
@@ -624,9 +728,14 @@ def prepare(games, events, ctx):
     if len(data) < G["model_games"]:
         return data, None, None
     full = fit_model(data)
-    fold, models = cross_fit(data)
+    fold, models = cross_fit(data, start=full["beta"])
+    _, constant = cross_fit(data, staged=False)  # the model before 2026-11-26, kept for check()'s comparison
     for d in data:
         score_rows(d, models.get(fold[d["game"]], full))
+        cm = constant.get(fold[d["game"]])
+        if cm:
+            for r in d["ends"]:
+                r["p_constant"] = model_probs(r, cm)
         d["trades"] = trades(d)
         d["moves"] = robber_moves(d)
     robber_baseline(data, ctx)
@@ -639,9 +748,15 @@ def compute_all(games, replays, events, ctx):
     _STATE.update({d["game"]: d for d in data})
     if full is None:
         return {"model": None, "games": len(data)}
+    # beta, se and ci run over terms: each feature's main weight (at stage 0.5), then its stage shift.
+    # weights[f] is feature f's weight at each of stage.points, with its interval.
     model = {"feats": FEATS, "labels": LABELS, "games": full["games"], "states": full["states"], "level": LEVEL,
+             "terms": FEATS + [f + ":stage" for f in FEATS],
              "beta": [r3(b) for b in full["beta"]], "se": [r3(s) for s in full["se"]],
              "ci": [[r3(c[0]), r3(c[1])] if c else None for c in full["ci"]],
+             "stage": {"center": STAGE_CENTER, "points": STAGE_POINTS, "ridge_main": RIDGE_MAIN,
+                       "ridge_stage": RIDGE_STAGE},
+             "weights": [{k: [r3(v) for v in w[k]] for k in ("est", "lo", "hi")} for w in stage_weights(full)],
              "scale": [r3(s) for s in full["scale"]], "gamma": r3(full["gamma"]), "check": chk}
     return {"model": model, "games": len(data), "timelines": timelines(data)}
 

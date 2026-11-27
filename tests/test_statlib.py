@@ -159,6 +159,35 @@ class ConditionalLogit(unittest.TestCase):
                        for k in range(-1000, 1001))
             self.assertAlmostEqual(2 * (fit["loglik_penalized"] - best), sl.z_for(0.95) ** 2, places=3)
 
+    def test_ridge(self):
+        rng = random.Random(6)
+        strata = simulate_strata(rng, 300, 3, 0.6)
+        ml = sl.cond_logit(strata, firth=False)
+        self.assertEqual(sl.cond_logit(strata, firth=False, ridge=0)["beta"], ml["beta"])  # 0 is no penalty
+        lam = 40.0
+        fit = sl.cond_logit(strata, firth=False, ridge=lam)
+        b = fit["beta"][0]
+        self.assertTrue(fit["converged"])
+        self.assertTrue(0 < b < ml["beta"][0])  # shrunk toward 0, same sign
+        # Stationary point of l(b) - lam b^2 / 2: the unpenalized score equals lam b (central differences).
+        h = 1e-5
+        score = (sl.cond_logit_loglik(strata, [b + h]) - sl.cond_logit_loglik(strata, [b - h])) / (2 * h)
+        self.assertAlmostEqual(score, lam * b, places=4)
+        self.assertAlmostEqual(fit["loglik_penalized"], fit["loglik"] - lam * b * b / 2, places=9)
+        self.assertLess(abs(sl.cond_logit(strata, firth=False, ridge=1e7)["beta"][0]), 1e-4)
+
+    def test_ridge_per_coefficient(self):
+        # A huge penalty on the second feature only: it goes to 0 and the first is fit as if alone.
+        rng = random.Random(7)
+        strata = [{"X": [[s["X"][k][0], rng.gauss(0, 1)] for k in range(3)], "y": s["y"]}
+                  for s in simulate_strata(rng, 300, 3, 0.5)]
+        fit = sl.cond_logit(strata, firth=False, ridge=[0, 1e9])
+        alone = sl.cond_logit([{"X": [[x[0]] for x in s["X"]], "y": s["y"]} for s in strata], firth=False)
+        self.assertAlmostEqual(fit["beta"][1], 0.0, places=6)
+        self.assertAlmostEqual(fit["beta"][0], alone["beta"][0], places=6)
+        with self.assertRaises(ValueError):
+            sl.cond_logit(strata, firth=False, ridge=[1.0])
+
     def test_profile_ci_coverage(self):
         rng = random.Random(5)
         beta, hits, sims = 0.5, 0, 200

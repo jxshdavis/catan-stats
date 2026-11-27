@@ -272,11 +272,13 @@ def _prep(strata):
     return out
 
 
-def _evaluate(prep, beta, firth):
+def _evaluate(prep, beta, firth, ridge=None):
     """Log-likelihood, penalized log-likelihood, (modified) score and Fisher information at beta.
 
     Breslow: l = sum_s [sum_k y_k x_k.b - d_s log sum_k exp(x_k.b)], I = sum_s d_s Cov_p(x).
     Firth score adds 0.5 tr(I^-1 dI/db_r) = 0.5 sum_s d_s sum_k p_k c_kr (c_k' I^-1 c_k), c_k = x_k - E_p x.
+    ridge (one penalty per coefficient) subtracts 0.5 sum_r ridge_r b_r^2: the score loses ridge_r b_r and the
+    information gains ridge_r on its diagonal (the Firth term, if any, still uses the unpenalized I).
     """
     k = len(beta)
     ll = 0.0
@@ -306,27 +308,32 @@ def _evaluate(prep, beta, firth):
     for r in range(k):
         for s in range(r):
             I[s][r] = I[r][s]
-    if not firth:
-        return ll, ll, U, I
-    Iinv = inverse(I)
-    pen = 0.5 * logdet(I)
-    for d, p, C in keep:
-        for a, c in enumerate(C):
-            q = sum(c[r] * sum(Iinv[r][s] * c[s] for s in range(k)) for r in range(k))
-            f = 0.5 * d * p[a] * q
-            for r in range(k):
-                U[r] += f * c[r]
-    return ll, ll + pen, U, I
+    lp = ll
+    if firth:
+        Iinv = inverse(I)
+        lp += 0.5 * logdet(I)
+        for d, p, C in keep:
+            for a, c in enumerate(C):
+                q = sum(c[r] * sum(Iinv[r][s] * c[s] for s in range(k)) for r in range(k))
+                f = 0.5 * d * p[a] * q
+                for r in range(k):
+                    U[r] += f * c[r]
+    if ridge:
+        for r in range(k):
+            lp -= 0.5 * ridge[r] * beta[r] ** 2
+            U[r] -= ridge[r] * beta[r]
+            I[r][r] += ridge[r]
+    return ll, lp, U, I
 
 
-def _newton(prep, beta, firth, free, max_iter=100, tol=1e-9, max_step=5.0):
+def _newton(prep, beta, firth, free, max_iter=100, tol=1e-9, max_step=5.0, ridge=None):
     """Fisher-scoring ascent on the (penalized) log-likelihood over the coordinates in `free`.
 
     Step = I_ff^-1 U*_f, capped at max_step per coordinate and halved until l* does not drop. Because I is
     positive definite this is always an ascent direction; without Firth it is exact Newton for clogit.
     """
     beta = list(beta)
-    ll, lp, U, I = _evaluate(prep, beta, firth)
+    ll, lp, U, I = _evaluate(prep, beta, firth, ridge)
     if not free:
         return beta, ll, lp, U, I, True, 0
     for it in range(1, max_iter + 1):
@@ -343,7 +350,7 @@ def _newton(prep, beta, firth, free, max_iter=100, tol=1e-9, max_step=5.0):
             for r, v in zip(free, step):
                 trial[r] += t * v
             try:
-                res = _evaluate(prep, trial, firth)
+                res = _evaluate(prep, trial, firth, ridge)
             except (ValueError, OverflowError):
                 res = None
             if res is not None and res[1] >= lp - 1e-10 * (1 + abs(lp)):
@@ -358,26 +365,37 @@ def _newton(prep, beta, firth, free, max_iter=100, tol=1e-9, max_step=5.0):
     return beta, ll, lp, U, I, False, max_iter
 
 
-def cond_logit(strata, firth=True, ties="breslow", start=None, max_iter=100):
+def cond_logit(strata, firth=True, ties="breslow", start=None, max_iter=100, ridge=None):
     """Conditional (multinomial choice) logit stratified by group, Breslow ties, optional Firth penalty.
 
     strata: list of {"X": one feature vector per alternative, "y": 0/1 or counts chosen}; more than one
     chosen in a stratum is handled by the Breslow approximation. Fit: Fisher scoring with step halving on
     l*(b) = l(b) + 0.5 log|I(b)| (Firth 1993) or on l(b). SE = sqrt(diag I^-1) at the estimate.
+
+    ridge: a penalty per coefficient (or one number for all), subtracting 0.5 sum_r ridge_r b_r^2 from the
+    objective; it shrinks the coefficients toward 0, and 0 leaves a coefficient unpenalized. With it, "cov" is
+    the inverse of the penalized information (I + diag(ridge)), the bread a sandwich estimator needs.
     """
     if ties != "breslow":
         raise ValueError("only Breslow ties are implemented")
     prep = _prep(strata)
     k = len(prep[0][0][0])
+    if ridge is not None:
+        ridge = [float(ridge)] * k if isinstance(ridge, (int, float)) else [float(v) for v in ridge]
+        if len(ridge) != k or any(v < 0 for v in ridge):
+            raise ValueError("ridge needs one non-negative penalty per coefficient")
+        if not any(ridge):
+            ridge = None
     beta0 = list(start) if start is not None else [0.0] * k
-    beta, ll, lp, U, I, ok, it = _newton(prep, beta0, firth, list(range(k)), max_iter=max_iter)
+    beta, ll, lp, U, I, ok, it = _newton(prep, beta0, firth, list(range(k)), max_iter=max_iter, ridge=ridge)
     try:
         cov = inverse(I)
         se = [math.sqrt(cov[r][r]) if cov[r][r] > 0 else None for r in range(k)]
     except ValueError:
         cov, se = None, [None] * k
     return {"beta": beta, "se": se, "cov": cov, "loglik": ll, "loglik_penalized": lp, "converged": ok,
-            "iterations": it, "firth": firth, "n_strata": len(prep), "n_events": sum(d for _, _, d in prep)}
+            "iterations": it, "firth": firth, "ridge": ridge, "n_strata": len(prep),
+            "n_events": sum(d for _, _, d in prep)}
 
 
 def cond_logit_loglik(strata, beta, firth=False):
